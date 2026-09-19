@@ -96,6 +96,19 @@
       background: #94a3b8;
     }
 
+    /* Smooth touch scrolling for tables and mobile sidebar */
+    .overflow-x-auto, .overflow-y-auto {
+      -webkit-overflow-scrolling: touch;
+    }
+    /* Hide scrollbar for clean horizontal tabs */
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-none {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
     @media print {
       body * {
         visibility: hidden;
@@ -121,36 +134,42 @@
 
   <!-- TOP HEADER -->
   <header class="bg-slate-950 text-white sticky top-0 z-40 border-b border-slate-800/80 shadow-lg backdrop-blur-md bg-opacity-95">
-    <div class="max-w-[1650px] w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="max-w-[1650px] w-full mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
       
-      <!-- LEFT: Language Switcher Button (English / اردو Toggle) -->
-      <div class="flex items-center gap-3">
-        <div class="inline-flex p-1 bg-slate-900 rounded-xl border border-slate-800 shadow-inner">
-          <button onclick="setLanguage('en')" id="lang-btn-en" class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-sm">
+      <!-- LEFT: Mobile Menu Hamburger + Language Switcher + Brand -->
+      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+        <!-- Hamburger button (Mobile/Tablet only) -->
+        <button onclick="toggleMobileSidebar(true)" id="mobile-hamburger-btn" class="lg:hidden p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition shrink-0" aria-label="Open Navigation" title="Open Navigation">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Language Switcher Button (English / اردو Toggle) -->
+        <div class="inline-flex p-0.5 sm:p-1 bg-slate-900 rounded-xl border border-slate-800 shadow-inner shrink-0">
+          <button onclick="setLanguage('en')" id="lang-btn-en" class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition flex items-center gap-1 bg-amber-500 text-slate-950 shadow-sm">
             <span>🇬🇧</span>
-            <span>English</span>
+            <span class="hidden xs:inline sm:inline">English</span>
           </button>
-          <button onclick="setLanguage('ur')" id="lang-btn-ur" class="px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white">
+          <button onclick="setLanguage('ur')" id="lang-btn-ur" class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition flex items-center gap-1 text-slate-400 hover:text-white">
             <span>🇵🇰</span>
-            <span>اردو ورژن</span>
+            <span class="hidden xs:inline sm:inline">اردو ورژن</span>
           </button>
         </div>
 
         <!-- Brand & Title -->
-        <div class="flex items-center space-x-3 rtl:space-x-reverse ml-2">
-          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/25 border border-amber-300/30">
-            <i data-lucide="cog" class="w-5 h-5 text-slate-950 animate-[spin_10s_linear_infinite]"></i>
+        <div class="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse ml-1 sm:ml-2 min-w-0">
+          <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 flex items-center justify-center shadow-md shadow-amber-500/25 border border-amber-300/30 shrink-0">
+            <i data-lucide="cog" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-950 animate-[spin_10s_linear_infinite]"></i>
           </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h1 id="header-brand-name" class="text-base font-extrabold tracking-tight text-white flex items-center gap-1.5">
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <h1 id="header-brand-name" class="text-sm sm:text-base font-extrabold tracking-tight text-white truncate max-w-[120px] xs:max-w-[170px] sm:max-w-none">
                 MUFTI AUTO STORE
               </h1>
-              <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 tracking-wider">
+              <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 tracking-wider shrink-0 hidden xs:inline-block">
                 ERP 1.0
               </span>
             </div>
-            <p id="header-brand-sub" class="text-[11px] text-amber-200/80 leading-none mt-0.5">
+            <p id="header-brand-sub" class="text-[10px] sm:text-[11px] text-amber-200/80 leading-none mt-0.5 truncate hidden md:block">
               Auto Parts Manufacturing & Production Management ERP
             </p>
           </div>
@@ -158,11 +177,11 @@
       </div>
 
       <!-- RIGHT: User Role Selector (Live RBAC Switcher) & Refresh -->
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-800 shadow-inner">
-          <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i>
-          <span id="label-user-role" class="text-xs text-slate-300 font-medium">User Role:</span>
-          <select id="role-selector" onchange="changeActiveRole(this.value)" class="bg-slate-950 text-amber-300 text-xs font-bold rounded-lg px-2.5 py-1 border border-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-400 cursor-pointer">
+      <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        <div class="flex items-center gap-1 sm:gap-2 bg-slate-900/90 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-slate-800 shadow-inner">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0"></i>
+          <span id="label-user-role" class="text-xs text-slate-300 font-medium hidden md:inline">User Role:</span>
+          <select id="role-selector" onchange="changeActiveRole(this.value)" class="bg-slate-950 text-amber-300 text-[11px] sm:text-xs font-bold rounded-lg px-2 py-1 border border-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-400 cursor-pointer max-w-[110px] xs:max-w-[140px] sm:max-w-none truncate">
             <option value="Admin">Super Admin (All Modules)</option>
             <option value="Storekeeper">Store Incharge (Raw Store / GRN)</option>
             <option value="Production">Production Manager (BOM / Work Order)</option>
@@ -171,22 +190,29 @@
           </select>
         </div>
 
-        <button onclick="refreshCurrentView()" title="Refresh Data" class="p-2 text-slate-400 hover:text-amber-300 hover:bg-slate-800/80 rounded-xl transition border border-transparent hover:border-slate-700">
-          <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+        <button onclick="refreshCurrentView()" title="Refresh Data" class="p-1.5 sm:p-2 text-slate-400 hover:text-amber-300 hover:bg-slate-800/80 rounded-xl transition border border-transparent hover:border-slate-700 shrink-0">
+          <i data-lucide="rotate-cw" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
         </button>
       </div>
     </div>
   </header>
 
   <!-- MAIN APP CONTAINER (Sidebar + Content) -->
-  <div class="flex-1 flex max-w-[1650px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-6 sm:gap-7">
+  <div class="flex-1 flex max-w-[1650px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 gap-6 sm:gap-7 relative">
 
-    <!-- SIDEBAR NAVIGATION (Wider, Bolder Boxed Tiles) -->
-    <aside class="w-80 sm:w-88 xl:w-96 shrink-0">
-      <div class="bg-white/90 backdrop-blur-md rounded-2xl border border-slate-200/80 p-4 sticky top-24 shadow-sm">
+    <!-- Mobile Backdrop Overlay -->
+    <div id="sidebar-backdrop" onclick="toggleMobileSidebar(false)" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 hidden transition-opacity duration-300 lg:hidden"></div>
+
+    <!-- SIDEBAR NAVIGATION (Drawer on Mobile, Static Column on Desktop) -->
+    <aside id="app-sidebar" class="fixed inset-y-0 start-0 z-50 w-72 sm:w-80 bg-white shadow-2xl lg:shadow-none border-e border-slate-200 p-4 transition-transform duration-300 ease-in-out -translate-x-full rtl:translate-x-full lg:translate-x-0 lg:rtl:translate-x-0 lg:static lg:z-auto lg:w-80 sm:lg:w-88 xl:lg:w-96 lg:shrink-0 lg:border-none lg:bg-transparent lg:p-0 overflow-y-auto">
+      <div class="bg-white/95 lg:bg-white/90 backdrop-blur-md rounded-2xl border border-slate-200/80 p-3 sm:p-4 sticky top-24 shadow-sm">
         <div class="px-3 py-2 text-xs font-black uppercase tracking-wider text-slate-500 border-b border-slate-100 mb-3 flex items-center justify-between">
           <span id="sidebar-label-nav">NAVIGATION MENU</span>
-          <i data-lucide="menu" class="w-4 h-4 text-slate-400"></i>
+          <!-- Close button for mobile drawer -->
+          <button onclick="toggleMobileSidebar(false)" class="lg:hidden p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition" title="Close Menu">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+          <i data-lucide="menu" class="w-4 h-4 text-slate-400 hidden lg:block"></i>
         </div>
         
         <nav class="space-y-2.5" id="sidebar-nav">
@@ -947,7 +973,7 @@
           </div>
 
           <!-- HR Subtabs -->
-          <div class="flex border-b border-slate-200 gap-4 text-xs font-semibold">
+          <div class="flex border-b border-slate-200 gap-2 sm:gap-4 text-xs font-semibold overflow-x-auto whitespace-nowrap scrollbar-none pb-px">
             <button onclick="switchHRTab('attendance')" id="hr-tab-attendance" class="py-2.5 border-b-2 border-pink-600 text-pink-600">Daily Attendance & Overtime</button>
             <button onclick="switchHRTab('piece_work')" id="hr-tab-piece_work" class="py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800">Piece-Rate Work (ٹھیکہ)</button>
             <button onclick="switchHRTab('leaves')" id="hr-tab-leaves" class="py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800">Leave Applications</button>
@@ -956,12 +982,12 @@
 
           <!-- HR Subtab 1: Attendance -->
           <div id="hr-content-attendance" class="space-y-4">
-            <div class="flex items-center justify-between gap-4 bg-slate-50/80 p-3 rounded-xl border border-slate-200">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-slate-50/80 p-3 rounded-xl border border-slate-200">
               <div class="flex items-center gap-2">
                 <label id="lbl-att-date" class="text-xs font-semibold text-slate-700">Select Date:</label>
                 <input type="date" id="attendance-date-filter" onchange="loadAttendance()" class="text-xs border border-slate-200 rounded-lg px-2.5 py-1 bg-white">
               </div>
-              <button onclick="openMarkAttendanceModal()" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl shadow transition flex items-center gap-1.5">
+              <button onclick="openMarkAttendanceModal()" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl shadow transition flex items-center justify-center gap-1.5 w-full sm:w-auto">
                 <i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i>
                 <span id="btn-mark-att">Log Attendance / Overtime</span>
               </button>
@@ -990,12 +1016,12 @@
 
           <!-- HR Subtab 2: Piece-Rate ٹھیکہ ورک -->
           <div id="hr-content-piece_work" class="space-y-4 hidden">
-            <div class="flex items-center justify-between gap-4 bg-amber-500/10 p-3.5 rounded-xl border border-amber-500/20">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-amber-500/10 p-3.5 rounded-xl border border-amber-500/20">
               <div>
                 <h4 id="lbl-pw-title" class="text-xs font-bold text-amber-950">Contract Worker Piece-Rate Earnings</h4>
                 <p id="lbl-pw-sub" class="text-[11px] text-amber-800">Auto-credited earnings based on pieces completed in production stages</p>
               </div>
-              <button onclick="openNewPieceWorkModal()" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-amber-600/20 transition flex items-center gap-1.5">
+              <button onclick="openNewPieceWorkModal()" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-amber-600/20 transition flex items-center justify-center gap-1.5 w-full sm:w-auto">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
                 <span id="btn-new-pw">Log Piece-Rate Work</span>
               </button>
@@ -1024,12 +1050,12 @@
 
           <!-- HR Subtab 3: Leaves -->
           <div id="hr-content-leaves" class="space-y-4 hidden">
-            <div class="flex items-center justify-between gap-4 bg-slate-50/80 p-3 rounded-xl border border-slate-200">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-slate-50/80 p-3 rounded-xl border border-slate-200">
               <div>
                 <h4 id="lbl-lv-title" class="text-xs font-bold text-slate-800">Leave Applications & Records</h4>
                 <p id="lbl-lv-sub" class="text-[11px] text-slate-500">Track and approve casual, sick, and annual employee leaves</p>
               </div>
-              <button onclick="openApplyLeaveModal()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-rose-600/20 transition flex items-center gap-1.5">
+              <button onclick="openApplyLeaveModal()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-rose-600/20 transition flex items-center justify-center gap-1.5 w-full sm:w-auto">
                 <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
                 <span id="btn-apply-lv">Apply Leave</span>
               </button>

@@ -665,13 +665,40 @@ function applyRolePermissions(role) {
   });
 }
 
-// ----------------- NAVIGATION -----------------
+// ----------------- NAVIGATION & MOBILE DRAWER -----------------
+
+function toggleMobileSidebar(open) {
+  const sidebar = document.getElementById("app-sidebar");
+  const backdrop = document.getElementById("sidebar-backdrop");
+  if (!sidebar || !backdrop) return;
+
+  const isUrdu = currentLang === "ur";
+  const shouldOpen = open !== undefined ? open : backdrop.classList.contains("hidden");
+
+  if (shouldOpen) {
+    backdrop.classList.remove("hidden");
+    sidebar.classList.remove("-translate-x-full", "rtl:translate-x-full");
+    sidebar.classList.add("translate-x-0", "rtl:translate-x-0");
+    document.body.classList.add("overflow-hidden", "lg:overflow-auto");
+  } else {
+    backdrop.classList.add("hidden");
+    sidebar.classList.add("-translate-x-full", "rtl:translate-x-full");
+    sidebar.classList.remove("translate-x-0", "rtl:translate-x-0");
+    document.body.classList.remove("overflow-hidden", "lg:overflow-auto");
+  }
+  if (window.lucide) lucide.createIcons();
+}
 
 function navigate(viewName) {
   const allowed = ROLE_PERMISSIONS[currentRole] || [];
   if (!allowed.includes(viewName)) {
     alert(currentLang === "ur" ? "آپ کے مقررہ رول کو اس ماڈیول تک رسائی کی اجازت نہیں ہے۔" : "Access Restricted for this User Role.");
     return;
+  }
+
+  // Auto-close mobile sidebar drawer when navigating
+  if (window.innerWidth < 1024) {
+    toggleMobileSidebar(false);
   }
 
   currentView = viewName;
@@ -1438,7 +1465,7 @@ async function loadWorkOrders() {
         <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
           ${currentLang === "ur" ? "پروڈکشن کے مراحل (Production Stages & Piece-Rate ٹھیکہ):" : "Production Stages & Piece-Rate Operations:"}
         </h4>
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3">
           ${wo.steps.map(s => {
             const pct = Math.min(100, Math.round((s.completed_pieces / s.required_pieces) * 100));
             const isDone = s.status === 'Completed';
