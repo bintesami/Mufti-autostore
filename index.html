@@ -121,7 +121,7 @@
 
   <!-- TOP HEADER -->
   <header class="bg-slate-950 text-white sticky top-0 z-40 border-b border-slate-800/80 shadow-lg backdrop-blur-md bg-opacity-95">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="max-w-[1650px] w-full mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       
       <!-- LEFT: Language Switcher Button (English / اردو Toggle) -->
       <div class="flex items-center gap-3">
@@ -179,126 +179,125 @@
   </header>
 
   <!-- MAIN APP CONTAINER (Sidebar + Content) -->
-  <div class="flex-1 flex max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-6">
+  <div class="flex-1 flex max-w-[1650px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-6 sm:gap-7">
 
-    <!-- SIDEBAR NAVIGATION (Modular Boxed Tiles) -->
     <!-- SIDEBAR NAVIGATION (Wider, Bolder Boxed Tiles) -->
-    <aside class="w-72 sm:w-80 shrink-0">
+    <aside class="w-80 sm:w-88 xl:w-96 shrink-0">
       <div class="bg-white/90 backdrop-blur-md rounded-2xl border border-slate-200/80 p-4 sticky top-24 shadow-sm">
-        <div class="px-2.5 py-2 text-xs font-black uppercase tracking-wider text-slate-500 border-b border-slate-100 mb-3 flex items-center justify-between">
+        <div class="px-3 py-2 text-xs font-black uppercase tracking-wider text-slate-500 border-b border-slate-100 mb-3 flex items-center justify-between">
           <span id="sidebar-label-nav">NAVIGATION MENU</span>
           <i data-lucide="menu" class="w-4 h-4 text-slate-400"></i>
         </div>
         
-        <nav class="space-y-2" id="sidebar-nav">
-          <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item menu-box w-full flex items-center justify-between active">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+        <nav class="space-y-2.5" id="sidebar-nav">
+          <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item menu-box w-full flex items-center justify-between active p-3.5 sm:p-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 shadow-xs">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
               </div>
-              <span id="nav-txt-dashboard" class="text-sm sm:text-[15px] font-black text-slate-900 tracking-normal">Dashboard</span>
+              <span id="nav-txt-dashboard" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Dashboard</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
           </button>
 
-          <button onclick="navigate('po')" id="nav-po" class="nav-item menu-box w-full flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
+          <button onclick="navigate('po')" id="nav-po" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 shadow-xs">
                 <i data-lucide="shopping-cart" class="w-5 h-5"></i>
               </div>
-              <span id="nav-txt-po" class="text-sm sm:text-[15px] font-black text-slate-900 tracking-normal">Purchase Orders</span>
+              <span id="nav-txt-po" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Purchase Orders</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
           </button>
 
-          <button onclick="navigate('grn')" id="nav-grn" class="nav-item menu-box w-full flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+          <button onclick="navigate('grn')" id="nav-grn" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 shadow-xs">
                 <i data-lucide="package-check" class="w-5 h-5"></i>
               </div>
-              <span id="nav-txt-grn" class="text-sm sm:text-[15px] font-black text-slate-900 tracking-normal">Raw Receiving (GRN)</span>
+              <span id="nav-txt-grn" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Raw Receiving (GRN)</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
           </button>
 
-          <button onclick="navigate('raw_store')" id="nav-raw_store" class="nav-item menu-box w-full flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+          <button onclick="navigate('raw_store')" id="nav-raw_store" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 shadow-xs">
                 <i data-lucide="boxes" class="w-5 h-5"></i>
               </div>
-              <span id="nav-txt-raw_store" class="text-sm sm:text-[15px] font-black text-slate-900 tracking-normal">Raw Store Inventory</span>
+              <span id="nav-txt-raw_store" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Raw Store Inventory</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
           </button>
 
-          <button onclick="navigate('sampling')" id="nav-sampling" class="nav-item menu-box w-full flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+          <button onclick="navigate('sampling')" id="nav-sampling" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 shadow-xs">
                 <i data-lucide="flask-conical" class="w-5 h-5"></i>
               </div>
-              <span id="nav-txt-sampling" class="text-sm sm:text-[15px] font-black text-slate-900 tracking-normal">Sampling & Recipe</span>
+              <span id="nav-txt-sampling" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Sampling & Recipe</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
           </button>
 
-          <button onclick="navigate('bom')" id="nav-bom" class="nav-item menu-box w-full flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+          <button onclick="navigate('bom')" id="nav-bom" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 shadow-xs">
                 <i data-lucide="clipboard-list" class="w-5 h-5"></i>
               </div>
-              <span id="nav-txt-bom" class="text-sm sm:text-[15px] font-black text-slate-900 tracking-normal">Bill of Materials (BOM)</span>
+              <span id="nav-txt-bom" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Bill of Materials (BOM)</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
           </button>
 
-          <button onclick="navigate('work_orders')" id="nav-work_orders" class="nav-item menu-box w-full flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0">
+          <button onclick="navigate('work_orders')" id="nav-work_orders" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 shadow-xs">
                 <i data-lucide="factory" class="w-5 h-5"></i>
               </div>
-              <span id="nav-txt-work_orders" class="text-sm sm:text-[15px] font-black text-slate-900 tracking-normal">Production Work Orders</span>
+              <span id="nav-txt-work_orders" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Production Work Orders</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
           </button>
 
-          <button onclick="navigate('fg')" id="nav-fg" class="nav-item menu-box w-full flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0">
+          <button onclick="navigate('fg')" id="nav-fg" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 shadow-xs">
                 <i data-lucide="box" class="w-5 h-5"></i>
               </div>
-              <span id="nav-txt-fg" class="text-sm sm:text-[15px] font-black text-slate-900 tracking-normal">Finished Goods (FG)</span>
+              <span id="nav-txt-fg" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Finished Goods (FG)</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
           </button>
 
-          <button onclick="navigate('dispatch')" id="nav-dispatch" class="nav-item menu-box w-full flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center shrink-0">
+          <button onclick="navigate('dispatch')" id="nav-dispatch" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center shrink-0 shadow-xs">
                 <i data-lucide="truck" class="w-5 h-5"></i>
               </div>
-              <span id="nav-txt-dispatch" class="text-sm sm:text-[15px] font-black text-slate-900 tracking-normal">Outward Dispatch</span>
+              <span id="nav-txt-dispatch" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Outward Dispatch</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
           </button>
 
-          <button onclick="navigate('hr')" id="nav-hr" class="nav-item menu-box w-full flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center shrink-0">
+          <button onclick="navigate('hr')" id="nav-hr" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 shadow-xs">
                 <i data-lucide="users" class="w-5 h-5"></i>
               </div>
-              <span id="nav-txt-hr" class="text-sm sm:text-[15px] font-black text-slate-900 tracking-normal">HR & Piece-Rate</span>
+              <span id="nav-txt-hr" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">HR & Piece-Rate</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
           </button>
 
-          <button onclick="navigate('rbac')" id="nav-rbac" class="nav-item menu-box w-full flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+          <button onclick="navigate('rbac')" id="nav-rbac" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
+            <div class="flex items-center gap-3.5">
+              <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 shadow-xs">
                 <i data-lucide="shield-check" class="w-5 h-5"></i>
               </div>
-              <span id="nav-txt-rbac" class="text-sm sm:text-[15px] font-black text-slate-900 tracking-normal">User Roles (RBAC)</span>
+              <span id="nav-txt-rbac" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">User Roles (RBAC)</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
           </button>
         </nav>
       </div>
@@ -312,53 +311,53 @@
         <!-- Top Stats Cards (Modular Tiles) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
           <!-- 1. Raw Materials -->
-          <div class="stat-tile flex items-center justify-between">
-            <div>
-              <p id="stat-lbl-raw" class="text-sm sm:text-base font-black text-slate-700">Total Raw Materials</p>
-              <h3 class="text-3xl sm:text-4xl font-black text-slate-900 mt-1 font-en tracking-tight" id="stat-raw-items">0</h3>
-              <p class="text-xs sm:text-[13px] text-amber-700 mt-1.5 flex items-center gap-1.5 font-bold">
+          <div class="stat-tile p-5 sm:p-6 min-h-[140px] flex items-center justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <p id="stat-lbl-raw" class="text-base sm:text-lg font-black text-slate-800 leading-snug">Total Raw Materials</p>
+              <h3 class="text-4xl sm:text-5xl font-black text-slate-900 mt-2 font-en tracking-tight" id="stat-raw-items">0</h3>
+              <p class="text-xs sm:text-sm text-amber-700 mt-2 flex items-center gap-1.5 font-bold">
                 <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 shrink-0"></i>
                 <span id="stat-low-stock">0</span> <span id="stat-lbl-low-alert">Low Stock Items</span>
               </p>
             </div>
-            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-amber-500/10 text-amber-600 border border-amber-500/25 flex items-center justify-center shrink-0 shadow-sm">
-              <i data-lucide="boxes" class="w-7 h-7 sm:w-8 sm:h-8"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-amber-500/10 text-amber-600 border border-amber-500/25 flex items-center justify-center shrink-0 shadow-sm">
+              <i data-lucide="boxes" class="w-8 h-8 sm:w-10 sm:h-10"></i>
             </div>
           </div>
 
           <!-- 2. Active Work Orders -->
-          <div class="stat-tile flex items-center justify-between">
-            <div>
-              <p id="stat-lbl-wo" class="text-sm sm:text-base font-black text-slate-700">Active Work Orders</p>
-              <h3 class="text-3xl sm:text-4xl font-black text-slate-900 mt-1 font-en tracking-tight" id="stat-active-wo">0</h3>
-              <p id="stat-lbl-wo-sub" class="text-xs sm:text-[13px] text-blue-700 mt-1.5 font-bold">In Progress Stages</p>
+          <div class="stat-tile p-5 sm:p-6 min-h-[140px] flex items-center justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <p id="stat-lbl-wo" class="text-base sm:text-lg font-black text-slate-800 leading-snug">Active Work Orders</p>
+              <h3 class="text-4xl sm:text-5xl font-black text-slate-900 mt-2 font-en tracking-tight" id="stat-active-wo">0</h3>
+              <p id="stat-lbl-wo-sub" class="text-xs sm:text-sm text-blue-700 mt-2 font-bold">In Progress Stages</p>
             </div>
-            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-blue-500/10 text-blue-600 border border-blue-500/25 flex items-center justify-center shrink-0 shadow-sm">
-              <i data-lucide="factory" class="w-7 h-7 sm:w-8 sm:h-8"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-blue-500/10 text-blue-600 border border-blue-500/25 flex items-center justify-center shrink-0 shadow-sm">
+              <i data-lucide="factory" class="w-8 h-8 sm:w-10 sm:h-10"></i>
             </div>
           </div>
 
           <!-- 3. Finished Goods -->
-          <div class="stat-tile flex items-center justify-between">
-            <div>
-              <p id="stat-lbl-fg" class="text-sm sm:text-base font-black text-slate-700">Finished Goods Stock</p>
-              <h3 class="text-3xl sm:text-4xl font-black text-slate-900 mt-1 font-en tracking-tight" id="stat-fg-qty">0</h3>
-              <p id="stat-lbl-fg-sub" class="text-xs sm:text-[13px] text-emerald-700 mt-1.5 font-bold">Ready for Dispatch</p>
+          <div class="stat-tile p-5 sm:p-6 min-h-[140px] flex items-center justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <p id="stat-lbl-fg" class="text-base sm:text-lg font-black text-slate-800 leading-snug">Finished Goods Stock</p>
+              <h3 class="text-4xl sm:text-5xl font-black text-slate-900 mt-2 font-en tracking-tight" id="stat-fg-qty">0</h3>
+              <p id="stat-lbl-fg-sub" class="text-xs sm:text-sm text-emerald-700 mt-2 font-bold">Ready for Dispatch</p>
             </div>
-            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-emerald-500/10 text-emerald-600 border border-emerald-500/25 flex items-center justify-center shrink-0 shadow-sm">
-              <i data-lucide="package" class="w-7 h-7 sm:w-8 sm:h-8"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-500/10 text-emerald-600 border border-emerald-500/25 flex items-center justify-center shrink-0 shadow-sm">
+              <i data-lucide="package" class="w-8 h-8 sm:w-10 sm:h-10"></i>
             </div>
           </div>
 
           <!-- 4. Attendance -->
-          <div class="stat-tile flex items-center justify-between">
-            <div>
-              <p id="stat-lbl-att" class="text-sm sm:text-base font-black text-slate-700">Today's Attendance</p>
-              <h3 class="text-3xl sm:text-4xl font-black text-slate-900 mt-1 font-en tracking-tight" id="stat-attendance">0 / 0</h3>
-              <p id="stat-lbl-att-sub" class="text-xs sm:text-[13px] text-pink-700 mt-1.5 font-bold">Staff & Piece Workers</p>
+          <div class="stat-tile p-5 sm:p-6 min-h-[140px] flex items-center justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <p id="stat-lbl-att" class="text-base sm:text-lg font-black text-slate-800 leading-snug">Today's Attendance</p>
+              <h3 class="text-4xl sm:text-5xl font-black text-slate-900 mt-2 font-en tracking-tight" id="stat-attendance">0 / 0</h3>
+              <p id="stat-lbl-att-sub" class="text-xs sm:text-sm text-pink-700 mt-2 font-bold">Staff & Piece Workers</p>
             </div>
-            <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-pink-500/10 text-pink-600 border border-pink-500/25 flex items-center justify-center shrink-0 shadow-sm">
-              <i data-lucide="user-check" class="w-7 h-7 sm:w-8 sm:h-8"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-pink-500/10 text-pink-600 border border-pink-500/25 flex items-center justify-center shrink-0 shadow-sm">
+              <i data-lucide="user-check" class="w-8 h-8 sm:w-10 sm:h-10"></i>
             </div>
           </div>
         </div>
@@ -373,114 +372,174 @@
             <span id="dash-mod-sub" class="text-xs sm:text-sm text-slate-500 font-semibold">Click any module to manage</span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5">
             <!-- 1. Purchase Orders (PO) -->
-            <div onclick="navigate('po')" class="stat-tile p-4 sm:p-5 hover:border-blue-400 hover:shadow-md cursor-pointer transition flex items-center justify-between gap-3 group">
-              <div class="min-w-0 flex-1">
-                <h4 id="card-txt-po" class="text-sm sm:text-base font-black text-slate-900 leading-tight group-hover:text-blue-600 transition">Purchase Orders</h4>
-                <p id="card-sub-po" class="text-xs sm:text-[13px] font-semibold text-slate-600 mt-1.5 leading-snug">Supplier Procurement</p>
+            <div onclick="navigate('po')" class="stat-tile p-4 sm:p-5 hover:border-blue-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <h4 id="card-txt-po" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-blue-600 transition leading-snug">Purchase Orders</h4>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition shadow-xs">
+                  <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                </div>
               </div>
-              <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition shadow-xs">
-                <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
+                <p id="card-sub-po" class="leading-normal">Supplier Procurement</p>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 transition rtl:block ltr:hidden shrink-0"></i>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 transition ltr:block rtl:hidden shrink-0"></i>
               </div>
             </div>
 
             <!-- 2. Raw Material Receiving (GRN) -->
-            <div onclick="navigate('grn')" class="stat-tile p-4 sm:p-5 hover:border-emerald-400 hover:shadow-md cursor-pointer transition flex items-center justify-between gap-3 group">
-              <div class="min-w-0 flex-1">
-                <h4 id="card-txt-grn" class="text-sm sm:text-base font-black text-slate-900 leading-tight group-hover:text-emerald-600 transition">Raw Receiving (GRN)</h4>
-                <p id="card-sub-grn" class="text-xs sm:text-[13px] font-semibold text-slate-600 mt-1.5 leading-snug">Challans & Gate Receipts</p>
+            <div onclick="navigate('grn')" class="stat-tile p-4 sm:p-5 hover:border-emerald-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <h4 id="card-txt-grn" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-emerald-600 transition leading-snug">Raw Receiving (GRN)</h4>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition shadow-xs">
+                  <i data-lucide="package-check" class="w-6 h-6"></i>
+                </div>
               </div>
-              <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition shadow-xs">
-                <i data-lucide="package-check" class="w-6 h-6"></i>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
+                <p id="card-sub-grn" class="leading-normal">Challans & Gate Receipts</p>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 transition rtl:block ltr:hidden shrink-0"></i>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 transition ltr:block rtl:hidden shrink-0"></i>
               </div>
             </div>
 
             <!-- 3. Raw Store Inventory -->
-            <div onclick="navigate('raw_store')" class="stat-tile p-4 sm:p-5 hover:border-amber-400 hover:shadow-md cursor-pointer transition flex items-center justify-between gap-3 group">
-              <div class="min-w-0 flex-1">
-                <h4 id="card-txt-raw_store" class="text-sm sm:text-base font-black text-slate-900 leading-tight group-hover:text-amber-600 transition">Raw Store Inventory</h4>
-                <p id="card-sub-raw_store" class="text-xs sm:text-[13px] font-semibold text-slate-600 mt-1.5 leading-snug">Metals, Parts & Bags</p>
+            <div onclick="navigate('raw_store')" class="stat-tile p-4 sm:p-5 hover:border-amber-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <h4 id="card-txt-raw_store" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-amber-600 transition leading-snug">Raw Store Inventory</h4>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-amber-600 group-hover:text-white transition shadow-xs">
+                  <i data-lucide="boxes" class="w-6 h-6"></i>
+                </div>
               </div>
-              <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-amber-600 group-hover:text-white transition shadow-xs">
-                <i data-lucide="boxes" class="w-6 h-6"></i>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
+                <p id="card-sub-raw_store" class="leading-normal">Metals, Parts & Bags</p>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 transition rtl:block ltr:hidden shrink-0"></i>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 transition ltr:block rtl:hidden shrink-0"></i>
               </div>
             </div>
 
             <!-- 4. Sampling & Recipe -->
-            <div onclick="navigate('sampling')" class="stat-tile p-4 sm:p-5 hover:border-purple-400 hover:shadow-md cursor-pointer transition flex items-center justify-between gap-3 group">
-              <div class="min-w-0 flex-1">
-                <h4 id="card-txt-sampling" class="text-sm sm:text-base font-black text-slate-900 leading-tight group-hover:text-purple-600 transition">Sampling & Recipe</h4>
-                <p id="card-sub-sampling" class="text-xs sm:text-[13px] font-semibold text-slate-600 mt-1.5 leading-snug">Master Part Recipes</p>
+            <div onclick="navigate('sampling')" class="stat-tile p-4 sm:p-5 hover:border-purple-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <h4 id="card-txt-sampling" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-purple-600 transition leading-snug">Sampling & Recipe</h4>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition shadow-xs">
+                  <i data-lucide="flask-conical" class="w-6 h-6"></i>
+                </div>
               </div>
-              <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition shadow-xs">
-                <i data-lucide="flask-conical" class="w-6 h-6"></i>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
+                <p id="card-sub-sampling" class="leading-normal">Master Part Recipes</p>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-purple-600 transition rtl:block ltr:hidden shrink-0"></i>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-purple-600 transition ltr:block rtl:hidden shrink-0"></i>
               </div>
             </div>
 
             <!-- 5. Bill of Materials (BOM) -->
-            <div onclick="navigate('bom')" class="stat-tile p-4 sm:p-5 hover:border-rose-400 hover:shadow-md cursor-pointer transition flex items-center justify-between gap-3 group">
-              <div class="min-w-0 flex-1">
-                <h4 id="card-txt-bom" class="text-sm sm:text-base font-black text-slate-900 leading-tight group-hover:text-rose-600 transition">Bill of Materials (BOM)</h4>
-                <p id="card-sub-bom" class="text-xs sm:text-[13px] font-semibold text-slate-600 mt-1.5 leading-snug">Auto Stock Calculation</p>
+            <div onclick="navigate('bom')" class="stat-tile p-4 sm:p-5 hover:border-rose-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <h4 id="card-txt-bom" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-rose-600 transition leading-snug">Bill of Materials (BOM)</h4>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-rose-600 group-hover:text-white transition shadow-xs">
+                  <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+                </div>
               </div>
-              <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-rose-600 group-hover:text-white transition shadow-xs">
-                <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
+                <p id="card-sub-bom" class="leading-normal">Auto Stock Calculation</p>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-rose-600 transition rtl:block ltr:hidden shrink-0"></i>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-rose-600 transition ltr:block rtl:hidden shrink-0"></i>
               </div>
             </div>
 
             <!-- 6. Production Work Orders -->
-            <div onclick="navigate('work_orders')" class="stat-tile p-4 sm:p-5 hover:border-orange-400 hover:shadow-md cursor-pointer transition flex items-center justify-between gap-3 group">
-              <div class="min-w-0 flex-1">
-                <h4 id="card-txt-work_orders" class="text-sm sm:text-base font-black text-slate-900 leading-tight group-hover:text-orange-600 transition">Production Work Orders</h4>
-                <p id="card-sub-work_orders" class="text-xs sm:text-[13px] font-semibold text-slate-600 mt-1.5 leading-snug">5-Stage Assembly Floor</p>
+            <div onclick="navigate('work_orders')" class="stat-tile p-4 sm:p-5 hover:border-orange-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <h4 id="card-txt-work_orders" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-orange-600 transition leading-snug">Production Work Orders</h4>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-orange-600 group-hover:text-white transition shadow-xs">
+                  <i data-lucide="factory" class="w-6 h-6"></i>
+                </div>
               </div>
-              <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-orange-600 group-hover:text-white transition shadow-xs">
-                <i data-lucide="factory" class="w-6 h-6"></i>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
+                <p id="card-sub-work_orders" class="leading-normal">5-Stage Assembly Floor</p>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-orange-600 transition rtl:block ltr:hidden shrink-0"></i>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-orange-600 transition ltr:block rtl:hidden shrink-0"></i>
               </div>
             </div>
 
             <!-- 7. Finished Goods (FG) -->
-            <div onclick="navigate('fg')" class="stat-tile p-4 sm:p-5 hover:border-teal-400 hover:shadow-md cursor-pointer transition flex items-center justify-between gap-3 group">
-              <div class="min-w-0 flex-1">
-                <h4 id="card-txt-fg" class="text-sm sm:text-base font-black text-slate-900 leading-tight group-hover:text-teal-600 transition">Finished Goods (FG)</h4>
-                <p id="card-sub-fg" class="text-xs sm:text-[13px] font-semibold text-slate-600 mt-1.5 leading-snug">Packed & QC Verified</p>
+            <div onclick="navigate('fg')" class="stat-tile p-4 sm:p-5 hover:border-teal-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <h4 id="card-txt-fg" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-teal-600 transition leading-snug">Finished Goods (FG)</h4>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 border border-teal-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white transition shadow-xs">
+                  <i data-lucide="box" class="w-6 h-6"></i>
+                </div>
               </div>
-              <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 border border-teal-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white transition shadow-xs">
-                <i data-lucide="box" class="w-6 h-6"></i>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
+                <p id="card-sub-fg" class="leading-normal">Packed & QC Verified</p>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-teal-600 transition rtl:block ltr:hidden shrink-0"></i>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-teal-600 transition ltr:block rtl:hidden shrink-0"></i>
               </div>
             </div>
 
             <!-- 8. Outward Dispatch -->
-            <div onclick="navigate('dispatch')" class="stat-tile p-4 sm:p-5 hover:border-cyan-400 hover:shadow-md cursor-pointer transition flex items-center justify-between gap-3 group">
-              <div class="min-w-0 flex-1">
-                <h4 id="card-txt-dispatch" class="text-sm sm:text-base font-black text-slate-900 leading-tight group-hover:text-cyan-600 transition">Outward Dispatch</h4>
-                <p id="card-sub-dispatch" class="text-xs sm:text-[13px] font-semibold text-slate-600 mt-1.5 leading-snug">Challans & Gate Passes</p>
+            <div onclick="navigate('dispatch')" class="stat-tile p-4 sm:p-5 hover:border-cyan-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <h4 id="card-txt-dispatch" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-cyan-600 transition leading-snug">Outward Dispatch</h4>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 border border-cyan-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-cyan-600 group-hover:text-white transition shadow-xs">
+                  <i data-lucide="truck" class="w-6 h-6"></i>
+                </div>
               </div>
-              <div class="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 border border-cyan-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-cyan-600 group-hover:text-white transition shadow-xs">
-                <i data-lucide="truck" class="w-6 h-6"></i>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
+                <p id="card-sub-dispatch" class="leading-normal">Challans & Gate Passes</p>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-600 transition rtl:block ltr:hidden shrink-0"></i>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-600 transition ltr:block rtl:hidden shrink-0"></i>
               </div>
             </div>
 
             <!-- 9. HR & Piece-Rate -->
-            <div onclick="navigate('hr')" class="stat-tile p-4 sm:p-5 hover:border-pink-400 hover:shadow-md cursor-pointer transition flex items-center justify-between gap-3 group">
-              <div class="min-w-0 flex-1">
-                <h4 id="card-txt-hr" class="text-sm sm:text-base font-black text-slate-900 leading-tight group-hover:text-pink-600 transition">HR & Piece-Rate</h4>
-                <p id="card-sub-hr" class="text-xs sm:text-[13px] font-semibold text-slate-600 mt-1.5 leading-snug">Attendance & Worker Pay</p>
+            <div onclick="navigate('hr')" class="stat-tile p-4 sm:p-5 hover:border-pink-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <h4 id="card-txt-hr" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-pink-600 transition leading-snug">HR & Piece-Rate</h4>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-pink-50 text-pink-600 border border-pink-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white transition shadow-xs">
+                  <i data-lucide="users" class="w-6 h-6"></i>
+                </div>
               </div>
-              <div class="w-12 h-12 rounded-2xl bg-pink-50 text-pink-600 border border-pink-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white transition shadow-xs">
-                <i data-lucide="users" class="w-6 h-6"></i>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
+                <p id="card-sub-hr" class="leading-normal">Attendance & Worker Pay</p>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-pink-600 transition rtl:block ltr:hidden shrink-0"></i>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-pink-600 transition ltr:block rtl:hidden shrink-0"></i>
               </div>
             </div>
 
             <!-- 10. User Roles (RBAC) -->
-            <div onclick="navigate('rbac')" class="stat-tile p-4 sm:p-5 hover:border-indigo-400 hover:shadow-md cursor-pointer transition flex items-center justify-between gap-3 group">
-              <div class="min-w-0 flex-1">
-                <h4 id="card-txt-rbac" class="text-sm sm:text-base font-black text-slate-900 leading-tight group-hover:text-indigo-600 transition">User Roles (RBAC)</h4>
-                <p id="card-sub-rbac" class="text-xs sm:text-[13px] font-semibold text-slate-600 mt-1.5 leading-snug">System Permissions</p>
+            <div onclick="navigate('rbac')" class="stat-tile p-4 sm:p-5 hover:border-indigo-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
+              <div class="flex items-start justify-between gap-3">
+                <div class="flex-1 min-w-0">
+                  <h4 id="card-txt-rbac" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-indigo-600 transition leading-snug">User Roles (RBAC)</h4>
+                </div>
+                <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition shadow-xs">
+                  <i data-lucide="shield-check" class="w-6 h-6"></i>
+                </div>
               </div>
-              <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition shadow-xs">
-                <i data-lucide="shield-check" class="w-6 h-6"></i>
+              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
+                <p id="card-sub-rbac" class="leading-normal">System Permissions</p>
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition rtl:block ltr:hidden shrink-0"></i>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition ltr:block rtl:hidden shrink-0"></i>
               </div>
             </div>
           </div>
