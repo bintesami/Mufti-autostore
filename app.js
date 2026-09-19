@@ -171,7 +171,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   applyRolePermissions(currentRole);
 });
 
-// ----------------- BILINGUAL LANGUAGE ENGINE -----------------
+// Helper function to safely set element innerText without throwing null exceptions
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.innerText = text;
+}
 
 const I18N = {
   en: {
@@ -208,10 +212,28 @@ const I18N = {
       fgSub: "Ready for Dispatch",
       attLbl: "Today's Attendance",
       attSub: "Staff & Piece Workers",
-      bannerTitle: "Auto Parts Manufacturing Lifecycle",
-      bannerDesc: "1. Purchase Order (PO) ➔ 2. Raw Material Receiving (GRN) ➔ 3. Sampling & Recipe (Child Parts, Bags, Stickers, Logo) ➔ 4. Bill of Materials (BOM Auto Recipe) ➔ 5. Multi-Step Production & Piece-Rate Work ➔ 6. Finished Goods & Factory Dispatch.",
-      btnBOM: "Generate BOM",
-      btnGRN: "Receive Goods (GRN)",
+      modTitle: "Production Modules & Quick Operations",
+      modSub: "Click any module to manage",
+      cardPO: "Purchase Orders",
+      cardSubPO: "Supplier Procurement",
+      cardGRN: "Raw Receiving (GRN)",
+      cardSubGRN: "Challans & Gate Receipts",
+      cardRaw: "Raw Store Inventory",
+      cardSubRaw: "Metals, Parts & Bags",
+      cardSampling: "Sampling & Recipe",
+      cardSubSampling: "Master Part Recipes",
+      cardBOM: "Bill of Materials (BOM)",
+      cardSubBOM: "Auto Stock Calculation",
+      cardWO: "Production Work Orders",
+      cardSubWO: "5-Stage Assembly Floor",
+      cardFG: "Finished Goods (FG)",
+      cardSubFG: "Packed & QC Verified",
+      cardDispatch: "Outward Dispatch",
+      cardSubDispatch: "Challans & Gate Passes",
+      cardHR: "HR & Piece-Rate",
+      cardSubHR: "Attendance & Worker Pay",
+      cardRBAC: "User Roles (RBAC)",
+      cardSubRBAC: "System Permissions",
       woTblTitle: "Active Production Work Orders",
       viewAll: "View All",
       stockTblTitle: "Low Stock Warning (Raw Store)",
@@ -268,6 +290,10 @@ const I18N = {
       btnCalc: "Calculate Recipe",
       btnConvert: "Convert to Work Order",
       savedTitle: "Saved BOMs History"
+    },
+    sampling: {
+      title: "Sampling & Master Recipe",
+      sub: "Define auto part components: core parts, child parts, packaging bags, stickers & logos"
     },
     wo: {
       title: "Multi-Step Production Work Orders",
@@ -326,10 +352,28 @@ const I18N = {
       fgSub: "ڈسپیچ کیلئے تیار",
       attLbl: "آج کی ورکرز حاضری",
       attSub: "سٹاف و ٹھیکہ ورکرز",
-      bannerTitle: "آٹو پارٹس پروڈکشن فلو",
-      bannerDesc: "1. خام مال کی خریداری (PO) ➔ 2. جی آر این و ڈیلیوری چالان ریسیونگ (GRN) ➔ 3. سیمپلنگ و ماسٹر ریسیپی (ساتھ تھیلی، سٹیکر، لوگو) ➔ 4. بل آف مٹیریل (BOM Auto Recipe) ➔ 5. ملٹی سٹیپ پروڈکشن و ٹھیکہ ورکرز ➔ 6. فنش گڈز و فیکٹری/گودام ڈسپیچ۔",
-      btnBOM: "نیا BOM بنائیں",
-      btnGRN: "مال ریسیونگ (GRN)",
+      modTitle: "مینوفیکچرنگ ماڈیولز و فوری رسائی",
+      modSub: "کسی بھی ماڈیول پر کلک کر کے انتظام کریں",
+      cardPO: "پرچیز آرڈر (PO)",
+      cardSubPO: "خام مال و پرزہ جات خریداری",
+      cardGRN: "را مٹیریل ریسیونگ (GRN)",
+      cardSubGRN: "سپلائر چالان و مال وصولی",
+      cardRaw: "را سٹور انوینٹری",
+      cardSubRaw: "پرزہ جات، تھیلی، سٹیکر، لوگو",
+      cardSampling: "سیمپلنگ و ریسیپی",
+      cardSubSampling: "ماسٹر پارٹ ریسیپیز",
+      cardBOM: "بل آف مٹیریل (BOM)",
+      cardSubBOM: "خودکار سٹاک و ریسیپی حساب",
+      cardWO: "پروڈکشن ورک آرڈر",
+      cardSubWO: "5 مراحل پر مشتمل اسمبلی",
+      cardFG: "فنش گڈز و پیکنگ",
+      cardSubFG: "تیار سٹاک مع تھیلی، سٹیکر، لوگو",
+      cardDispatch: "ڈسپیچ چالان و گیٹ پاس",
+      cardSubDispatch: "روانگی چالان و گیٹ پاس",
+      cardHR: "ایچ آر و ٹھیکہ سسٹم",
+      cardSubHR: "حاضری و پر پیس ٹھیکہ اجرت",
+      cardRBAC: "رولز و یوزر کنٹرول",
+      cardSubRBAC: "سسٹم پرمیشنز و اختیارات",
       woTblTitle: "جاری پروڈکشن ورک آرڈرز",
       viewAll: "سب دیکھیں",
       stockTblTitle: "کم سٹاک الرٹ (را سٹور)",
@@ -387,6 +431,10 @@ const I18N = {
       btnConvert: "ورک آرڈر میں تبدیل کریں",
       savedTitle: "محفوظ شدہ بل آف مٹیریلز"
     },
+    sampling: {
+      title: "سیمپلنگ و ماسٹر ریسیپی",
+      sub: "مین پارٹ، چائلڈ پارٹس، پیکنگ تھیلی، سٹیکر اور لوگو کی ریسیپی ڈیفینیشن"
+    },
     wo: {
       title: "پروڈکشن اور ورک آرڈر مراحل",
       sub: "کٹنگ، سب اسمبلی، ویلڈنگ، کوالٹی چیک، اور پیکنگ (ساتھ پر پیس ٹھیکہ ورک اندراج)"
@@ -417,137 +465,168 @@ function setLanguage(lang, reloadView = true) {
   localStorage.setItem("mufti_erp_lang", lang);
 
   const html = document.getElementById("html-root");
-  html.setAttribute("lang", lang);
-  html.setAttribute("dir", lang === "ur" ? "rtl" : "ltr");
+  if (html) {
+    html.setAttribute("lang", lang);
+    html.setAttribute("dir", lang === "ur" ? "rtl" : "ltr");
+  }
 
   // Toggle button active states in Header
   const btnEn = document.getElementById("lang-btn-en");
   const btnUr = document.getElementById("lang-btn-ur");
 
   if (lang === "en") {
-    btnEn.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-sm";
-    btnUr.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white";
+    if (btnEn) btnEn.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-sm";
+    if (btnUr) btnUr.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white";
   } else {
-    btnUr.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-sm";
-    btnEn.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white";
+    if (btnUr) btnUr.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-sm";
+    if (btnEn) btnEn.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white";
   }
 
-  // Update Header & Nav Static Texts
   const t = I18N[lang];
-  document.getElementById("header-brand-name").innerText = t.brandName;
-  document.getElementById("header-brand-sub").innerText = t.brandSub;
-  document.getElementById("label-user-role").innerText = t.userRole;
-  document.getElementById("sidebar-label-nav").innerText = t.navMenu;
+
+  // Header & Nav
+  setText("header-brand-name", t.brandName);
+  setText("header-brand-sub", t.brandSub);
+  setText("label-user-role", t.userRole);
+  setText("sidebar-label-nav", t.navMenu);
 
   // Role selector options
   const roleSel = document.getElementById("role-selector");
-  roleSel.options[0].text = t.roles.Admin;
-  roleSel.options[1].text = t.roles.Storekeeper;
-  roleSel.options[2].text = t.roles.Production;
-  roleSel.options[3].text = t.roles.HR;
-  roleSel.options[4].text = t.roles.Dispatch;
+  if (roleSel && roleSel.options.length >= 5) {
+    roleSel.options[0].text = t.roles.Admin;
+    roleSel.options[1].text = t.roles.Storekeeper;
+    roleSel.options[2].text = t.roles.Production;
+    roleSel.options[3].text = t.roles.HR;
+    roleSel.options[4].text = t.roles.Dispatch;
+  }
 
   // Nav Items
-  document.getElementById("nav-txt-dashboard").innerText = t.nav.dashboard;
-  document.getElementById("nav-txt-po").innerText = t.nav.po;
-  document.getElementById("nav-txt-grn").innerText = t.nav.grn;
-  document.getElementById("nav-txt-raw_store").innerText = t.nav.raw_store;
-  document.getElementById("nav-txt-sampling").innerText = t.nav.sampling;
-  document.getElementById("nav-txt-bom").innerText = t.nav.bom;
-  document.getElementById("nav-txt-work_orders").innerText = t.nav.work_orders;
-  document.getElementById("nav-txt-fg").innerText = t.nav.fg;
-  document.getElementById("nav-txt-dispatch").innerText = t.nav.dispatch;
-  document.getElementById("nav-txt-hr").innerText = t.nav.hr;
-  document.getElementById("nav-txt-rbac").innerText = t.nav.rbac;
+  setText("nav-txt-dashboard", t.nav.dashboard);
+  setText("nav-txt-po", t.nav.po);
+  setText("nav-txt-grn", t.nav.grn);
+  setText("nav-txt-raw_store", t.nav.raw_store);
+  setText("nav-txt-sampling", t.nav.sampling);
+  setText("nav-txt-bom", t.nav.bom);
+  setText("nav-txt-work_orders", t.nav.work_orders);
+  setText("nav-txt-fg", t.nav.fg);
+  setText("nav-txt-dispatch", t.nav.dispatch);
+  setText("nav-txt-hr", t.nav.hr);
+  setText("nav-txt-rbac", t.nav.rbac);
 
-  // Dashboard texts
-  document.getElementById("stat-lbl-raw").innerText = t.dash.rawLbl;
-  document.getElementById("stat-lbl-low-alert").innerText = t.dash.lowAlert;
-  document.getElementById("stat-lbl-wo").innerText = t.dash.woLbl;
-  document.getElementById("stat-lbl-wo-sub").innerText = t.dash.woSub;
-  document.getElementById("stat-lbl-fg").innerText = t.dash.fgLbl;
-  document.getElementById("stat-lbl-fg-sub").innerText = t.dash.fgSub;
-  document.getElementById("stat-lbl-att").innerText = t.dash.attLbl;
-  document.getElementById("stat-lbl-att-sub").innerText = t.dash.attSub;
-  document.getElementById("banner-title").innerText = t.dash.bannerTitle;
-  document.getElementById("banner-desc").innerText = t.dash.bannerDesc;
-  document.getElementById("btn-create-bom-banner").innerText = t.dash.btnBOM;
-  document.getElementById("btn-create-grn-banner").innerText = t.dash.btnGRN;
-  document.getElementById("dash-tbl-wo-title").innerText = t.dash.woTblTitle;
-  document.getElementById("dash-tbl-wo-viewall").innerText = t.dash.viewAll;
-  document.getElementById("dash-tbl-stock-title").innerText = t.dash.stockTblTitle;
-  document.getElementById("dash-tbl-stock-viewall").innerText = t.dash.viewStore;
-  document.getElementById("th-wo-num").innerText = t.dash.thWoNum;
-  document.getElementById("th-wo-art").innerText = t.dash.thWoArt;
-  document.getElementById("th-wo-qty").innerText = t.dash.thWoQty;
-  document.getElementById("th-wo-st").innerText = t.dash.thWoSt;
-  document.getElementById("th-st-code").innerText = t.dash.thStCode;
-  document.getElementById("th-st-name").innerText = t.dash.thStName;
-  document.getElementById("th-st-stock").innerText = t.dash.thStStock;
-  document.getElementById("th-st-alert").innerText = t.dash.thStAlert;
+  // Top Stat Tiles
+  setText("stat-lbl-raw", t.dash.rawLbl);
+  setText("stat-lbl-low-alert", t.dash.lowAlert);
+  setText("stat-lbl-wo", t.dash.woLbl);
+  setText("stat-lbl-wo-sub", t.dash.woSub);
+  setText("stat-lbl-fg", t.dash.fgLbl);
+  setText("stat-lbl-fg-sub", t.dash.fgSub);
+  setText("stat-lbl-att", t.dash.attLbl);
+  setText("stat-lbl-att-sub", t.dash.attSub);
+
+  // Dashboard Module Cards
+  setText("dash-mod-title", t.dash.modTitle);
+  setText("dash-mod-sub", t.dash.modSub);
+  setText("card-txt-po", t.dash.cardPO);
+  setText("card-sub-po", t.dash.cardSubPO);
+  setText("card-txt-grn", t.dash.cardGRN);
+  setText("card-sub-grn", t.dash.cardSubGRN);
+  setText("card-txt-raw_store", t.dash.cardRaw);
+  setText("card-sub-raw_store", t.dash.cardSubRaw);
+  setText("card-txt-sampling", t.dash.cardSampling);
+  setText("card-sub-sampling", t.dash.cardSubSampling);
+  setText("card-txt-bom", t.dash.cardBOM);
+  setText("card-sub-bom", t.dash.cardSubBOM);
+  setText("card-txt-work_orders", t.dash.cardWO);
+  setText("card-sub-work_orders", t.dash.cardSubWO);
+  setText("card-txt-fg", t.dash.cardFG);
+  setText("card-sub-fg", t.dash.cardSubFG);
+  setText("card-txt-dispatch", t.dash.cardDispatch);
+  setText("card-sub-dispatch", t.dash.cardSubDispatch);
+  setText("card-txt-hr", t.dash.cardHR);
+  setText("card-sub-hr", t.dash.cardSubHR);
+  setText("card-txt-rbac", t.dash.cardRBAC);
+  setText("card-sub-rbac", t.dash.cardSubRBAC);
+
+  // Dashboard Tables
+  setText("dash-tbl-wo-title", t.dash.woTblTitle);
+  setText("dash-tbl-wo-viewall", t.dash.viewAll);
+  setText("dash-tbl-stock-title", t.dash.stockTblTitle);
+  setText("dash-tbl-stock-viewall", t.dash.viewStore);
+  setText("th-wo-num", t.dash.thWoNum);
+  setText("th-wo-art", t.dash.thWoArt);
+  setText("th-wo-qty", t.dash.thWoQty);
+  setText("th-wo-st", t.dash.thWoSt);
+  setText("th-st-code", t.dash.thStCode);
+  setText("th-st-name", t.dash.thStName);
+  setText("th-st-stock", t.dash.thStStock);
+  setText("th-st-alert", t.dash.thStAlert);
 
   // PO texts
-  document.getElementById("po-page-title").innerText = t.po.title;
-  document.getElementById("po-page-sub").innerText = t.po.sub;
-  document.getElementById("po-btn-new").innerText = t.po.btnNew;
-  document.getElementById("th-po-num").innerText = t.po.thNum;
-  document.getElementById("th-po-sup").innerText = t.po.thSup;
-  document.getElementById("th-po-date").innerText = t.po.thDate;
-  document.getElementById("th-po-tot").innerText = t.po.thTot;
-  document.getElementById("th-po-st").innerText = t.po.thSt;
-  document.getElementById("th-po-act").innerText = t.po.thAct;
+  setText("po-page-title", t.po.title);
+  setText("po-page-sub", t.po.sub);
+  setText("po-btn-new", t.po.btnNew);
+  setText("th-po-num", t.po.thNum);
+  setText("th-po-sup", t.po.thSup);
+  setText("th-po-date", t.po.thDate);
+  setText("th-po-tot", t.po.thTot);
+  setText("th-po-st", t.po.thSt);
+  setText("th-po-act", t.po.thAct);
 
   // GRN texts
-  document.getElementById("grn-page-title").innerText = t.grn.title;
-  document.getElementById("grn-page-sub").innerText = t.grn.sub;
-  document.getElementById("grn-btn-new").innerText = t.grn.btnNew;
-  document.getElementById("th-grn-num").innerText = t.grn.thNum;
-  document.getElementById("th-grn-dc").innerText = t.grn.thDc;
-  document.getElementById("th-grn-sup").innerText = t.grn.thSup;
-  document.getElementById("th-grn-date").innerText = t.grn.thDate;
-  document.getElementById("th-grn-by").innerText = t.grn.thBy;
-  document.getElementById("th-grn-act").innerText = t.grn.thAct;
+  setText("grn-page-title", t.grn.title);
+  setText("grn-page-sub", t.grn.sub);
+  setText("grn-btn-new", t.grn.btnNew);
+  setText("th-grn-num", t.grn.thNum);
+  setText("th-grn-dc", t.grn.thDc);
+  setText("th-grn-sup", t.grn.thSup);
+  setText("th-grn-date", t.grn.thDate);
+  setText("th-grn-by", t.grn.thBy);
+  setText("th-grn-act", t.grn.thAct);
 
   // Raw store texts
-  document.getElementById("raw-page-title").innerText = t.raw.title;
-  document.getElementById("raw-page-sub").innerText = t.raw.sub;
-  document.getElementById("raw-btn-new").innerText = t.raw.btnNew;
-  document.getElementById("th-raw-code").innerText = t.raw.thCode;
-  document.getElementById("th-raw-name").innerText = t.raw.thName;
-  document.getElementById("th-raw-cat").innerText = t.raw.thCat;
-  document.getElementById("th-raw-stk").innerText = t.raw.thStk;
-  document.getElementById("th-raw-unit").innerText = t.raw.thUnit;
-  document.getElementById("th-raw-price").innerText = t.raw.thPrice;
-  document.getElementById("th-raw-loc").innerText = t.raw.thLoc;
-  document.getElementById("th-raw-stat").innerText = t.raw.thStat;
+  setText("raw-page-title", t.raw.title);
+  setText("raw-page-sub", t.raw.sub);
+  setText("raw-btn-new", t.raw.btnNew);
+  setText("th-raw-code", t.raw.thCode);
+  setText("th-raw-name", t.raw.thName);
+  setText("th-raw-cat", t.raw.thCat);
+  setText("th-raw-stk", t.raw.thStk);
+  setText("th-raw-unit", t.raw.thUnit);
+  setText("th-raw-price", t.raw.thPrice);
+  setText("th-raw-loc", t.raw.thLoc);
+  setText("th-raw-stat", t.raw.thStat);
 
   // BOM texts
-  document.getElementById("bom-page-title").innerText = t.bom.title;
-  document.getElementById("bom-page-sub").innerText = t.bom.sub;
-  document.getElementById("bom-lbl-select").innerText = t.bom.lblSelect;
-  document.getElementById("bom-lbl-qty").innerText = t.bom.lblQty;
-  document.getElementById("bom-btn-calc").innerText = t.bom.btnCalc;
-  document.getElementById("bom-saved-title").innerText = t.bom.savedTitle;
+  setText("bom-page-title", t.bom.title);
+  setText("bom-page-sub", t.bom.sub);
+  setText("bom-lbl-select", t.bom.lblSelect);
+  setText("bom-lbl-qty", t.bom.lblQty);
+  setText("bom-btn-calc", t.bom.btnCalc);
+  setText("bom-saved-title", t.bom.savedTitle);
 
   // Other modules
-  document.getElementById("sample-page-title").innerText = t.sampling ? t.sampling.title : (lang === "ur" ? "سیمپلنگ و ماسٹر ریسیپی" : "Sampling & Master Recipe");
-  document.getElementById("sample-page-sub").innerText = lang === "ur" ? "مین پارٹ، چائلڈ پارٹس، پیکنگ تھیلی، سٹیکر اور لوگو کی ریسیپی ڈیفینیشن" : "Define auto part components: core parts, child parts, packaging bags, stickers & logos";
-  document.getElementById("wo-page-title").innerText = t.wo.title;
-  document.getElementById("wo-page-sub").innerText = t.wo.sub;
-  document.getElementById("fg-page-title").innerText = t.fg.title;
-  document.getElementById("fg-page-sub").innerText = t.fg.sub;
-  document.getElementById("disp-page-title").innerText = t.disp.title;
-  document.getElementById("disp-page-sub").innerText = t.disp.sub;
-  document.getElementById("disp-btn-new").innerText = t.disp.btnNew;
-  document.getElementById("hr-page-title").innerText = t.hr.title;
-  document.getElementById("hr-page-sub").innerText = t.hr.sub;
-  document.getElementById("hr-btn-new-emp").innerText = t.hr.btnNewEmp;
-  document.getElementById("rbac-page-title").innerText = t.rbac.title;
-  document.getElementById("rbac-page-sub").innerText = t.rbac.sub;
+  setText("sample-page-title", t.sampling ? t.sampling.title : (lang === "ur" ? "سیمپلنگ و ماسٹر ریسیپی" : "Sampling & Master Recipe"));
+  setText("sample-page-sub", t.sampling ? t.sampling.sub : (lang === "ur" ? "مین پارٹ، چائلڈ پارٹس، پیکنگ تھیلی، سٹیکر اور لوگو کی ریسیپی ڈیفینیشن" : "Define auto part components: core parts, child parts, packaging bags, stickers & logos"));
+  setText("wo-page-title", t.wo.title);
+  setText("wo-page-sub", t.wo.sub);
+  setText("fg-page-title", t.fg.title);
+  setText("fg-page-sub", t.fg.sub);
+  setText("disp-page-title", t.disp.title);
+  setText("disp-page-sub", t.disp.sub);
+  setText("disp-btn-new", t.disp.btnNew);
+  setText("hr-page-title", t.hr.title);
+  setText("hr-page-sub", t.hr.sub);
+  setText("hr-btn-new-emp", t.hr.btnNewEmp);
+  setText("rbac-page-title", t.rbac.title);
+  setText("rbac-page-sub", t.rbac.sub);
 
   if (reloadView) {
     navigate(currentView);
+  } else {
+    loadDashboardStats();
   }
+
+  if (window.lucide) lucide.createIcons();
 }
 
 async function initialLoad() {
