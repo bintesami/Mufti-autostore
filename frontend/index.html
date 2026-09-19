@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ur" dir="ltr">
+<html lang="en" dir="ltr" id="html-root">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,13 +11,13 @@
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
-  <!-- Google Fonts: Plus Jakarta Sans (English) & Noto Nastaliq Urdu (Urdu Nastaleeq Fallback) -->
+  <!-- Google Fonts: Plus Jakarta Sans (English) & Noto Nastaliq Urdu (Urdu Fallback) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
   <style>
-    /* Jameel Noori Nastaleeq Webfont Definition */
+    /* Jameel Noori Nastaleeq Webfont */
     @font-face {
       font-family: 'Jameel Noori Nastaleeq';
       src: url('https://fonts.cdnfonts.com/s/72688/JameelNooriNastaleeq.woff') format('woff'),
@@ -32,36 +32,61 @@
       --font-ur: 'Jameel Noori Nastaleeq', 'Noto Nastaliq Urdu', serif;
     }
 
-    body {
+    /* English Mode Defaults */
+    html[lang="en"] body {
       font-family: var(--font-en);
-      background-color: #f8fafc;
-      color: #0f172a;
+      letter-spacing: -0.015em;
     }
 
-    /* Harmonized Urdu Typography */
-    .urdu, .urdu-font, [lang="ur"] {
-      font-family: var(--font-ur);
-      line-height: 2.0 !important;
-      letter-spacing: 0px;
+    /* Pure Urdu Mode Styles */
+    html[lang="ur"] body, html[lang="ur"] .urdu-font, html[lang="ur"] button, html[lang="ur"] input, html[lang="ur"] select, html[lang="ur"] textarea {
+      font-family: var(--font-ur) !important;
+      line-height: 2.1 !important;
+      letter-spacing: 0px !important;
     }
 
-    /* English Headings & Badges */
-    .font-en {
-      font-family: var(--font-en);
-      letter-spacing: -0.02em;
+    /* Modular Boxed Sidebar Item */
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.65rem 0.95rem;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #334155;
+      background: transparent;
+      border-inline-start: 4px solid transparent;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .nav-item:hover {
+      background: #f8fafc;
+      color: #23688b;
+    }
+    .nav-item.active {
+      background: #f0f7fa;
+      color: #23688b;
+      font-weight: 700;
+      border-inline-start-color: #23688b;
+    }
+    .nav-item.active .nav-icon {
+      color: #23688b;
     }
 
-    /* Subtle Glass & Shadows */
-    .glass-card {
+    /* Stat Cards */
+    .stat-tile {
       background: #ffffff;
       border: 1px solid #e2e8f0;
-      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+      border-radius: 1.25rem;
+      padding: 1.35rem 1.5rem;
+      box-shadow: 0 2px 8px -1px rgba(15, 23, 42, 0.04);
+      transition: all 0.2s ease;
     }
-    
-    .glass-card-hover:hover {
+    .stat-tile:hover {
       border-color: #cbd5e1;
-      box-shadow: 0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
-      transition: all 0.2s ease-in-out;
+      box-shadow: 0 10px 25px -4px rgba(15, 23, 42, 0.08);
+      transform: translateY(-2px);
     }
 
     /* Custom scrollbar */
@@ -78,6 +103,19 @@
     }
     ::-webkit-scrollbar-thumb:hover {
       background: #94a3b8;
+    }
+
+    /* Smooth touch scrolling for tables and mobile sidebar */
+    .overflow-x-auto, .overflow-y-auto {
+      -webkit-overflow-scrolling: touch;
+    }
+    /* Hide scrollbar for clean horizontal tabs */
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-none {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     @media print {
@@ -103,156 +141,203 @@
 </head>
 <body class="bg-slate-50/80 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-amber-500 selection:text-white">
 
-  <!-- TOP HEADER (Deep Navy & Industrial Gold) -->
-  <header class="bg-slate-950 text-white sticky top-0 z-40 border-b border-slate-800/80 shadow-lg backdrop-blur-md bg-opacity-95">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-      <!-- Brand & Title -->
-      <div class="flex items-center space-x-3.5 rtl:space-x-reverse">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/25 border border-amber-300/30">
-          <i data-lucide="cog" class="w-6 h-6 text-slate-950 animate-[spin_10s_linear_infinite]"></i>
-        </div>
-        <div>
-          <div class="flex items-center gap-2">
-            <h1 class="text-base sm:text-lg font-extrabold tracking-tight text-white font-en flex items-center gap-2">
+  <!-- TOP HEADER (Executive Petrol Blue Theme) -->
+  <header class="bg-[#23688b] text-white sticky top-0 z-40 border-b border-[#1b5370] shadow-md">
+    <div class="max-w-[1650px] w-full mx-auto px-3 sm:px-6 lg:px-8 h-15 flex items-center justify-between gap-2 py-2">
+      
+      <!-- LEFT: Mobile Menu Hamburger + Brand + Refresh + Language -->
+      <div class="flex items-center gap-2.5 sm:gap-4 min-w-0">
+        <!-- Hamburger button (Mobile/Tablet only) -->
+        <button onclick="toggleMobileSidebar(true)" id="mobile-hamburger-btn" class="lg:hidden p-1.5 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition shrink-0" aria-label="Open Navigation" title="Open Navigation">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+
+        <!-- Brand & Title -->
+        <div class="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse min-w-0">
+          <div class="w-8 h-8 rounded-lg bg-white text-[#23688b] flex items-center justify-center shadow-sm font-black text-base shrink-0">
+            <i data-lucide="cog" class="w-5 h-5 animate-[spin_10s_linear_infinite]"></i>
+          </div>
+          <div class="min-w-0">
+            <h1 id="header-brand-name" class="text-sm sm:text-base font-extrabold tracking-tight text-white truncate max-w-[130px] xs:max-w-[180px] sm:max-w-none">
               MUFTI AUTO STORE
             </h1>
-            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 tracking-wide font-en">
-              ERP ENTERPRISE
-            </span>
           </div>
-          <p class="text-[13px] text-amber-200/80 urdu leading-none mt-0.5">آٹو پارٹس مینوفیکچرنگ اینڈ پروڈکشن مینجمنٹ سسٹم</p>
+        </div>
+
+        <!-- Refresh Button (Next to Brand, matching reference screenshot) -->
+        <button onclick="refreshCurrentView()" title="Refresh Data" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition border border-white/20 shadow-xs shrink-0">
+          <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+        </button>
+
+        <!-- Language Switcher Button (English / اردو Toggle) -->
+        <div class="inline-flex p-0.5 bg-black/20 rounded-lg border border-white/15 shadow-inner shrink-0">
+          <button onclick="setLanguage('en')" id="lang-btn-en" class="px-2 sm:px-2.5 py-0.5 rounded text-[11px] font-bold transition flex items-center gap-1 bg-white text-[#23688b] shadow-xs">
+            <span>🇬🇧</span>
+            <span class="hidden xs:inline sm:inline">English</span>
+          </button>
+          <button onclick="setLanguage('ur')" id="lang-btn-ur" class="px-2 sm:px-2.5 py-0.5 rounded text-[11px] font-bold transition flex items-center gap-1 text-white/80 hover:text-white">
+            <span>🇵🇰</span>
+            <span class="hidden xs:inline sm:inline">اردو</span>
+          </button>
         </div>
       </div>
 
-      <!-- User Role Selector (Live RBAC Switcher) -->
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-800 shadow-inner">
-          <i data-lucide="shield-check" class="w-4 h-4 text-amber-400"></i>
-          <span class="text-xs text-slate-300 font-medium urdu">یوزر رول:</span>
-          <select id="role-selector" onchange="changeActiveRole(this.value)" class="bg-slate-950 text-amber-300 text-xs font-bold rounded-lg px-2.5 py-1 border border-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-400 cursor-pointer font-en">
-            <option value="Admin">Super Admin (تمام ماڈیولز)</option>
-            <option value="Storekeeper">Store Incharge (را سٹور / جی آر این)</option>
-            <option value="Production">Production Manager (BOM / ورک آرڈر)</option>
-            <option value="HR">HR Manager (حاضری / ٹھیکہ / چھٹیاں)</option>
-            <option value="Dispatch">Dispatch Officer (فنش گڈز / چالان)</option>
+      <!-- RIGHT: User Role Selector & Profile Avatar (matching reference screenshot) -->
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div class="flex items-center gap-1 sm:gap-2 bg-white/10 px-2 sm:px-2.5 py-1 rounded-lg border border-white/20 shadow-inner">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-white shrink-0"></i>
+          <span id="label-user-role" class="text-xs text-white/90 font-medium hidden md:inline">User Role:</span>
+          <select id="role-selector" onchange="changeActiveRole(this.value)" class="bg-transparent text-white text-[11px] sm:text-xs font-bold rounded px-1.5 py-0.5 focus:outline-none cursor-pointer max-w-[110px] xs:max-w-[140px] sm:max-w-none truncate [&>option]:bg-slate-900 [&>option]:text-white">
+            <option value="Admin">Super Admin (All Modules)</option>
+            <option value="Storekeeper">Store Incharge (Raw Store / GRN)</option>
+            <option value="Production">Production Manager (BOM / Work Order)</option>
+            <option value="HR">HR Manager (Attendance / Piece-Rate)</option>
+            <option value="Dispatch">Dispatch Officer (Finished Goods / Challan)</option>
           </select>
         </div>
 
-        <button onclick="refreshCurrentView()" title="Refresh Data" class="p-2 text-slate-400 hover:text-amber-300 hover:bg-slate-800/80 rounded-xl transition border border-transparent hover:border-slate-700">
-          <i data-lucide="rotate-cw" class="w-4 h-4"></i>
-        </button>
+        <!-- Global indicator & User Avatar Silhouette (matching reference screenshot) -->
+        <div class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white flex items-center justify-center transition cursor-pointer shadow-xs shrink-0" title="System Administrator">
+          <i data-lucide="user" class="w-4.5 h-4.5"></i>
+        </div>
       </div>
     </div>
   </header>
 
+  <!-- SUB-HEADER BREADCRUMB / TAB BAR (Matching reference screenshot) -->
+  <div class="bg-slate-100 border-b border-slate-200 px-3 sm:px-6 lg:px-8">
+    <div class="max-w-[1650px] w-full mx-auto flex items-center justify-between">
+      <div class="inline-flex items-center gap-2 bg-white border-x border-t-2 border-t-[#23688b] border-slate-200 px-4 py-1.5 text-xs font-bold text-slate-800 rounded-t shadow-xs" id="active-tab-indicator">
+        <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-[#23688b]" id="breadcrumb-icon"></i>
+        <span id="breadcrumb-title">Dashboard</span>
+      </div>
+    </div>
+  </div>
+
   <!-- MAIN APP CONTAINER (Sidebar + Content) -->
-  <div class="flex-1 flex max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 gap-6">
+  <div class="flex-1 flex max-w-[1650px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-5 gap-5 sm:gap-6 relative">
 
-    <!-- SIDEBAR NAVIGATION -->
-    <aside class="w-64 shrink-0">
-      <div class="glass-card rounded-2xl p-3 sticky top-24">
-        <div class="px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-2 flex items-center justify-between">
-          <span class="font-en">NAVIGATION</span>
-          <span class="urdu text-slate-400 text-xs">ماڈیولز</span>
-        </div>
-        <nav class="space-y-1" id="sidebar-nav">
-          <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/80 transition">
+    <!-- Mobile Backdrop Overlay -->
+    <div id="sidebar-backdrop" onclick="toggleMobileSidebar(false)" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 hidden transition-opacity duration-300 lg:hidden"></div>
+
+    <!-- SIDEBAR NAVIGATION (Drawer on Mobile, Sleek Static Column on Desktop) -->
+    <aside id="app-sidebar" class="fixed inset-y-0 start-0 z-50 w-64 sm:w-72 bg-white shadow-2xl lg:shadow-sm border border-slate-200 transition-transform duration-300 ease-in-out -translate-x-full rtl:translate-x-full lg:translate-x-0 lg:rtl:translate-x-0 lg:static lg:z-auto lg:w-64 xl:w-72 lg:shrink-0 lg:rounded-xl overflow-y-auto max-h-screen lg:max-h-[calc(100vh-120px)] lg:sticky lg:top-24">
+      
+      <!-- 4 Quick-Action Colored Square Tiles (Exact match to reference screenshot) -->
+      <div class="grid grid-cols-4 gap-1 p-2 bg-slate-50 border-b border-slate-200">
+        <!-- 1. Green Button: Raw Store -->
+        <button onclick="navigate('raw_store')" title="Raw Store Inventory" class="h-8 rounded bg-[#5cb85c] hover:bg-[#4cae4c] text-white flex items-center justify-center transition shadow-xs">
+          <i data-lucide="boxes" class="w-4 h-4"></i>
+        </button>
+        <!-- 2. Blue Button: Purchase Orders -->
+        <button onclick="navigate('po')" title="Purchase Orders" class="h-8 rounded bg-[#0284c7] hover:bg-[#0369a1] text-white flex items-center justify-center transition shadow-xs">
+          <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+        </button>
+        <!-- 3. Orange Button: Production Work Orders -->
+        <button onclick="navigate('work_orders')" title="Production Work Orders" class="h-8 rounded bg-[#f0ad4e] hover:bg-[#eea236] text-white flex items-center justify-center transition shadow-xs">
+          <i data-lucide="factory" class="w-4 h-4"></i>
+        </button>
+        <!-- 4. Brick/Red Button: HR & Piece-Rate -->
+        <button onclick="navigate('hr')" title="HR & Piece-Rate" class="h-8 rounded bg-[#d9534f] hover:bg-[#d43f3a] text-white flex items-center justify-center transition shadow-xs">
+          <i data-lucide="users" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Mobile Close Header -->
+      <div class="lg:hidden px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 flex items-center justify-between">
+        <span id="sidebar-label-nav">NAVIGATION MENU</span>
+        <button onclick="toggleMobileSidebar(false)" class="p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition" title="Close Menu">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+        
+        <nav class="divide-y divide-slate-100/90" id="sidebar-nav">
+          <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group active">
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
-                <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
-              </div>
-              <span class="urdu text-sm font-semibold">ڈیش بورڈ (Dashboard)</span>
+              <i data-lucide="layout-dashboard" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-dashboard" class="leading-normal">Dashboard</span>
             </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('po')" id="nav-po" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/80 transition">
+          <button onclick="navigate('po')" id="nav-po" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
-                <i data-lucide="shopping-cart" class="w-4 h-4"></i>
-              </div>
-              <span class="urdu text-sm font-semibold">پرچیز آرڈر (PO)</span>
+              <i data-lucide="shopping-cart" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-po" class="leading-normal">Purchase Orders</span>
             </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('grn')" id="nav-grn" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/80 transition">
+          <button onclick="navigate('grn')" id="nav-grn" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                <i data-lucide="package-check" class="w-4 h-4"></i>
-              </div>
-              <span class="urdu text-sm font-semibold">را مٹیریل ریسیونگ (GRN)</span>
+              <i data-lucide="package-check" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-grn" class="leading-normal">Raw Receiving (GRN)</span>
             </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('raw_store')" id="nav-raw_store" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/80 transition">
+          <button onclick="navigate('raw_store')" id="nav-raw_store" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
-                <i data-lucide="boxes" class="w-4 h-4"></i>
-              </div>
-              <span class="urdu text-sm font-semibold">را سٹور انوینٹری (Stock)</span>
+              <i data-lucide="boxes" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-raw_store" class="leading-normal">Raw Store Inventory</span>
             </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('sampling')" id="nav-sampling" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/80 transition">
+          <button onclick="navigate('sampling')" id="nav-sampling" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center">
-                <i data-lucide="flask-conical" class="w-4 h-4"></i>
-              </div>
-              <span class="urdu text-sm font-semibold">سیمپلنگ و ریسیپی (Recipe)</span>
+              <i data-lucide="flask-conical" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-sampling" class="leading-normal">Sampling & Recipe</span>
             </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('bom')" id="nav-bom" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/80 transition">
+          <button onclick="navigate('bom')" id="nav-bom" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center">
-                <i data-lucide="clipboard-list" class="w-4 h-4"></i>
-              </div>
-              <span class="urdu text-sm font-semibold">بل آف مٹیریل (BOM)</span>
+              <i data-lucide="clipboard-list" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-bom" class="leading-normal">Bill of Materials (BOM)</span>
             </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('work_orders')" id="nav-work_orders" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/80 transition">
+          <button onclick="navigate('work_orders')" id="nav-work_orders" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-orange-50 text-orange-600 flex items-center justify-center">
-                <i data-lucide="factory" class="w-4 h-4"></i>
-              </div>
-              <span class="urdu text-sm font-semibold">پروڈکشن ورک آرڈر (WO)</span>
+              <i data-lucide="factory" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-work_orders" class="leading-normal">Production Work Orders</span>
             </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('fg')" id="nav-fg" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/80 transition">
+          <button onclick="navigate('fg')" id="nav-fg" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
-                <i data-lucide="box" class="w-4 h-4"></i>
-              </div>
-              <span class="urdu text-sm font-semibold">فنش گڈز و پیکنگ (FG)</span>
+              <i data-lucide="box" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-fg" class="leading-normal">Finished Goods (FG)</span>
             </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('dispatch')" id="nav-dispatch" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/80 transition">
+          <button onclick="navigate('dispatch')" id="nav-dispatch" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-cyan-50 text-cyan-600 flex items-center justify-center">
-                <i data-lucide="truck" class="w-4 h-4"></i>
-              </div>
-              <span class="urdu text-sm font-semibold">ڈسپیچ چالان (Outward)</span>
+              <i data-lucide="truck" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-dispatch" class="leading-normal">Outward Dispatch</span>
             </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('hr')" id="nav-hr" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/80 transition">
+          <button onclick="navigate('hr')" id="nav-hr" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center">
-                <i data-lucide="users" class="w-4 h-4"></i>
-              </div>
-              <span class="urdu text-sm font-semibold">ایچ آر و ٹھیکہ (HR)</span>
+              <i data-lucide="users" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-hr" class="leading-normal">HR & Piece-Rate</span>
             </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('rbac')" id="nav-rbac" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-100/80 transition">
+          <button onclick="navigate('rbac')" id="nav-rbac" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
             <div class="flex items-center gap-2.5">
-              <div class="w-7 h-7 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center">
-                <i data-lucide="shield-check" class="w-4 h-4"></i>
-              </div>
-              <span class="urdu text-sm font-semibold">رولز و یوزر کنٹرول (RBAC)</span>
+              <i data-lucide="shield-check" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-rbac" class="leading-normal">User Roles (RBAC)</span>
             </div>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
         </nav>
       </div>
@@ -263,79 +348,139 @@
 
       <!-- ================= 1. DASHBOARD VIEW ================= -->
       <section id="view-dashboard" class="space-y-6">
-        <!-- Top Stats Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="glass-card glass-card-hover p-5 rounded-2xl flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-slate-500 urdu">کل را مٹیریل آئٹمز</p>
-              <h3 class="text-2xl font-black text-slate-900 mt-0.5 font-en" id="stat-raw-items">0</h3>
-              <p class="text-xs text-amber-700 mt-1 flex items-center gap-1 font-semibold urdu">
-                <i data-lucide="alert-triangle" class="w-3.5 h-3.5 text-amber-600"></i>
-                <span id="stat-low-stock" class="font-en">0</span> آئٹمز کم سٹاک الرٹ
+        <!-- Top Stats Cards (Modular Tiles) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          <!-- 1. Raw Materials -->
+          <div class="stat-tile p-5 sm:p-6 min-h-[140px] flex items-center justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <p id="stat-lbl-raw" class="text-base sm:text-lg font-black text-slate-800 leading-snug">Total Raw Materials</p>
+              <h3 class="text-4xl sm:text-5xl font-black text-slate-900 mt-2 font-en tracking-tight" id="stat-raw-items">0</h3>
+              <p class="text-xs sm:text-sm text-amber-700 mt-2 flex items-center gap-1.5 font-bold">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600 shrink-0"></i>
+                <span id="stat-low-stock">0</span> <span id="stat-lbl-low-alert">Low Stock Items</span>
               </p>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 border border-amber-500/20 flex items-center justify-center">
-              <i data-lucide="boxes" class="w-6 h-6"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-amber-500/10 text-amber-600 border border-amber-500/25 flex items-center justify-center shrink-0 shadow-sm">
+              <i data-lucide="boxes" class="w-8 h-8 sm:w-10 sm:h-10"></i>
             </div>
           </div>
 
-          <div class="glass-card glass-card-hover p-5 rounded-2xl flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-slate-500 urdu">ایکٹو ورک آرڈرز</p>
-              <h3 class="text-2xl font-black text-slate-900 mt-0.5 font-en" id="stat-active-wo">0</h3>
-              <p class="text-xs text-blue-700 mt-1 font-semibold urdu">مراحل میں پروڈکشن جاری</p>
+          <!-- 2. Active Work Orders -->
+          <div class="stat-tile p-5 sm:p-6 min-h-[140px] flex items-center justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <p id="stat-lbl-wo" class="text-base sm:text-lg font-black text-slate-800 leading-snug">Active Work Orders</p>
+              <h3 class="text-4xl sm:text-5xl font-black text-slate-900 mt-2 font-en tracking-tight" id="stat-active-wo">0</h3>
+              <p id="stat-lbl-wo-sub" class="text-xs sm:text-sm text-blue-700 mt-2 font-bold">In Progress Stages</p>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 border border-blue-500/20 flex items-center justify-center">
-              <i data-lucide="factory" class="w-6 h-6"></i>
-            </div>
-          </div>
-
-          <div class="glass-card glass-card-hover p-5 rounded-2xl flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-slate-500 urdu">فنش گڈز سٹاک (FG)</p>
-              <h3 class="text-2xl font-black text-slate-900 mt-0.5 font-en" id="stat-fg-qty">0</h3>
-              <p class="text-xs text-emerald-700 mt-1 font-semibold urdu">پیک شدہ و ڈسپیچ کیلئے تیار</p>
-            </div>
-            <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 flex items-center justify-center">
-              <i data-lucide="package" class="w-6 h-6"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-blue-500/10 text-blue-600 border border-blue-500/25 flex items-center justify-center shrink-0 shadow-sm">
+              <i data-lucide="factory" class="w-8 h-8 sm:w-10 sm:h-10"></i>
             </div>
           </div>
 
-          <div class="glass-card glass-card-hover p-5 rounded-2xl flex items-center justify-between">
-            <div>
-              <p class="text-xs font-bold text-slate-500 urdu">آج کی ورکرز حاضری</p>
-              <h3 class="text-2xl font-black text-slate-900 mt-0.5 font-en" id="stat-attendance">0 / 0</h3>
-              <p class="text-xs text-pink-700 mt-1 font-semibold urdu">ٹھیکہ و تنخواہ دار ملازمین</p>
+          <!-- 3. Finished Goods -->
+          <div class="stat-tile p-5 sm:p-6 min-h-[140px] flex items-center justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <p id="stat-lbl-fg" class="text-base sm:text-lg font-black text-slate-800 leading-snug">Finished Goods Stock</p>
+              <h3 class="text-4xl sm:text-5xl font-black text-slate-900 mt-2 font-en tracking-tight" id="stat-fg-qty">0</h3>
+              <p id="stat-lbl-fg-sub" class="text-xs sm:text-sm text-emerald-700 mt-2 font-bold">Ready for Dispatch</p>
             </div>
-            <div class="w-12 h-12 rounded-2xl bg-pink-500/10 text-pink-600 border border-pink-500/20 flex items-center justify-center">
-              <i data-lucide="user-check" class="w-6 h-6"></i>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-emerald-500/10 text-emerald-600 border border-emerald-500/25 flex items-center justify-center shrink-0 shadow-sm">
+              <i data-lucide="package" class="w-8 h-8 sm:w-10 sm:h-10"></i>
+            </div>
+          </div>
+
+          <!-- 4. Attendance -->
+          <div class="stat-tile p-5 sm:p-6 min-h-[140px] flex items-center justify-between gap-4">
+            <div class="flex-1 min-w-0">
+              <p id="stat-lbl-att" class="text-base sm:text-lg font-black text-slate-800 leading-snug">Today's Attendance</p>
+              <h3 class="text-4xl sm:text-5xl font-black text-slate-900 mt-2 font-en tracking-tight" id="stat-attendance">0 / 0</h3>
+              <p id="stat-lbl-att-sub" class="text-xs sm:text-sm text-pink-700 mt-2 font-bold">Staff & Piece Workers</p>
+            </div>
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-pink-500/10 text-pink-600 border border-pink-500/25 flex items-center justify-center shrink-0 shadow-sm">
+              <i data-lucide="user-check" class="w-8 h-8 sm:w-10 sm:h-10"></i>
             </div>
           </div>
         </div>
 
-        <!-- Quick Workflow Guide Banner -->
-        <div class="bg-gradient-to-r from-slate-950 via-slate-900 to-indigo-950 rounded-2xl p-6 text-white shadow-xl border border-slate-800 relative overflow-hidden">
-          <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
-            <div>
-              <h2 class="text-lg font-bold flex items-center gap-2.5">
-                <span class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-                <span class="urdu text-xl text-amber-300">آٹو پارٹس پروڈکشن فلو</span>
-                <span class="text-xs font-en text-slate-400 border-l border-slate-700 pl-2">Manufacturing Lifecycle</span>
-              </h2>
-              <p class="text-xs text-slate-300 mt-1.5 leading-relaxed max-w-3xl urdu text-sm">
-                1. خام مال کی خریداری (PO) ➔ 2. جی آر این و ڈیلیوری چالان ریسیونگ (GRN) ➔ 3. سیمپلنگ و ماسٹر ریسیپی (ساتھ تھیلی، سٹیکر، لوگو) ➔ 4. بل آف مٹیریل (BOM Auto Recipe) ➔ 5. ملٹی سٹیپ پروڈکشن و ٹھیکہ ورکرز ➔ 6. فنش گڈز و فیکٹری/گودام ڈسپیچ۔
-              </p>
+        <!-- Manufacturing Modules & Operations Hub (Cards matching left sidebar modules) -->
+        <div class="space-y-3.5">
+          <div class="flex items-center justify-between">
+            <h2 id="dash-mod-title" class="text-sm sm:text-base font-black uppercase tracking-wider text-slate-800 flex items-center gap-2">
+              <i data-lucide="layout-grid" class="w-5 h-5 text-amber-500"></i>
+              <span>Production Modules & Quick Operations</span>
+            </h2>
+            <span id="dash-mod-sub" class="text-xs sm:text-sm text-slate-500 font-semibold">Click any module to manage</span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4.5">
+            <!-- 1. Purchase Orders (PO) -->
+            <div onclick="navigate('po')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="shopping-cart" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-po" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Purchase Orders</h4>
+              <p id="card-sub-po" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">خام مال کا آرڈر</p>
             </div>
-            <div class="flex flex-wrap gap-2.5">
-              <button onclick="navigate('bom')" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-xs rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center gap-1.5">
-                <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                <span class="urdu text-sm font-bold">نیا BOM بنائیں</span>
-              </button>
-              <button onclick="navigate('grn')" class="px-4 py-2 bg-slate-900/90 hover:bg-slate-800 text-white font-semibold text-xs rounded-xl border border-slate-700 transition flex items-center gap-1.5">
-                <i data-lucide="arrow-down-left" class="w-4 h-4 text-emerald-400"></i>
-                <span class="urdu text-sm">مال ریسیونگ (GRN)</span>
-              </button>
+
+            <!-- 2. Raw Material Receiving (GRN) -->
+            <div onclick="navigate('grn')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="package-check" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-grn" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Raw Receiving (GRN)</h4>
+              <p id="card-sub-grn" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">گیٹ اور چالان آمد</p>
+            </div>
+
+            <!-- 3. Raw Store Inventory -->
+            <div onclick="navigate('raw_store')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="boxes" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-raw_store" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Raw Store Inventory</h4>
+              <p id="card-sub-raw_store" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">خام مال کا اسٹاک</p>
+            </div>
+
+            <!-- 4. Sampling & Recipe -->
+            <div onclick="navigate('sampling')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="flask-conical" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-sampling" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Sampling & Recipe</h4>
+              <p id="card-sub-sampling" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">سیمپلنگ اور فارمولا</p>
+            </div>
+
+            <!-- 5. Bill of Materials (BOM) -->
+            <div onclick="navigate('bom')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="clipboard-list" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-bom" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Bill of Materials (BOM)</h4>
+              <p id="card-sub-bom" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">بل آف میٹریل</p>
+            </div>
+
+            <!-- 6. Production Work Orders -->
+            <div onclick="navigate('work_orders')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="factory" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-work_orders" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Production Work Orders</h4>
+              <p id="card-sub-work_orders" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">پروڈکشن ورک آرڈرز</p>
+            </div>
+
+            <!-- 7. Finished Goods (FG) -->
+            <div onclick="navigate('fg')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="box" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-fg" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Finished Goods (FG)</h4>
+              <p id="card-sub-fg" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">تیار شدہ مال کا ذخیرہ</p>
+            </div>
+
+            <!-- 8. Outward Dispatch -->
+            <div onclick="navigate('dispatch')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="truck" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-dispatch" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Outward Dispatch</h4>
+              <p id="card-sub-dispatch" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">ڈسپیچ اور گیٹ پاس</p>
+            </div>
+
+            <!-- 9. HR & Piece-Rate -->
+            <div onclick="navigate('hr')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="users" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-hr" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">HR & Piece-Rate</h4>
+              <p id="card-sub-hr" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">حاضری اور کاریگر اجرت</p>
+            </div>
+
+            <!-- 10. User Roles (RBAC) -->
+            <div onclick="navigate('rbac')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="shield-check" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-rbac" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">User Roles (RBAC)</h4>
+              <p id="card-sub-rbac" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">سسٹم اختیارات</p>
             </div>
           </div>
         </div>
@@ -343,52 +488,52 @@
         <!-- Dashboard Tables: Recent Work Orders & Low Stock Warning -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <!-- Recent Work Orders -->
-          <div class="glass-card rounded-2xl p-5">
+          <div class="stat-tile">
             <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
               <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
                 <i data-lucide="clock" class="w-4 h-4 text-blue-500"></i>
-                <span class="urdu text-base font-bold">جاری پروڈکشن ورک آرڈرز</span>
+                <span id="dash-tbl-wo-title" class="font-bold">Active Production Work Orders</span>
               </h3>
-              <button onclick="navigate('work_orders')" class="text-xs text-blue-600 font-semibold hover:underline urdu">سب دیکھیں</button>
+              <button onclick="navigate('work_orders')" id="dash-tbl-wo-viewall" class="text-xs text-blue-600 font-semibold hover:underline">View All</button>
             </div>
             <div class="overflow-x-auto">
               <table class="w-full text-xs text-left text-slate-600">
-                <thead class="bg-slate-50/80 text-slate-500 uppercase font-semibold font-en">
+                <thead class="bg-slate-50/80 text-slate-500 uppercase font-semibold">
                   <tr>
-                    <th class="py-2.5 px-3">WO #</th>
-                    <th class="py-2.5 px-3">آرٹیکل</th>
-                    <th class="py-2.5 px-3">ہدف / مکمل</th>
-                    <th class="py-2.5 px-3">مرحلہ</th>
+                    <th class="py-2.5 px-3" id="th-wo-num">WO #</th>
+                    <th class="py-2.5 px-3" id="th-wo-art">Article</th>
+                    <th class="py-2.5 px-3" id="th-wo-qty">Target / Done</th>
+                    <th class="py-2.5 px-3" id="th-wo-st">Status</th>
                   </tr>
                 </thead>
                 <tbody id="dash-wo-table" class="divide-y divide-slate-100">
-                  <tr><td colspan="4" class="py-4 text-center text-slate-400 urdu">لوڈ ہو رہا ہے...</td></tr>
+                  <tr><td colspan="4" class="py-4 text-center text-slate-400">Loading...</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
 
           <!-- Low Stock Warnings -->
-          <div class="glass-card rounded-2xl p-5">
+          <div class="stat-tile">
             <div class="flex items-center justify-between mb-4 border-b border-slate-100 pb-3">
               <h3 class="font-bold text-sm text-slate-800 flex items-center gap-2">
                 <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i>
-                <span class="urdu text-base font-bold">کم سٹاک الرٹ (را سٹور)</span>
+                <span id="dash-tbl-stock-title" class="font-bold">Low Stock Warning (Raw Store)</span>
               </h3>
-              <button onclick="navigate('raw_store')" class="text-xs text-amber-700 font-semibold hover:underline urdu">سٹور دیکھیں</button>
+              <button onclick="navigate('raw_store')" id="dash-tbl-stock-viewall" class="text-xs text-amber-700 font-semibold hover:underline">View Store</button>
             </div>
             <div class="overflow-x-auto">
               <table class="w-full text-xs text-left text-slate-600">
-                <thead class="bg-slate-50/80 text-slate-500 uppercase font-semibold font-en">
+                <thead class="bg-slate-50/80 text-slate-500 uppercase font-semibold">
                   <tr>
-                    <th class="py-2.5 px-3">کوڈ</th>
-                    <th class="py-2.5 px-3">آئٹم کا نام</th>
-                    <th class="py-2.5 px-3">موجودہ سٹاک</th>
-                    <th class="py-2.5 px-3">الرٹ لیول</th>
+                    <th class="py-2.5 px-3" id="th-st-code">Code</th>
+                    <th class="py-2.5 px-3" id="th-st-name">Item Name</th>
+                    <th class="py-2.5 px-3" id="th-st-stock">Current Stock</th>
+                    <th class="py-2.5 px-3" id="th-st-alert">Alert Level</th>
                   </tr>
                 </thead>
                 <tbody id="dash-stock-table" class="divide-y divide-slate-100">
-                  <tr><td colspan="4" class="py-4 text-center text-slate-400 urdu">لوڈ ہو رہا ہے...</td></tr>
+                  <tr><td colspan="4" class="py-4 text-center text-slate-400">Loading...</td></tr>
                 </tbody>
               </table>
             </div>
@@ -398,36 +543,35 @@
 
       <!-- ================= 2. PURCHASE ORDERS (PO) ================= -->
       <section id="view-po" class="space-y-6 hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 stat-tile">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="shopping-cart" class="w-5 h-5 text-blue-600"></i>
-              <span class="urdu text-xl font-bold">پرچیز آرڈر مینجمنٹ</span>
-              <span class="text-xs font-en text-slate-400 border-l pl-2">Purchase Orders</span>
+              <span id="po-page-title" class="text-lg font-bold">Purchase Order Management</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5 urdu">خام مال، چائلڈ پارٹس اور پیکنگ میٹریل کے لیے سپلائرز کو جاری کیے گئے آرڈرز</p>
+            <p id="po-page-sub" class="text-xs text-slate-500 mt-0.5">Procure raw materials, child parts, and packaging from suppliers</p>
           </div>
           <button onclick="openNewPOModal()" class="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/20 transition flex items-center gap-2">
             <i data-lucide="plus" class="w-4 h-4"></i>
-            <span class="urdu text-sm font-bold">نیا پرچیز آرڈر بنائیں</span>
+            <span id="po-btn-new">New Purchase Order</span>
           </button>
         </div>
 
-        <div class="glass-card rounded-2xl overflow-hidden">
+        <div class="stat-tile overflow-hidden p-0">
           <div class="overflow-x-auto">
             <table class="w-full text-xs text-left text-slate-600">
-              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200 font-en">
+              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
                 <tr>
-                  <th class="py-3 px-4">PO نمبر</th>
-                  <th class="py-3 px-4">سپلائر</th>
-                  <th class="py-3 px-4">تاریخ آرڈر</th>
-                  <th class="py-3 px-4">کل رقم (PKR)</th>
-                  <th class="py-3 px-4">سٹیٹس</th>
-                  <th class="py-3 px-4 text-right">ایکشن</th>
+                  <th class="py-3 px-4" id="th-po-num">PO Number</th>
+                  <th class="py-3 px-4" id="th-po-sup">Supplier</th>
+                  <th class="py-3 px-4" id="th-po-date">Order Date</th>
+                  <th class="py-3 px-4" id="th-po-tot">Total Amount (PKR)</th>
+                  <th class="py-3 px-4" id="th-po-st">Status</th>
+                  <th class="py-3 px-4 text-right" id="th-po-act">Action</th>
                 </tr>
               </thead>
               <tbody id="po-table-body" class="divide-y divide-slate-100">
-                <tr><td colspan="6" class="py-4 text-center text-slate-400 urdu">لوڈ ہو رہا ہے...</td></tr>
+                <tr><td colspan="6" class="py-4 text-center text-slate-400">Loading...</td></tr>
               </tbody>
             </table>
           </div>
@@ -436,36 +580,35 @@
 
       <!-- ================= 3. GRN & DELIVERY CHALLAN RECEIVING ================= -->
       <section id="view-grn" class="space-y-6 hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 stat-tile">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="package-check" class="w-5 h-5 text-emerald-600"></i>
-              <span class="urdu text-xl font-bold">را مٹیریل ریسیونگ (GRN)</span>
-              <span class="text-xs font-en text-slate-400 border-l pl-2">Goods Received Note</span>
+              <span id="grn-page-title" class="text-lg font-bold">Goods Receiving Note (GRN)</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5 urdu">مال کی آمد پر جی آر این بنائیں، چیکنگ کریں، اور را سٹور میں سٹاک خودکار شامل کریں</p>
+            <p id="grn-page-sub" class="text-xs text-slate-500 mt-0.5">Receive supplier shipments, inspect quality, and auto-update raw store inventory</p>
           </div>
           <button onclick="openNewGRNModal()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-md shadow-emerald-500/20 transition flex items-center gap-2">
             <i data-lucide="plus" class="w-4 h-4"></i>
-            <span class="urdu text-sm font-bold">نئی GRN ریسیونگ درج کریں</span>
+            <span id="grn-btn-new">New GRN Entry</span>
           </button>
         </div>
 
-        <div class="glass-card rounded-2xl overflow-hidden">
+        <div class="stat-tile overflow-hidden p-0">
           <div class="overflow-x-auto">
             <table class="w-full text-xs text-left text-slate-600">
-              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200 font-en">
+              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
                 <tr>
-                  <th class="py-3 px-4">GRN نمبر</th>
-                  <th class="py-3 px-4">سپلائر چالان نمبر</th>
-                  <th class="py-3 px-4">سپلائر کا نام</th>
-                  <th class="py-3 px-4">تاریخ ریسیونگ</th>
-                  <th class="py-3 px-4">وصول کنندہ</th>
-                  <th class="py-3 px-4 text-right">پرنٹ واؤچر</th>
+                  <th class="py-3 px-4" id="th-grn-num">GRN #</th>
+                  <th class="py-3 px-4" id="th-grn-dc">Supplier DC #</th>
+                  <th class="py-3 px-4" id="th-grn-sup">Supplier Name</th>
+                  <th class="py-3 px-4" id="th-grn-date">Receiving Date</th>
+                  <th class="py-3 px-4" id="th-grn-by">Received By</th>
+                  <th class="py-3 px-4 text-right" id="th-grn-act">Print Voucher</th>
                 </tr>
               </thead>
               <tbody id="grn-table-body" class="divide-y divide-slate-100">
-                <tr><td colspan="6" class="py-4 text-center text-slate-400 urdu">لوڈ ہو رہا ہے...</td></tr>
+                <tr><td colspan="6" class="py-4 text-center text-slate-400">Loading...</td></tr>
               </tbody>
             </table>
           </div>
@@ -474,49 +617,48 @@
 
       <!-- ================= 4. RAW STORE INVENTORY ================= -->
       <section id="view-raw_store" class="space-y-6 hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 stat-tile">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="boxes" class="w-5 h-5 text-amber-600"></i>
-              <span class="urdu text-xl font-bold">را سٹور انوینٹری</span>
-              <span class="text-xs font-en text-slate-400 border-l pl-2">Raw Store Stock</span>
+              <span id="raw-page-title" class="text-lg font-bold">Raw Store Inventory</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5 urdu">خام مال، چائلڈ پارٹس، سپرنگ، ریوٹ، تھیلی، سٹیکر اور لوگو کا لائیو سٹاک</p>
+            <p id="raw-page-sub" class="text-xs text-slate-500 mt-0.5">Live stock of raw metals, child parts, springs, rivets, bags, stickers & logos</p>
           </div>
           <div class="flex items-center gap-3">
-            <select id="raw-category-filter" onchange="filterRawMaterials(this.value)" class="text-xs border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-500 urdu font-semibold">
-              <option value="">تمام کیٹیگریز (All)</option>
-              <option value="Raw Metal">خام دھات (Raw Metal)</option>
-              <option value="Child Part">چائلڈ پارٹس (Child Parts)</option>
-              <option value="Fastener">سپرنگ و ریوٹس (Fasteners)</option>
-              <option value="Packaging Bag">پیکنگ تھیلی (Bags)</option>
-              <option value="Sticker">سٹیکر (Stickers)</option>
-              <option value="Logo/Branding">لوگو (Logos)</option>
+            <select id="raw-category-filter" onchange="filterRawMaterials(this.value)" class="text-xs border border-slate-200 rounded-xl px-3 py-2 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-amber-500 font-semibold">
+              <option value="" id="opt-cat-all">All Categories</option>
+              <option value="Raw Metal" id="opt-cat-metal">Raw Metal</option>
+              <option value="Child Part" id="opt-cat-child">Child Parts</option>
+              <option value="Fastener" id="opt-cat-fast">Fasteners & Springs</option>
+              <option value="Packaging Bag" id="opt-cat-bag">Packaging Bags</option>
+              <option value="Sticker" id="opt-cat-stk">Stickers</option>
+              <option value="Logo/Branding" id="opt-cat-logo">Logos / Branding</option>
             </select>
             <button onclick="openNewMaterialModal()" class="px-4 py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow-md shadow-amber-500/20 transition flex items-center gap-1.5">
               <i data-lucide="plus" class="w-4 h-4"></i>
-              <span class="urdu text-sm font-bold">نیا آئٹم شامل کریں</span>
+              <span id="raw-btn-new">Add New Item</span>
             </button>
           </div>
         </div>
 
-        <div class="glass-card rounded-2xl overflow-hidden">
+        <div class="stat-tile overflow-hidden p-0">
           <div class="overflow-x-auto">
             <table class="w-full text-xs text-left text-slate-600">
-              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200 font-en">
+              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
                 <tr>
-                  <th class="py-3 px-4">کوڈ</th>
-                  <th class="py-3 px-4">آئٹم کا نام</th>
-                  <th class="py-3 px-4">کیٹیگری</th>
-                  <th class="py-3 px-4">موجودہ سٹاک</th>
-                  <th class="py-3 px-4">یونٹ</th>
-                  <th class="py-3 px-4">فی یونٹ قیمت</th>
-                  <th class="py-3 px-4">لوکیشن</th>
-                  <th class="py-3 px-4 text-center">سٹیٹس</th>
+                  <th class="py-3 px-4" id="th-raw-code">Code</th>
+                  <th class="py-3 px-4" id="th-raw-name">Item Name</th>
+                  <th class="py-3 px-4" id="th-raw-cat">Category</th>
+                  <th class="py-3 px-4" id="th-raw-stk">Current Stock</th>
+                  <th class="py-3 px-4" id="th-raw-unit">Unit</th>
+                  <th class="py-3 px-4" id="th-raw-price">Unit Price</th>
+                  <th class="py-3 px-4" id="th-raw-loc">Location</th>
+                  <th class="py-3 px-4 text-center" id="th-raw-stat">Status</th>
                 </tr>
               </thead>
               <tbody id="raw-store-table-body" class="divide-y divide-slate-100">
-                <tr><td colspan="8" class="py-4 text-center text-slate-400 urdu">لوڈ ہو رہا ہے...</td></tr>
+                <tr><td colspan="8" class="py-4 text-center text-slate-400">Loading...</td></tr>
               </tbody>
             </table>
           </div>
@@ -525,14 +667,13 @@
 
       <!-- ================= 5. SAMPLING & RECIPE BUILDER ================= -->
       <section id="view-sampling" class="space-y-6 hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 stat-tile">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="flask-conical" class="w-5 h-5 text-purple-600"></i>
-              <span class="urdu text-xl font-bold">سیمپلنگ و ماسٹر ریسیپی</span>
-              <span class="text-xs font-en text-slate-400 border-l pl-2">Sampling & Recipe</span>
+              <span id="sample-page-title" class="text-lg font-bold">Sampling & Master Recipe</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5 urdu">مین پارٹ، چائلڈ پارٹس، پیکنگ تھیلی، سٹیکر اور لوگو کی ریسیپی ڈیفینیشن</p>
+            <p id="sample-page-sub" class="text-xs text-slate-500 mt-0.5">Define auto part components: core parts, child parts, packaging bags, stickers & logos</p>
           </div>
         </div>
 
@@ -543,34 +684,33 @@
 
       <!-- ================= 6. BILL OF MATERIALS (BOM) ================= -->
       <section id="view-bom" class="space-y-6 hidden">
-        <div class="glass-card p-6 rounded-2xl space-y-4">
+        <div class="stat-tile space-y-4">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="clipboard-list" class="w-5 h-5 text-rose-600"></i>
-              <span class="urdu text-xl font-bold">بل آف مٹیریل جنریٹر</span>
-              <span class="text-xs font-en text-slate-400 border-l pl-2">BOM Auto Recipe</span>
+              <span id="bom-page-title" class="text-lg font-bold">Bill of Materials Generator</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5 urdu">
-              آرٹیکل منتخب کریں، مطلوبہ تعداد (جیسے 200 پیس) درج کریں، سسٹم خودکار طریقے سے تمام پارٹس، تھیلی، سٹیکر اور لوگو کا حساب نکال کر را سٹور سٹاک سے موازنہ کرے گا!
+            <p id="bom-page-sub" class="text-xs text-slate-500 mt-0.5">
+              Select an article, enter target quantity (e.g. 200 pcs), and the system automatically calculates all required parts, bags, stickers, and logos against raw store stock!
             </p>
           </div>
 
           <!-- BOM Generator Form -->
           <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 bg-slate-50/80 p-4 rounded-2xl border border-slate-200 items-end">
             <div class="sm:col-span-6">
-              <label class="block text-xs font-semibold text-slate-700 mb-1 urdu">آرٹیکل منتخب کریں (Select Article):</label>
-              <select id="bom-article-select" class="w-full text-xs border border-slate-200 rounded-xl px-3 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 font-en">
+              <label id="bom-lbl-select" class="block text-xs font-semibold text-slate-700 mb-1">Select Finished Article:</label>
+              <select id="bom-article-select" class="w-full text-xs border border-slate-200 rounded-xl px-3 py-2.5 bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 font-semibold">
                 <!-- Populated dynamically -->
               </select>
             </div>
             <div class="sm:col-span-3">
-              <label class="block text-xs font-semibold text-slate-700 mb-1 urdu">مطلوبہ تعداد (Target Quantity):</label>
-              <input type="number" id="bom-quantity-input" value="200" min="1" class="w-full text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 font-bold text-slate-900 font-en text-base">
+              <label id="bom-lbl-qty" class="block text-xs font-semibold text-slate-700 mb-1">Target Quantity:</label>
+              <input type="number" id="bom-quantity-input" value="200" min="1" class="w-full text-xs border border-slate-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-rose-500 font-bold text-slate-900 text-base">
             </div>
             <div class="sm:col-span-3">
               <button onclick="calculateBOM()" class="w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-md shadow-rose-500/20 transition flex items-center justify-center gap-1.5">
                 <i data-lucide="calculator" class="w-4 h-4"></i>
-                <span class="urdu text-sm font-bold">ریسیپی کیلکولیٹ کریں</span>
+                <span id="bom-btn-calc">Calculate Recipe</span>
               </button>
             </div>
           </div>
@@ -579,31 +719,31 @@
           <div id="bom-calculation-result" class="hidden space-y-4 pt-4 border-t border-slate-200">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
-                <h3 class="font-bold text-sm text-slate-800 font-en" id="bom-res-title">BOM برائے: -</h3>
-                <p class="text-xs text-slate-500 urdu" id="bom-res-subtitle">تعداد: 200 پیس</p>
+                <h3 class="font-bold text-sm text-slate-800" id="bom-res-title">BOM For: -</h3>
+                <p class="text-xs text-slate-500" id="bom-res-subtitle">Planned Target: 200 Pcs</p>
               </div>
               <div class="flex items-center gap-2">
-                <span id="bom-stock-status-badge" class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200 urdu">
-                  تمام مٹیریل موجود ہے
+                <span id="bom-stock-status-badge" class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  All Materials Available
                 </span>
                 <button onclick="convertBOMToWorkOrder()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-xl shadow-md shadow-amber-500/20 transition flex items-center gap-1.5">
                   <i data-lucide="play" class="w-4 h-4"></i>
-                  <span class="urdu text-sm font-bold">ورک آرڈر میں تبدیل کریں</span>
+                  <span id="bom-btn-convert">Convert to Work Order</span>
                 </button>
               </div>
             </div>
 
             <div class="overflow-x-auto rounded-xl border border-slate-200">
               <table class="w-full text-xs text-left text-slate-600">
-                <thead class="bg-slate-100/70 text-slate-700 uppercase font-semibold font-en">
+                <thead class="bg-slate-100/70 text-slate-700 uppercase font-semibold">
                   <tr>
-                    <th class="py-2.5 px-3">کمپوننٹ / مٹیریل کا نام</th>
-                    <th class="py-2.5 px-3">قسم (Type)</th>
-                    <th class="py-2.5 px-3">فی پیس ضرورت</th>
-                    <th class="py-2.5 px-3">کل درکار کوانٹٹی</th>
-                    <th class="py-2.5 px-3">سٹور میں موجود</th>
-                    <th class="py-2.5 px-3">کمی (Shortage)</th>
-                    <th class="py-2.5 px-3 text-center">سٹیٹس</th>
+                    <th class="py-2.5 px-3" id="th-bom-comp">Component / Material</th>
+                    <th class="py-2.5 px-3" id="th-bom-type">Type</th>
+                    <th class="py-2.5 px-3" id="th-bom-req1">Req / Unit</th>
+                    <th class="py-2.5 px-3" id="th-bom-reqtot">Total Required</th>
+                    <th class="py-2.5 px-3" id="th-bom-avail">Store Available</th>
+                    <th class="py-2.5 px-3" id="th-bom-short">Shortage</th>
+                    <th class="py-2.5 px-3 text-center" id="th-bom-st">Status</th>
                   </tr>
                 </thead>
                 <tbody id="bom-calc-table-body" class="divide-y divide-slate-100 bg-white">
@@ -615,24 +755,24 @@
         </div>
 
         <!-- Saved BOMs Table -->
-        <div class="glass-card rounded-2xl overflow-hidden p-5">
+        <div class="stat-tile">
           <h3 class="font-bold text-sm text-slate-800 mb-3 flex items-center gap-2">
             <i data-lucide="archive" class="w-4 h-4 text-slate-500"></i>
-            <span class="urdu text-base font-bold">محفوظ شدہ بل آف مٹیریلز (Saved BOMs)</span>
+            <span id="bom-saved-title">Saved BOMs History</span>
           </h3>
           <div class="overflow-x-auto">
             <table class="w-full text-xs text-left text-slate-600">
-              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200 font-en">
+              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
                 <tr>
-                  <th class="py-3 px-4">BOM نمبر</th>
-                  <th class="py-3 px-4">آرٹیکل</th>
-                  <th class="py-3 px-4">پلان شدہ کوانٹٹی</th>
-                  <th class="py-3 px-4">تاریخ</th>
-                  <th class="py-3 px-4">سٹیٹس</th>
+                  <th class="py-3 px-4" id="th-sb-num">BOM #</th>
+                  <th class="py-3 px-4" id="th-sb-art">Article</th>
+                  <th class="py-3 px-4" id="th-sb-qty">Target Qty</th>
+                  <th class="py-3 px-4" id="th-sb-date">Date</th>
+                  <th class="py-3 px-4" id="th-sb-st">Status</th>
                 </tr>
               </thead>
               <tbody id="saved-boms-table" class="divide-y divide-slate-100">
-                <tr><td colspan="5" class="py-4 text-center text-slate-400 urdu">لوڈ ہو رہا ہے...</td></tr>
+                <tr><td colspan="5" class="py-4 text-center text-slate-400">Loading...</td></tr>
               </tbody>
             </table>
           </div>
@@ -641,14 +781,13 @@
 
       <!-- ================= 7. WORK ORDERS & MULTI-STEP PRODUCTION ================= -->
       <section id="view-work_orders" class="space-y-6 hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 stat-tile">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="factory" class="w-5 h-5 text-orange-600"></i>
-              <span class="urdu text-xl font-bold">پروڈکشن اور ورک آرڈر مراحل</span>
-              <span class="text-xs font-en text-slate-400 border-l pl-2">Multi-Step Production</span>
+              <span id="wo-page-title" class="text-lg font-bold">Multi-Step Production Work Orders</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5 urdu">کٹنگ، سب اسمبلی، ویلڈنگ، کوالٹی چیک، اور پیکنگ (ساتھ پر پیس ٹھیکہ ورک اندراج)</p>
+            <p id="wo-page-sub" class="text-xs text-slate-500 mt-0.5">Stamping, Sub-Assembly, Riveting, Quality Inspection & Final Packaging</p>
           </div>
         </div>
 
@@ -660,33 +799,32 @@
 
       <!-- ================= 8. FINISHED GOODS & PACKING ================= -->
       <section id="view-fg" class="space-y-6 hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 stat-tile">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="box" class="w-5 h-5 text-teal-600"></i>
-              <span class="urdu text-xl font-bold">فنش گڈز سٹور و پیکنگ</span>
-              <span class="text-xs font-en text-slate-400 border-l pl-2">Finished Goods</span>
+              <span id="fg-page-title" class="text-lg font-bold">Finished Goods & Packaging Store</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5 urdu">پروڈکشن سے مکمل، تھیلی، سٹیکر اور لوگو لگ کر تیار پارٹس کا سٹاک</p>
+            <p id="fg-page-sub" class="text-xs text-slate-500 mt-0.5">Verified parts packed with polybags, stickers, and hologram logos</p>
           </div>
         </div>
 
-        <div class="glass-card rounded-2xl overflow-hidden">
+        <div class="stat-tile overflow-hidden p-0">
           <div class="overflow-x-auto">
             <table class="w-full text-xs text-left text-slate-600">
-              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200 font-en">
+              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
                 <tr>
-                  <th class="py-3 px-4">بیچ نمبر</th>
-                  <th class="py-3 px-4">آرٹیکل کا نام</th>
-                  <th class="py-3 px-4">کوڈ</th>
-                  <th class="py-3 px-4">موجودہ تیار کوانٹٹی</th>
-                  <th class="py-3 px-4">پیکنگ سٹیٹس</th>
-                  <th class="py-3 px-4">کوالٹی چیک</th>
-                  <th class="py-3 px-4">لوکیشن</th>
+                  <th class="py-3 px-4" id="th-fg-batch">Batch Number</th>
+                  <th class="py-3 px-4" id="th-fg-art">Article Name</th>
+                  <th class="py-3 px-4" id="th-fg-code">Code</th>
+                  <th class="py-3 px-4" id="th-fg-qty">Ready Quantity</th>
+                  <th class="py-3 px-4" id="th-fg-pack">Packaging Status</th>
+                  <th class="py-3 px-4" id="th-fg-qc">QC Verification</th>
+                  <th class="py-3 px-4" id="th-fg-loc">Storage Location</th>
                 </tr>
               </thead>
               <tbody id="fg-table-body" class="divide-y divide-slate-100">
-                <tr><td colspan="7" class="py-4 text-center text-slate-400 urdu">لوڈ ہو رہا ہے...</td></tr>
+                <tr><td colspan="7" class="py-4 text-center text-slate-400">Loading...</td></tr>
               </tbody>
             </table>
           </div>
@@ -695,37 +833,36 @@
 
       <!-- ================= 9. DISPATCH CHALLAN & GATE PASS ================= -->
       <section id="view-dispatch" class="space-y-6 hidden">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-card p-5 rounded-2xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 stat-tile">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="truck" class="w-5 h-5 text-cyan-600"></i>
-              <span class="urdu text-xl font-bold">ڈسپیچ چالان و گیٹ پاس</span>
-              <span class="text-xs font-en text-slate-400 border-l pl-2">Outward Dispatch</span>
+              <span id="disp-page-title" class="text-lg font-bold">Outward Dispatch Challan & Gate Pass</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5 urdu">فیکٹری یا کسٹمر گودام کو مال روانگی کے چالان اور گیٹ پاس</p>
+            <p id="disp-page-sub" class="text-xs text-slate-500 mt-0.5">Delivery challans for sending finished auto parts to factories or customer warehouses</p>
           </div>
           <button onclick="openNewDispatchModal()" class="px-4 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs rounded-xl shadow-md shadow-cyan-500/20 transition flex items-center gap-2">
             <i data-lucide="plus" class="w-4 h-4"></i>
-            <span class="urdu text-sm font-bold">نیا ڈسپیچ چالان بنائیں</span>
+            <span id="disp-btn-new">New Dispatch Challan</span>
           </button>
         </div>
 
-        <div class="glass-card rounded-2xl overflow-hidden">
+        <div class="stat-tile overflow-hidden p-0">
           <div class="overflow-x-auto">
             <table class="w-full text-xs text-left text-slate-600">
-              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200 font-en">
+              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-200">
                 <tr>
-                  <th class="py-3 px-4">چالان نمبر</th>
-                  <th class="py-3 px-4">روانگی برائے (منزل)</th>
-                  <th class="py-3 px-4">تاریخ روانگی</th>
-                  <th class="py-3 px-4">گاڑی نمبر</th>
-                  <th class="py-3 px-4">ڈرائیور کا نام</th>
-                  <th class="py-3 px-4">گیٹ پاس نمبر</th>
-                  <th class="py-3 px-4 text-right">پرنٹ چالان</th>
+                  <th class="py-3 px-4" id="th-dc-num">Challan #</th>
+                  <th class="py-3 px-4" id="th-dc-dest">Destination</th>
+                  <th class="py-3 px-4" id="th-dc-date">Dispatch Date</th>
+                  <th class="py-3 px-4" id="th-dc-veh">Vehicle #</th>
+                  <th class="py-3 px-4" id="th-dc-driver">Driver Name</th>
+                  <th class="py-3 px-4" id="th-dc-gp">Gate Pass #</th>
+                  <th class="py-3 px-4 text-right" id="th-dc-act">Print Challan</th>
                 </tr>
               </thead>
               <tbody id="dispatch-table-body" class="divide-y divide-slate-100">
-                <tr><td colspan="7" class="py-4 text-center text-slate-400 urdu">لوڈ ہو رہا ہے...</td></tr>
+                <tr><td colspan="7" class="py-4 text-center text-slate-400">Loading...</td></tr>
               </tbody>
             </table>
           </div>
@@ -734,55 +871,54 @@
 
       <!-- ================= 10. HR & PAYROLL MODULE ================= -->
       <section id="view-hr" class="space-y-6 hidden">
-        <div class="glass-card p-5 rounded-2xl space-y-4">
+        <div class="stat-tile space-y-4">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
                 <i data-lucide="users" class="w-5 h-5 text-pink-600"></i>
-                <span class="urdu text-xl font-bold">ایچ آر، حاضری و پر پیس ٹھیکہ سسٹم</span>
-                <span class="text-xs font-en text-slate-400 border-l pl-2">HR & Piece-Rate</span>
+                <span id="hr-page-title" class="text-lg font-bold">HR, Attendance & Piece-Rate System</span>
               </h2>
-              <p class="text-xs text-slate-500 mt-0.5 urdu">حاضری، اوور ٹائم، پر پیس ٹھیکہ ورکرز کا حساب اور چھٹیاں (Leaves)</p>
+              <p id="hr-page-sub" class="text-xs text-slate-500 mt-0.5">Staff attendance, overtime, piece-rate (ٹھیکہ) earnings & leave management</p>
             </div>
             <button onclick="openNewEmployeeModal()" class="px-4 py-2.5 bg-pink-600 hover:bg-pink-700 text-white font-bold text-xs rounded-xl shadow-md shadow-pink-500/20 transition flex items-center gap-2">
               <i data-lucide="user-plus" class="w-4 h-4"></i>
-              <span class="urdu text-sm font-bold">نیا ملازم شامل کریں</span>
+              <span id="hr-btn-new-emp">Add New Staff</span>
             </button>
           </div>
 
           <!-- HR Subtabs -->
-          <div class="flex border-b border-slate-200 gap-4 text-xs font-semibold font-en">
-            <button onclick="switchHRTab('attendance')" id="hr-tab-attendance" class="py-2.5 border-b-2 border-pink-600 text-pink-600 urdu text-sm font-bold">یومیہ حاضری و اوور ٹائم</button>
-            <button onclick="switchHRTab('piece_work')" id="hr-tab-piece_work" class="py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800 urdu text-sm font-bold">پر پیس ٹھیکہ ورک (Piece Work)</button>
-            <button onclick="switchHRTab('leaves')" id="hr-tab-leaves" class="py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800 urdu text-sm font-bold">چھٹیاں (Leaves Management)</button>
-            <button onclick="switchHRTab('employees')" id="hr-tab-employees" class="py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800 urdu text-sm font-bold">ملازمین لسٹ (Staff List)</button>
+          <div class="flex border-b border-slate-200 gap-2 sm:gap-4 text-xs font-semibold overflow-x-auto whitespace-nowrap scrollbar-none pb-px">
+            <button onclick="switchHRTab('attendance')" id="hr-tab-attendance" class="py-2.5 border-b-2 border-pink-600 text-pink-600">Daily Attendance & Overtime</button>
+            <button onclick="switchHRTab('piece_work')" id="hr-tab-piece_work" class="py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800">Piece-Rate Work (ٹھیکہ)</button>
+            <button onclick="switchHRTab('leaves')" id="hr-tab-leaves" class="py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800">Leave Applications</button>
+            <button onclick="switchHRTab('employees')" id="hr-tab-employees" class="py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800">Employees List</button>
           </div>
 
           <!-- HR Subtab 1: Attendance -->
           <div id="hr-content-attendance" class="space-y-4">
-            <div class="flex items-center justify-between gap-4 bg-slate-50/80 p-3 rounded-xl border border-slate-200">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-slate-50/80 p-3 rounded-xl border border-slate-200">
               <div class="flex items-center gap-2">
-                <label class="text-xs font-semibold text-slate-700 urdu">تاریخ منتخب کریں:</label>
-                <input type="date" id="attendance-date-filter" onchange="loadAttendance()" class="text-xs border border-slate-200 rounded-lg px-2.5 py-1 bg-white font-en">
+                <label id="lbl-att-date" class="text-xs font-semibold text-slate-700">Select Date:</label>
+                <input type="date" id="attendance-date-filter" onchange="loadAttendance()" class="text-xs border border-slate-200 rounded-lg px-2.5 py-1 bg-white">
               </div>
-              <button onclick="openMarkAttendanceModal()" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl shadow transition flex items-center gap-1.5">
+              <button onclick="openMarkAttendanceModal()" class="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl shadow transition flex items-center justify-center gap-1.5 w-full sm:w-auto">
                 <i data-lucide="check" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span class="urdu text-sm font-semibold">حاضری / اوور ٹائم درج کریں</span>
+                <span id="btn-mark-att">Log Attendance / Overtime</span>
               </button>
             </div>
 
             <div class="overflow-x-auto rounded-xl border border-slate-200">
               <table class="w-full text-xs text-left text-slate-600">
-                <thead class="bg-slate-50 text-slate-500 uppercase font-semibold font-en">
+                <thead class="bg-slate-50 text-slate-500 uppercase font-semibold">
                   <tr>
-                    <th class="py-2.5 px-3">کوڈ</th>
-                    <th class="py-2.5 px-3">نام ملازم</th>
-                    <th class="py-2.5 px-3">شعبہ</th>
-                    <th class="py-2.5 px-3">حاضری سٹیٹس</th>
-                    <th class="py-2.5 px-3">آمد کا وقت</th>
-                    <th class="py-2.5 px-3">روانگی</th>
-                    <th class="py-2.5 px-3">اوور ٹائم (گھنٹے)</th>
-                    <th class="py-2.5 px-3">ریمارکس</th>
+                    <th class="py-2.5 px-3" id="th-att-code">Code</th>
+                    <th class="py-2.5 px-3" id="th-att-name">Employee Name</th>
+                    <th class="py-2.5 px-3" id="th-att-dept">Department</th>
+                    <th class="py-2.5 px-3" id="th-att-st">Status</th>
+                    <th class="py-2.5 px-3" id="th-att-in">Check In</th>
+                    <th class="py-2.5 px-3" id="th-att-out">Check Out</th>
+                    <th class="py-2.5 px-3" id="th-att-ot">Overtime (Hrs)</th>
+                    <th class="py-2.5 px-3" id="th-att-rem">Remarks</th>
                   </tr>
                 </thead>
                 <tbody id="attendance-table-body" class="divide-y divide-slate-100 bg-white">
@@ -794,29 +930,29 @@
 
           <!-- HR Subtab 2: Piece-Rate ٹھیکہ ورک -->
           <div id="hr-content-piece_work" class="space-y-4 hidden">
-            <div class="flex items-center justify-between gap-4 bg-amber-500/10 p-3.5 rounded-xl border border-amber-500/20">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-amber-500/10 p-3.5 rounded-xl border border-amber-500/20">
               <div>
-                <h4 class="text-xs font-bold text-amber-950 urdu text-sm">پر پیس ٹھیکہ ورک لاگ (Contract Worker Earnings)</h4>
-                <p class="text-[11px] text-amber-800 urdu">ورک آرڈر کے مراحل مکمل کرنے پر کاریگروں کی تعداد پیس اور اجرت کا خودکار اندراج</p>
+                <h4 id="lbl-pw-title" class="text-xs font-bold text-amber-950">Contract Worker Piece-Rate Earnings</h4>
+                <p id="lbl-pw-sub" class="text-[11px] text-amber-800">Auto-credited earnings based on pieces completed in production stages</p>
               </div>
-              <button onclick="openNewPieceWorkModal()" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-amber-600/20 transition flex items-center gap-1.5">
+              <button onclick="openNewPieceWorkModal()" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-amber-600/20 transition flex items-center justify-center gap-1.5 w-full sm:w-auto">
                 <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-                <span class="urdu text-sm font-bold">ٹھیکہ انٹری درج کریں</span>
+                <span id="btn-new-pw">Log Piece-Rate Work</span>
               </button>
             </div>
 
             <div class="overflow-x-auto rounded-xl border border-slate-200">
               <table class="w-full text-xs text-left text-slate-600">
-                <thead class="bg-slate-50 text-slate-500 uppercase font-semibold font-en">
+                <thead class="bg-slate-50 text-slate-500 uppercase font-semibold">
                   <tr>
-                    <th class="py-2.5 px-3">تاریخ</th>
-                    <th class="py-2.5 px-3">کاریگر کا نام</th>
-                    <th class="py-2.5 px-3">آرٹیکل</th>
-                    <th class="py-2.5 px-3">مرحلہ / کام کا نام</th>
-                    <th class="py-2.5 px-3">مکمل کردہ پیس</th>
-                    <th class="py-2.5 px-3">ریٹ فی پیس (PKR)</th>
-                    <th class="py-2.5 px-3 font-bold text-slate-800">کل رقم (PKR)</th>
-                    <th class="py-2.5 px-3">منظور کنندہ</th>
+                    <th class="py-2.5 px-3" id="th-pw-date">Date</th>
+                    <th class="py-2.5 px-3" id="th-pw-worker">Worker Name</th>
+                    <th class="py-2.5 px-3" id="th-pw-art">Article</th>
+                    <th class="py-2.5 px-3" id="th-pw-step">Operation / Step</th>
+                    <th class="py-2.5 px-3" id="th-pw-pcs">Pieces Done</th>
+                    <th class="py-2.5 px-3" id="th-pw-rate">Rate / Piece (PKR)</th>
+                    <th class="py-2.5 px-3 font-bold text-slate-800" id="th-pw-tot">Total Earning (PKR)</th>
+                    <th class="py-2.5 px-3" id="th-pw-appr">Approved By</th>
                   </tr>
                 </thead>
                 <tbody id="piecework-table-body" class="divide-y divide-slate-100 bg-white">
@@ -828,29 +964,29 @@
 
           <!-- HR Subtab 3: Leaves -->
           <div id="hr-content-leaves" class="space-y-4 hidden">
-            <div class="flex items-center justify-between gap-4 bg-slate-50/80 p-3 rounded-xl border border-slate-200">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 bg-slate-50/80 p-3 rounded-xl border border-slate-200">
               <div>
-                <h4 class="text-xs font-bold text-slate-800 urdu text-sm">چھٹیوں کی درخواستیں و ریکارڈ (Leave Applications)</h4>
-                <p class="text-[11px] text-slate-500 urdu">اتفاقی، بیماری اور سالانہ چھٹیوں کا اندراج و منظوری</p>
+                <h4 id="lbl-lv-title" class="text-xs font-bold text-slate-800">Leave Applications & Records</h4>
+                <p id="lbl-lv-sub" class="text-[11px] text-slate-500">Track and approve casual, sick, and annual employee leaves</p>
               </div>
-              <button onclick="openApplyLeaveModal()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-rose-600/20 transition flex items-center gap-1.5">
+              <button onclick="openApplyLeaveModal()" class="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-rose-600/20 transition flex items-center justify-center gap-1.5 w-full sm:w-auto">
                 <i data-lucide="calendar-plus" class="w-3.5 h-3.5"></i>
-                <span class="urdu text-sm font-bold">چھٹی کی درخواست درج کریں</span>
+                <span id="btn-apply-lv">Apply Leave</span>
               </button>
             </div>
 
             <div class="overflow-x-auto rounded-xl border border-slate-200">
               <table class="w-full text-xs text-left text-slate-600">
-                <thead class="bg-slate-50 text-slate-500 uppercase font-semibold font-en">
+                <thead class="bg-slate-50 text-slate-500 uppercase font-semibold">
                   <tr>
-                    <th class="py-2.5 px-3">ملازم</th>
-                    <th class="py-2.5 px-3">چھٹی کی قسم</th>
-                    <th class="py-2.5 px-3">شروع تاریخ</th>
-                    <th class="py-2.5 px-3">اختتام تاریخ</th>
-                    <th class="py-2.5 px-3">کل دن</th>
-                    <th class="py-2.5 px-3">وجہ</th>
-                    <th class="py-2.5 px-3">سٹیٹس</th>
-                    <th class="py-2.5 px-3 text-right">ایکشن</th>
+                    <th class="py-2.5 px-3" id="th-lv-emp">Employee</th>
+                    <th class="py-2.5 px-3" id="th-lv-type">Leave Type</th>
+                    <th class="py-2.5 px-3" id="th-lv-start">Start Date</th>
+                    <th class="py-2.5 px-3" id="th-lv-end">End Date</th>
+                    <th class="py-2.5 px-3" id="th-lv-days">Days</th>
+                    <th class="py-2.5 px-3" id="th-lv-reason">Reason</th>
+                    <th class="py-2.5 px-3" id="th-lv-st">Status</th>
+                    <th class="py-2.5 px-3 text-right" id="th-lv-act">Action</th>
                   </tr>
                 </thead>
                 <tbody id="leaves-table-body" class="divide-y divide-slate-100 bg-white">
@@ -864,15 +1000,15 @@
           <div id="hr-content-employees" class="space-y-4 hidden">
             <div class="overflow-x-auto rounded-xl border border-slate-200">
               <table class="w-full text-xs text-left text-slate-600">
-                <thead class="bg-slate-50 text-slate-500 uppercase font-semibold font-en">
+                <thead class="bg-slate-50 text-slate-500 uppercase font-semibold">
                   <tr>
-                    <th class="py-2.5 px-3">کوڈ</th>
-                    <th class="py-2.5 px-3">نام ملازم</th>
-                    <th class="py-2.5 px-3">عہدہ (Designation)</th>
-                    <th class="py-2.5 px-3">شعبہ</th>
-                    <th class="py-2.5 px-3">ملازمت کی قسم</th>
-                    <th class="py-2.5 px-3">بنیادی تنخواہ / ٹھیکہ ریٹ</th>
-                    <th class="py-2.5 px-3">فون نمبر</th>
+                    <th class="py-2.5 px-3" id="th-emp-code">Code</th>
+                    <th class="py-2.5 px-3" id="th-emp-name">Employee Name</th>
+                    <th class="py-2.5 px-3" id="th-emp-desig">Designation</th>
+                    <th class="py-2.5 px-3" id="th-emp-dept">Department</th>
+                    <th class="py-2.5 px-3" id="th-emp-type">Type</th>
+                    <th class="py-2.5 px-3" id="th-emp-pay">Base Salary / Piece Rate</th>
+                    <th class="py-2.5 px-3" id="th-emp-phone">Phone</th>
                   </tr>
                 </thead>
                 <tbody id="employees-table-body" class="divide-y divide-slate-100 bg-white">
@@ -886,20 +1022,19 @@
 
       <!-- ================= 11. RBAC & USER CONTROLS ================= -->
       <section id="view-rbac" class="space-y-6 hidden">
-        <div class="glass-card p-5 rounded-2xl space-y-4">
+        <div class="stat-tile space-y-4">
           <div>
             <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
               <i data-lucide="shield-check" class="w-5 h-5 text-indigo-600"></i>
-              <span class="urdu text-xl font-bold">رولز و یوزر لیمیٹیشن کنٹرول</span>
-              <span class="text-xs font-en text-slate-400 border-l pl-2">Access Control</span>
+              <span id="rbac-page-title" class="text-lg font-bold">Role-Based Access Control (RBAC)</span>
             </h2>
-            <p class="text-xs text-slate-500 mt-0.5 urdu">ایچ آر، سٹور مین، پروڈکشن والے کو کیا کیا دکھانا ہے اور کیا نہیں دکھانا، مکمل کنٹرول</p>
+            <p id="rbac-page-sub" class="text-xs text-slate-500 mt-0.5">Control module visibility and permissions for Store Incharge, Production, HR & Dispatch</p>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Roles & Permissions Matrix -->
             <div class="border border-slate-200 rounded-2xl p-4 bg-slate-50/80">
-              <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3 urdu text-sm">مقررہ رولز اور مجاز ماڈیولز</h3>
+              <h3 id="rbac-matrix-title" class="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3">Configured Roles & Permissions</h3>
               <div class="space-y-3 text-xs" id="roles-list-container">
                 <!-- Populated dynamically -->
               </div>
@@ -908,18 +1043,18 @@
             <!-- Users List -->
             <div class="border border-slate-200 rounded-2xl p-4 bg-white">
               <div class="flex items-center justify-between mb-3">
-                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider urdu text-sm">سسٹم یوزرز (System Users)</h3>
+                <h3 id="rbac-users-title" class="text-xs font-bold text-slate-800 uppercase tracking-wider">System Users</h3>
                 <button onclick="openNewUserModal()" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow transition flex items-center gap-1">
-                  <i data-lucide="plus" class="w-3.5 h-3.5"></i> <span class="urdu">نیا یوزر</span>
+                  <i data-lucide="plus" class="w-3.5 h-3.5"></i> <span id="btn-new-user">New User</span>
                 </button>
               </div>
               <div class="overflow-x-auto">
                 <table class="w-full text-xs text-left text-slate-600">
-                  <thead class="bg-slate-50 text-slate-500 uppercase font-semibold font-en">
+                  <thead class="bg-slate-50 text-slate-500 uppercase font-semibold">
                     <tr>
-                      <th class="py-2 px-3">یوزر نیم</th>
-                      <th class="py-2 px-3">مکمل نام</th>
-                      <th class="py-2 px-3">مقررہ رول</th>
+                      <th class="py-2 px-3" id="th-usr-name">Username</th>
+                      <th class="py-2 px-3" id="th-usr-full">Full Name</th>
+                      <th class="py-2 px-3" id="th-usr-role">Assigned Role</th>
                     </tr>
                   </thead>
                   <tbody id="users-table-body" class="divide-y divide-slate-100">

@@ -574,14 +574,25 @@ def change_leave_status(leave_id: int, status: str = Query(...), db: Session = D
     return crud.update_leave_status(db, leave_id, status)
 
 # ----------------- SERVE FRONTEND STATIC FILES -----------------
-FRONTEND_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
+
+@app.get("/")
+def serve_home():
+    root_index = os.path.join(BASE_DIR, "index.html")
+    if os.path.exists(root_index):
+        return FileResponse(root_index)
+    return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
+
+@app.get("/app.js")
+def serve_app_js():
+    root_js = os.path.join(BASE_DIR, "app.js")
+    if os.path.exists(root_js):
+        return FileResponse(root_js)
+    return FileResponse(os.path.join(FRONTEND_DIR, "app.js"))
 
 if os.path.exists(FRONTEND_DIR):
     app.mount("/static", StaticFiles(directory=FRONTEND_DIR), name="static")
-
-    @app.get("/")
-    def serve_home():
-        return FileResponse(os.path.join(FRONTEND_DIR, "index.html"))
 
 if __name__ == "__main__":
     import uvicorn

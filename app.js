@@ -475,11 +475,16 @@ function setLanguage(lang, reloadView = true) {
   const btnUr = document.getElementById("lang-btn-ur");
 
   if (lang === "en") {
-    if (btnEn) btnEn.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-sm";
-    if (btnUr) btnUr.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white";
+    if (btnEn) btnEn.className = "px-2 sm:px-2.5 py-0.5 rounded text-[11px] font-bold transition flex items-center gap-1 bg-white text-[#23688b] shadow-xs";
+    if (btnUr) btnUr.className = "px-2 sm:px-2.5 py-0.5 rounded text-[11px] font-bold transition flex items-center gap-1 text-white/80 hover:text-white";
   } else {
-    if (btnUr) btnUr.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-sm";
-    if (btnEn) btnEn.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white";
+    if (btnUr) btnUr.className = "px-2 sm:px-2.5 py-0.5 rounded text-[11px] font-bold transition flex items-center gap-1 bg-white text-[#23688b] shadow-xs";
+    if (btnEn) btnEn.className = "px-2 sm:px-2.5 py-0.5 rounded text-[11px] font-bold transition flex items-center gap-1 text-white/80 hover:text-white";
+  }
+
+  const bTitle = document.getElementById("breadcrumb-title");
+  if (bTitle && I18N[lang]?.nav?.[currentView]) {
+    bTitle.innerText = I18N[lang].nav[currentView];
   }
 
   const t = I18N[lang];
@@ -706,10 +711,33 @@ function navigate(viewName) {
   const target = document.getElementById(`view-${viewName}`);
   if (target) target.classList.remove("hidden");
 
-  // Highlight active menu-box
-  document.querySelectorAll(".menu-box").forEach(btn => btn.classList.remove("active"));
+  // Highlight active nav-item
+  document.querySelectorAll(".nav-item").forEach(btn => btn.classList.remove("active"));
   const activeBtn = document.getElementById(`nav-${viewName}`);
   if (activeBtn) activeBtn.classList.add("active");
+
+  // Update breadcrumb tab indicator
+  const bTitle = document.getElementById("breadcrumb-title");
+  const bIcon = document.getElementById("breadcrumb-icon");
+  const viewIcons = {
+    dashboard: "layout-dashboard",
+    po: "shopping-cart",
+    grn: "package-check",
+    raw_store: "boxes",
+    sampling: "flask-conical",
+    bom: "clipboard-list",
+    work_orders: "factory",
+    fg: "box",
+    dispatch: "truck",
+    hr: "users",
+    rbac: "shield-check"
+  };
+  if (bTitle && I18N[currentLang]?.nav?.[viewName]) {
+    bTitle.innerText = I18N[currentLang].nav[viewName];
+  }
+  if (bIcon && viewIcons[viewName]) {
+    bIcon.setAttribute("data-lucide", viewIcons[viewName]);
+  }
 
   if (viewName === "dashboard") loadDashboardStats();
   if (viewName === "po") loadPurchaseOrders();

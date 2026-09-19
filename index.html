@@ -46,23 +46,32 @@
     }
 
     /* Modular Boxed Sidebar Item */
-    .menu-box {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      border-radius: 1rem;
-      padding: 0.85rem 1.1rem;
-      box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04);
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    .nav-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 0.65rem 0.95rem;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #334155;
+      background: transparent;
+      border-inline-start: 4px solid transparent;
+      transition: all 0.15s ease;
+      cursor: pointer;
     }
-    .menu-box:hover {
-      border-color: #cbd5e1;
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+    .nav-item:hover {
+      background: #f8fafc;
+      color: #23688b;
     }
-    .menu-box.active {
-      border-color: #f59e0b;
-      background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
-      box-shadow: 0 4px 14px -2px rgba(245, 158, 11, 0.18);
+    .nav-item.active {
+      background: #f0f7fa;
+      color: #23688b;
+      font-weight: 700;
+      border-inline-start-color: #23688b;
+    }
+    .nav-item.active .nav-icon {
+      color: #23688b;
     }
 
     /* Stat Cards */
@@ -132,56 +141,53 @@
 </head>
 <body class="bg-slate-50/80 text-slate-800 antialiased min-h-screen flex flex-col selection:bg-amber-500 selection:text-white">
 
-  <!-- TOP HEADER -->
-  <header class="bg-slate-950 text-white sticky top-0 z-40 border-b border-slate-800/80 shadow-lg backdrop-blur-md bg-opacity-95">
-    <div class="max-w-[1650px] w-full mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-2">
+  <!-- TOP HEADER (Executive Petrol Blue Theme) -->
+  <header class="bg-[#23688b] text-white sticky top-0 z-40 border-b border-[#1b5370] shadow-md">
+    <div class="max-w-[1650px] w-full mx-auto px-3 sm:px-6 lg:px-8 h-15 flex items-center justify-between gap-2 py-2">
       
-      <!-- LEFT: Mobile Menu Hamburger + Language Switcher + Brand -->
-      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+      <!-- LEFT: Mobile Menu Hamburger + Brand + Refresh + Language -->
+      <div class="flex items-center gap-2.5 sm:gap-4 min-w-0">
         <!-- Hamburger button (Mobile/Tablet only) -->
-        <button onclick="toggleMobileSidebar(true)" id="mobile-hamburger-btn" class="lg:hidden p-2 text-slate-300 hover:text-white hover:bg-slate-800 rounded-xl transition shrink-0" aria-label="Open Navigation" title="Open Navigation">
+        <button onclick="toggleMobileSidebar(true)" id="mobile-hamburger-btn" class="lg:hidden p-1.5 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition shrink-0" aria-label="Open Navigation" title="Open Navigation">
           <i data-lucide="menu" class="w-5 h-5"></i>
         </button>
 
+        <!-- Brand & Title -->
+        <div class="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse min-w-0">
+          <div class="w-8 h-8 rounded-lg bg-white text-[#23688b] flex items-center justify-center shadow-sm font-black text-base shrink-0">
+            <i data-lucide="cog" class="w-5 h-5 animate-[spin_10s_linear_infinite]"></i>
+          </div>
+          <div class="min-w-0">
+            <h1 id="header-brand-name" class="text-sm sm:text-base font-extrabold tracking-tight text-white truncate max-w-[130px] xs:max-w-[180px] sm:max-w-none">
+              MUFTI AUTO STORE
+            </h1>
+          </div>
+        </div>
+
+        <!-- Refresh Button (Next to Brand, matching reference screenshot) -->
+        <button onclick="refreshCurrentView()" title="Refresh Data" class="w-8 h-8 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center transition border border-white/20 shadow-xs shrink-0">
+          <i data-lucide="rotate-cw" class="w-4 h-4"></i>
+        </button>
+
         <!-- Language Switcher Button (English / اردو Toggle) -->
-        <div class="inline-flex p-0.5 sm:p-1 bg-slate-900 rounded-xl border border-slate-800 shadow-inner shrink-0">
-          <button onclick="setLanguage('en')" id="lang-btn-en" class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition flex items-center gap-1 bg-amber-500 text-slate-950 shadow-sm">
+        <div class="inline-flex p-0.5 bg-black/20 rounded-lg border border-white/15 shadow-inner shrink-0">
+          <button onclick="setLanguage('en')" id="lang-btn-en" class="px-2 sm:px-2.5 py-0.5 rounded text-[11px] font-bold transition flex items-center gap-1 bg-white text-[#23688b] shadow-xs">
             <span>🇬🇧</span>
             <span class="hidden xs:inline sm:inline">English</span>
           </button>
-          <button onclick="setLanguage('ur')" id="lang-btn-ur" class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition flex items-center gap-1 text-slate-400 hover:text-white">
+          <button onclick="setLanguage('ur')" id="lang-btn-ur" class="px-2 sm:px-2.5 py-0.5 rounded text-[11px] font-bold transition flex items-center gap-1 text-white/80 hover:text-white">
             <span>🇵🇰</span>
-            <span class="hidden xs:inline sm:inline">اردو ورژن</span>
+            <span class="hidden xs:inline sm:inline">اردو</span>
           </button>
-        </div>
-
-        <!-- Brand & Title -->
-        <div class="flex items-center space-x-2 sm:space-x-3 rtl:space-x-reverse ml-1 sm:ml-2 min-w-0">
-          <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-amber-400 via-amber-500 to-amber-600 flex items-center justify-center shadow-md shadow-amber-500/25 border border-amber-300/30 shrink-0">
-            <i data-lucide="cog" class="w-4 h-4 sm:w-5 sm:h-5 text-slate-950 animate-[spin_10s_linear_infinite]"></i>
-          </div>
-          <div class="min-w-0">
-            <div class="flex items-center gap-1.5">
-              <h1 id="header-brand-name" class="text-sm sm:text-base font-extrabold tracking-tight text-white truncate max-w-[120px] xs:max-w-[170px] sm:max-w-none">
-                MUFTI AUTO STORE
-              </h1>
-              <span class="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 tracking-wider shrink-0 hidden xs:inline-block">
-                ERP 1.0
-              </span>
-            </div>
-            <p id="header-brand-sub" class="text-[10px] sm:text-[11px] text-amber-200/80 leading-none mt-0.5 truncate hidden md:block">
-              Auto Parts Manufacturing & Production Management ERP
-            </p>
-          </div>
         </div>
       </div>
 
-      <!-- RIGHT: User Role Selector (Live RBAC Switcher) & Refresh -->
-      <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
-        <div class="flex items-center gap-1 sm:gap-2 bg-slate-900/90 px-2 sm:px-3 py-1 sm:py-1.5 rounded-xl border border-slate-800 shadow-inner">
-          <i data-lucide="shield-check" class="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0"></i>
-          <span id="label-user-role" class="text-xs text-slate-300 font-medium hidden md:inline">User Role:</span>
-          <select id="role-selector" onchange="changeActiveRole(this.value)" class="bg-slate-950 text-amber-300 text-[11px] sm:text-xs font-bold rounded-lg px-2 py-1 border border-slate-700 focus:outline-none focus:ring-1 focus:ring-amber-400 cursor-pointer max-w-[110px] xs:max-w-[140px] sm:max-w-none truncate">
+      <!-- RIGHT: User Role Selector & Profile Avatar (matching reference screenshot) -->
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div class="flex items-center gap-1 sm:gap-2 bg-white/10 px-2 sm:px-2.5 py-1 rounded-lg border border-white/20 shadow-inner">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-white shrink-0"></i>
+          <span id="label-user-role" class="text-xs text-white/90 font-medium hidden md:inline">User Role:</span>
+          <select id="role-selector" onchange="changeActiveRole(this.value)" class="bg-transparent text-white text-[11px] sm:text-xs font-bold rounded px-1.5 py-0.5 focus:outline-none cursor-pointer max-w-[110px] xs:max-w-[140px] sm:max-w-none truncate [&>option]:bg-slate-900 [&>option]:text-white">
             <option value="Admin">Super Admin (All Modules)</option>
             <option value="Storekeeper">Store Incharge (Raw Store / GRN)</option>
             <option value="Production">Production Manager (BOM / Work Order)</option>
@@ -190,139 +196,148 @@
           </select>
         </div>
 
-        <button onclick="refreshCurrentView()" title="Refresh Data" class="p-1.5 sm:p-2 text-slate-400 hover:text-amber-300 hover:bg-slate-800/80 rounded-xl transition border border-transparent hover:border-slate-700 shrink-0">
-          <i data-lucide="rotate-cw" class="w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
-        </button>
+        <!-- Global indicator & User Avatar Silhouette (matching reference screenshot) -->
+        <div class="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white flex items-center justify-center transition cursor-pointer shadow-xs shrink-0" title="System Administrator">
+          <i data-lucide="user" class="w-4.5 h-4.5"></i>
+        </div>
       </div>
     </div>
   </header>
 
+  <!-- SUB-HEADER BREADCRUMB / TAB BAR (Matching reference screenshot) -->
+  <div class="bg-slate-100 border-b border-slate-200 px-3 sm:px-6 lg:px-8">
+    <div class="max-w-[1650px] w-full mx-auto flex items-center justify-between">
+      <div class="inline-flex items-center gap-2 bg-white border-x border-t-2 border-t-[#23688b] border-slate-200 px-4 py-1.5 text-xs font-bold text-slate-800 rounded-t shadow-xs" id="active-tab-indicator">
+        <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-[#23688b]" id="breadcrumb-icon"></i>
+        <span id="breadcrumb-title">Dashboard</span>
+      </div>
+    </div>
+  </div>
+
   <!-- MAIN APP CONTAINER (Sidebar + Content) -->
-  <div class="flex-1 flex max-w-[1650px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 gap-6 sm:gap-7 relative">
+  <div class="flex-1 flex max-w-[1650px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-5 gap-5 sm:gap-6 relative">
 
     <!-- Mobile Backdrop Overlay -->
     <div id="sidebar-backdrop" onclick="toggleMobileSidebar(false)" class="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 hidden transition-opacity duration-300 lg:hidden"></div>
 
-    <!-- SIDEBAR NAVIGATION (Drawer on Mobile, Static Column on Desktop) -->
-    <aside id="app-sidebar" class="fixed inset-y-0 start-0 z-50 w-72 sm:w-80 bg-white shadow-2xl lg:shadow-none border-e border-slate-200 p-4 transition-transform duration-300 ease-in-out -translate-x-full rtl:translate-x-full lg:translate-x-0 lg:rtl:translate-x-0 lg:static lg:z-auto lg:w-80 sm:lg:w-88 xl:lg:w-96 lg:shrink-0 lg:border-none lg:bg-transparent lg:p-0 overflow-y-auto">
-      <div class="bg-white/95 lg:bg-white/90 backdrop-blur-md rounded-2xl border border-slate-200/80 p-3 sm:p-4 sticky top-24 shadow-sm">
-        <div class="px-3 py-2 text-xs font-black uppercase tracking-wider text-slate-500 border-b border-slate-100 mb-3 flex items-center justify-between">
-          <span id="sidebar-label-nav">NAVIGATION MENU</span>
-          <!-- Close button for mobile drawer -->
-          <button onclick="toggleMobileSidebar(false)" class="lg:hidden p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition" title="Close Menu">
-            <i data-lucide="x" class="w-5 h-5"></i>
-          </button>
-        </div>
+    <!-- SIDEBAR NAVIGATION (Drawer on Mobile, Sleek Static Column on Desktop) -->
+    <aside id="app-sidebar" class="fixed inset-y-0 start-0 z-50 w-64 sm:w-72 bg-white shadow-2xl lg:shadow-sm border border-slate-200 transition-transform duration-300 ease-in-out -translate-x-full rtl:translate-x-full lg:translate-x-0 lg:rtl:translate-x-0 lg:static lg:z-auto lg:w-64 xl:w-72 lg:shrink-0 lg:rounded-xl overflow-y-auto max-h-screen lg:max-h-[calc(100vh-120px)] lg:sticky lg:top-24">
+      
+      <!-- 4 Quick-Action Colored Square Tiles (Exact match to reference screenshot) -->
+      <div class="grid grid-cols-4 gap-1 p-2 bg-slate-50 border-b border-slate-200">
+        <!-- 1. Green Button: Raw Store -->
+        <button onclick="navigate('raw_store')" title="Raw Store Inventory" class="h-8 rounded bg-[#5cb85c] hover:bg-[#4cae4c] text-white flex items-center justify-center transition shadow-xs">
+          <i data-lucide="boxes" class="w-4 h-4"></i>
+        </button>
+        <!-- 2. Blue Button: Purchase Orders -->
+        <button onclick="navigate('po')" title="Purchase Orders" class="h-8 rounded bg-[#0284c7] hover:bg-[#0369a1] text-white flex items-center justify-center transition shadow-xs">
+          <i data-lucide="shopping-cart" class="w-4 h-4"></i>
+        </button>
+        <!-- 3. Orange Button: Production Work Orders -->
+        <button onclick="navigate('work_orders')" title="Production Work Orders" class="h-8 rounded bg-[#f0ad4e] hover:bg-[#eea236] text-white flex items-center justify-center transition shadow-xs">
+          <i data-lucide="factory" class="w-4 h-4"></i>
+        </button>
+        <!-- 4. Brick/Red Button: HR & Piece-Rate -->
+        <button onclick="navigate('hr')" title="HR & Piece-Rate" class="h-8 rounded bg-[#d9534f] hover:bg-[#d43f3a] text-white flex items-center justify-center transition shadow-xs">
+          <i data-lucide="users" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Mobile Close Header -->
+      <div class="lg:hidden px-3 py-2 text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-slate-100 flex items-center justify-between">
+        <span id="sidebar-label-nav">NAVIGATION MENU</span>
+        <button onclick="toggleMobileSidebar(false)" class="p-1 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition" title="Close Menu">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
         
-        <nav class="space-y-2.5" id="sidebar-nav">
-          <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item menu-box w-full flex items-center justify-between active p-3.5 sm:p-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 shadow-xs">
-                <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
-              </div>
-              <span id="nav-txt-dashboard" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Dashboard</span>
+        <nav class="divide-y divide-slate-100/90" id="sidebar-nav">
+          <button onclick="navigate('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group active">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="layout-dashboard" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-dashboard" class="leading-normal">Dashboard</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('po')" id="nav-po" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 shadow-xs">
-                <i data-lucide="shopping-cart" class="w-5 h-5"></i>
-              </div>
-              <span id="nav-txt-po" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Purchase Orders</span>
+          <button onclick="navigate('po')" id="nav-po" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="shopping-cart" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-po" class="leading-normal">Purchase Orders</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('grn')" id="nav-grn" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 shadow-xs">
-                <i data-lucide="package-check" class="w-5 h-5"></i>
-              </div>
-              <span id="nav-txt-grn" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Raw Receiving (GRN)</span>
+          <button onclick="navigate('grn')" id="nav-grn" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="package-check" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-grn" class="leading-normal">Raw Receiving (GRN)</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('raw_store')" id="nav-raw_store" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 shadow-xs">
-                <i data-lucide="boxes" class="w-5 h-5"></i>
-              </div>
-              <span id="nav-txt-raw_store" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Raw Store Inventory</span>
+          <button onclick="navigate('raw_store')" id="nav-raw_store" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="boxes" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-raw_store" class="leading-normal">Raw Store Inventory</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('sampling')" id="nav-sampling" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 shadow-xs">
-                <i data-lucide="flask-conical" class="w-5 h-5"></i>
-              </div>
-              <span id="nav-txt-sampling" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Sampling & Recipe</span>
+          <button onclick="navigate('sampling')" id="nav-sampling" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="flask-conical" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-sampling" class="leading-normal">Sampling & Recipe</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('bom')" id="nav-bom" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 shadow-xs">
-                <i data-lucide="clipboard-list" class="w-5 h-5"></i>
-              </div>
-              <span id="nav-txt-bom" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Bill of Materials (BOM)</span>
+          <button onclick="navigate('bom')" id="nav-bom" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="clipboard-list" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-bom" class="leading-normal">Bill of Materials (BOM)</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('work_orders')" id="nav-work_orders" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 shadow-xs">
-                <i data-lucide="factory" class="w-5 h-5"></i>
-              </div>
-              <span id="nav-txt-work_orders" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Production Work Orders</span>
+          <button onclick="navigate('work_orders')" id="nav-work_orders" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="factory" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-work_orders" class="leading-normal">Production Work Orders</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('fg')" id="nav-fg" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 shadow-xs">
-                <i data-lucide="box" class="w-5 h-5"></i>
-              </div>
-              <span id="nav-txt-fg" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Finished Goods (FG)</span>
+          <button onclick="navigate('fg')" id="nav-fg" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="box" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-fg" class="leading-normal">Finished Goods (FG)</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('dispatch')" id="nav-dispatch" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center shrink-0 shadow-xs">
-                <i data-lucide="truck" class="w-5 h-5"></i>
-              </div>
-              <span id="nav-txt-dispatch" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">Outward Dispatch</span>
+          <button onclick="navigate('dispatch')" id="nav-dispatch" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="truck" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-dispatch" class="leading-normal">Outward Dispatch</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('hr')" id="nav-hr" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center shrink-0 shadow-xs">
-                <i data-lucide="users" class="w-5 h-5"></i>
-              </div>
-              <span id="nav-txt-hr" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">HR & Piece-Rate</span>
+          <button onclick="navigate('hr')" id="nav-hr" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="users" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-hr" class="leading-normal">HR & Piece-Rate</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
 
-          <button onclick="navigate('rbac')" id="nav-rbac" class="nav-item menu-box w-full flex items-center justify-between p-3.5 sm:p-4">
-            <div class="flex items-center gap-3.5">
-              <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 shadow-xs">
-                <i data-lucide="shield-check" class="w-5 h-5"></i>
-              </div>
-              <span id="nav-txt-rbac" class="text-base sm:text-[17px] font-black text-slate-900 tracking-normal">User Roles (RBAC)</span>
+          <button onclick="navigate('rbac')" id="nav-rbac" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 text-xs sm:text-[13px] font-semibold text-slate-700 hover:text-[#23688b] hover:bg-slate-50 transition group">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="shield-check" class="nav-icon w-4.5 h-4.5 text-slate-500 group-hover:text-[#23688b] transition shrink-0"></i>
+              <span id="nav-txt-rbac" class="leading-normal">User Roles (RBAC)</span>
             </div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 rtl:rotate-180"></i>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-[#23688b] rtl:rotate-180 transition shrink-0"></i>
           </button>
         </nav>
       </div>
@@ -397,175 +412,75 @@
             <span id="dash-mod-sub" class="text-xs sm:text-sm text-slate-500 font-semibold">Click any module to manage</span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-5">
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4.5">
             <!-- 1. Purchase Orders (PO) -->
-            <div onclick="navigate('po')" class="stat-tile p-4 sm:p-5 hover:border-blue-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex-1 min-w-0">
-                  <h4 id="card-txt-po" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-blue-600 transition leading-snug">Purchase Orders</h4>
-                </div>
-                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition shadow-xs">
-                  <i data-lucide="shopping-cart" class="w-6 h-6"></i>
-                </div>
-              </div>
-              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
-                <p id="card-sub-po" class="leading-normal">Supplier Procurement</p>
-                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 transition rtl:block ltr:hidden shrink-0"></i>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600 transition ltr:block rtl:hidden shrink-0"></i>
-              </div>
+            <div onclick="navigate('po')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="shopping-cart" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-po" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Purchase Orders</h4>
+              <p id="card-sub-po" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">خام مال کا آرڈر</p>
             </div>
 
             <!-- 2. Raw Material Receiving (GRN) -->
-            <div onclick="navigate('grn')" class="stat-tile p-4 sm:p-5 hover:border-emerald-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex-1 min-w-0">
-                  <h4 id="card-txt-grn" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-emerald-600 transition leading-snug">Raw Receiving (GRN)</h4>
-                </div>
-                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition shadow-xs">
-                  <i data-lucide="package-check" class="w-6 h-6"></i>
-                </div>
-              </div>
-              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
-                <p id="card-sub-grn" class="leading-normal">Challans & Gate Receipts</p>
-                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 transition rtl:block ltr:hidden shrink-0"></i>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 transition ltr:block rtl:hidden shrink-0"></i>
-              </div>
+            <div onclick="navigate('grn')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="package-check" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-grn" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Raw Receiving (GRN)</h4>
+              <p id="card-sub-grn" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">گیٹ اور چالان آمد</p>
             </div>
 
             <!-- 3. Raw Store Inventory -->
-            <div onclick="navigate('raw_store')" class="stat-tile p-4 sm:p-5 hover:border-amber-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex-1 min-w-0">
-                  <h4 id="card-txt-raw_store" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-amber-600 transition leading-snug">Raw Store Inventory</h4>
-                </div>
-                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 border border-amber-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-amber-600 group-hover:text-white transition shadow-xs">
-                  <i data-lucide="boxes" class="w-6 h-6"></i>
-                </div>
-              </div>
-              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
-                <p id="card-sub-raw_store" class="leading-normal">Metals, Parts & Bags</p>
-                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 transition rtl:block ltr:hidden shrink-0"></i>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-amber-600 transition ltr:block rtl:hidden shrink-0"></i>
-              </div>
+            <div onclick="navigate('raw_store')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="boxes" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-raw_store" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Raw Store Inventory</h4>
+              <p id="card-sub-raw_store" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">خام مال کا اسٹاک</p>
             </div>
 
             <!-- 4. Sampling & Recipe -->
-            <div onclick="navigate('sampling')" class="stat-tile p-4 sm:p-5 hover:border-purple-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex-1 min-w-0">
-                  <h4 id="card-txt-sampling" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-purple-600 transition leading-snug">Sampling & Recipe</h4>
-                </div>
-                <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 border border-purple-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition shadow-xs">
-                  <i data-lucide="flask-conical" class="w-6 h-6"></i>
-                </div>
-              </div>
-              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
-                <p id="card-sub-sampling" class="leading-normal">Master Part Recipes</p>
-                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-purple-600 transition rtl:block ltr:hidden shrink-0"></i>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-purple-600 transition ltr:block rtl:hidden shrink-0"></i>
-              </div>
+            <div onclick="navigate('sampling')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="flask-conical" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-sampling" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Sampling & Recipe</h4>
+              <p id="card-sub-sampling" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">سیمپلنگ اور فارمولا</p>
             </div>
 
             <!-- 5. Bill of Materials (BOM) -->
-            <div onclick="navigate('bom')" class="stat-tile p-4 sm:p-5 hover:border-rose-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex-1 min-w-0">
-                  <h4 id="card-txt-bom" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-rose-600 transition leading-snug">Bill of Materials (BOM)</h4>
-                </div>
-                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 border border-rose-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-rose-600 group-hover:text-white transition shadow-xs">
-                  <i data-lucide="clipboard-list" class="w-6 h-6"></i>
-                </div>
-              </div>
-              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
-                <p id="card-sub-bom" class="leading-normal">Auto Stock Calculation</p>
-                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-rose-600 transition rtl:block ltr:hidden shrink-0"></i>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-rose-600 transition ltr:block rtl:hidden shrink-0"></i>
-              </div>
+            <div onclick="navigate('bom')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="clipboard-list" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-bom" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Bill of Materials (BOM)</h4>
+              <p id="card-sub-bom" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">بل آف میٹریل</p>
             </div>
 
             <!-- 6. Production Work Orders -->
-            <div onclick="navigate('work_orders')" class="stat-tile p-4 sm:p-5 hover:border-orange-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex-1 min-w-0">
-                  <h4 id="card-txt-work_orders" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-orange-600 transition leading-snug">Production Work Orders</h4>
-                </div>
-                <div class="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 border border-orange-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-orange-600 group-hover:text-white transition shadow-xs">
-                  <i data-lucide="factory" class="w-6 h-6"></i>
-                </div>
-              </div>
-              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
-                <p id="card-sub-work_orders" class="leading-normal">5-Stage Assembly Floor</p>
-                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-orange-600 transition rtl:block ltr:hidden shrink-0"></i>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-orange-600 transition ltr:block rtl:hidden shrink-0"></i>
-              </div>
+            <div onclick="navigate('work_orders')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="factory" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-work_orders" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Production Work Orders</h4>
+              <p id="card-sub-work_orders" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">پروڈکشن ورک آرڈرز</p>
             </div>
 
             <!-- 7. Finished Goods (FG) -->
-            <div onclick="navigate('fg')" class="stat-tile p-4 sm:p-5 hover:border-teal-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex-1 min-w-0">
-                  <h4 id="card-txt-fg" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-teal-600 transition leading-snug">Finished Goods (FG)</h4>
-                </div>
-                <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-600 border border-teal-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white transition shadow-xs">
-                  <i data-lucide="box" class="w-6 h-6"></i>
-                </div>
-              </div>
-              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
-                <p id="card-sub-fg" class="leading-normal">Packed & QC Verified</p>
-                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-teal-600 transition rtl:block ltr:hidden shrink-0"></i>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-teal-600 transition ltr:block rtl:hidden shrink-0"></i>
-              </div>
+            <div onclick="navigate('fg')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="box" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-fg" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Finished Goods (FG)</h4>
+              <p id="card-sub-fg" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">تیار شدہ مال کا ذخیرہ</p>
             </div>
 
             <!-- 8. Outward Dispatch -->
-            <div onclick="navigate('dispatch')" class="stat-tile p-4 sm:p-5 hover:border-cyan-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex-1 min-w-0">
-                  <h4 id="card-txt-dispatch" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-cyan-600 transition leading-snug">Outward Dispatch</h4>
-                </div>
-                <div class="w-12 h-12 rounded-2xl bg-cyan-50 text-cyan-600 border border-cyan-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-cyan-600 group-hover:text-white transition shadow-xs">
-                  <i data-lucide="truck" class="w-6 h-6"></i>
-                </div>
-              </div>
-              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
-                <p id="card-sub-dispatch" class="leading-normal">Challans & Gate Passes</p>
-                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-600 transition rtl:block ltr:hidden shrink-0"></i>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-600 transition ltr:block rtl:hidden shrink-0"></i>
-              </div>
+            <div onclick="navigate('dispatch')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="truck" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-dispatch" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">Outward Dispatch</h4>
+              <p id="card-sub-dispatch" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">ڈسپیچ اور گیٹ پاس</p>
             </div>
 
             <!-- 9. HR & Piece-Rate -->
-            <div onclick="navigate('hr')" class="stat-tile p-4 sm:p-5 hover:border-pink-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex-1 min-w-0">
-                  <h4 id="card-txt-hr" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-pink-600 transition leading-snug">HR & Piece-Rate</h4>
-                </div>
-                <div class="w-12 h-12 rounded-2xl bg-pink-50 text-pink-600 border border-pink-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white transition shadow-xs">
-                  <i data-lucide="users" class="w-6 h-6"></i>
-                </div>
-              </div>
-              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
-                <p id="card-sub-hr" class="leading-normal">Attendance & Worker Pay</p>
-                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-pink-600 transition rtl:block ltr:hidden shrink-0"></i>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-pink-600 transition ltr:block rtl:hidden shrink-0"></i>
-              </div>
+            <div onclick="navigate('hr')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="users" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-hr" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">HR & Piece-Rate</h4>
+              <p id="card-sub-hr" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">حاضری اور کاریگر اجرت</p>
             </div>
 
             <!-- 10. User Roles (RBAC) -->
-            <div onclick="navigate('rbac')" class="stat-tile p-4 sm:p-5 hover:border-indigo-500 hover:shadow-lg cursor-pointer transition flex flex-col justify-between group min-h-[140px]">
-              <div class="flex items-start justify-between gap-3">
-                <div class="flex-1 min-w-0">
-                  <h4 id="card-txt-rbac" class="text-[16px] sm:text-[17px] font-black text-slate-900 group-hover:text-indigo-600 transition leading-snug">User Roles (RBAC)</h4>
-                </div>
-                <div class="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-indigo-600 group-hover:text-white transition shadow-xs">
-                  <i data-lucide="shield-check" class="w-6 h-6"></i>
-                </div>
-              </div>
-              <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-xs sm:text-[13px] font-bold text-slate-600">
-                <p id="card-sub-rbac" class="leading-normal">System Permissions</p>
-                <i data-lucide="arrow-left" class="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition rtl:block ltr:hidden shrink-0"></i>
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 transition ltr:block rtl:hidden shrink-0"></i>
-              </div>
+            <div onclick="navigate('rbac')" class="bg-white border border-slate-200/90 rounded-xl p-4 sm:p-5 hover:border-[#23688b] hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center group min-h-[135px]">
+              <i data-lucide="shield-check" class="w-9 h-9 sm:w-10 sm:h-10 text-[#23688b] mb-2 sm:mb-2.5 group-hover:scale-110 transition shrink-0"></i>
+              <h4 id="card-txt-rbac" class="font-bold text-slate-800 text-sm sm:text-base group-hover:text-[#23688b] transition leading-snug">User Roles (RBAC)</h4>
+              <p id="card-sub-rbac" class="text-xs sm:text-[13px] text-slate-500 font-medium urdu-font mt-1 leading-normal">سسٹم اختیارات</p>
             </div>
           </div>
         </div>
