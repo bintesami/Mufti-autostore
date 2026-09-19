@@ -1,118 +1,127 @@
-// Mufti Auto Store Production ERP - Hybrid Client (Works locally & on GitHub Pages)
+// Mufti Auto Store Production ERP - Hybrid Client with Full English & Urdu Bilingual Engine
 
 const API_BASE = "";
 let isLocalBackend = false;
 
-// In-Memory / LocalStorage Database for standalone GitHub Pages hosting
+// Language State: 'en' (English) or 'ur' (Urdu)
+let currentLang = localStorage.getItem("mufti_erp_lang") || "en";
+
+// In-Memory / LocalStorage Database
 const INITIAL_STORE = {
   roles: [
-    { id: 1, name: "Admin", description: "مکمل سسٹم کنٹرول (Full System Access)", permissions: "*" },
-    { id: 2, name: "Storekeeper", description: "را سٹور، پرچیز اور جی آر این کنٹرول", permissions: "dashboard,po,grn,raw_store" },
-    { id: 3, name: "Production", description: "سیمپلنگ، بل آف مٹیریل (BOM) اور ورک آرڈر کنٹرول", permissions: "dashboard,sampling,bom,work_orders,fg" },
-    { id: 4, name: "HR", description: "ملازمین، حاضری، اوور ٹائم، پر پیس ٹھیکہ اور چھٹیاں", permissions: "dashboard,hr" },
-    { id: 5, name: "Dispatch", description: "فنش گڈز پیکنگ اور فیکٹری/گودام ڈسپیچ چالان", permissions: "dashboard,fg,dispatch" }
+    { id: 1, name: "Admin", name_ur: "ایڈمن", description: "Full System Access", description_ur: "مکمل سسٹم کنٹرول (Full System Access)", permissions: "*" },
+    { id: 2, name: "Storekeeper", name_ur: "سٹور کیپر", description: "Raw Store, PO and GRN Control", description_ur: "را سٹور، پرچیز اور جی آر این کنٹرول", permissions: "dashboard,po,grn,raw_store" },
+    { id: 3, name: "Production", name_ur: "پروڈکشن", description: "Sampling, BOM and Work Orders Control", description_ur: "سیمپلنگ، بل آف مٹیریل (BOM) اور ورک آرڈر کنٹرول", permissions: "dashboard,sampling,bom,work_orders,fg" },
+    { id: 4, name: "HR", name_ur: "ایچ آر", description: "Staff, Attendance, Piece-Rate & Leaves", description_ur: "ملازمین، حاضری، اوور ٹائم، پر پیس ٹھیکہ اور چھٹیاں", permissions: "dashboard,hr" },
+    { id: 5, name: "Dispatch", name_ur: "ڈسپیچ", description: "Finished Goods Packing & Outward Challans", description_ur: "فنش گڈز پیکنگ اور فیکٹری/گودام ڈسپیچ چالان", permissions: "dashboard,fg,dispatch" }
   ],
   users: [
-    { id: 1, username: "admin", full_name: "سسٹم ایڈمنسٹریٹر", role: "Admin", is_active: true },
-    { id: 2, username: "store_mgr", full_name: "اصغر علی (سٹور انچارج)", role: "Storekeeper", is_active: true },
-    { id: 3, username: "prod_mgr", full_name: "محمد راشد (پروڈکشن سپروائزر)", role: "Production", is_active: true },
-    { id: 4, username: "hr_mgr", full_name: "شہزیب خان (ایچ آر آفیسر)", role: "HR", is_active: true },
-    { id: 5, username: "dispatch_mgr", full_name: "طاہر محمود (ڈسپیچ آفیسر)", role: "Dispatch", is_active: true }
+    { id: 1, username: "admin", full_name: "System Administrator", full_name_ur: "سسٹم ایڈمنسٹریٹر", role: "Admin", role_ur: "ایڈمن", is_active: true },
+    { id: 2, username: "store_mgr", full_name: "Asghar Ali (Store Incharge)", full_name_ur: "اصغر علی (سٹور انچارج)", role: "Storekeeper", role_ur: "سٹور کیپر", is_active: true },
+    { id: 3, username: "prod_mgr", full_name: "Muhammad Rashid (Prod. Supervisor)", full_name_ur: "محمد راشد (پروڈکشن سپروائزر)", role: "Production", role_ur: "پروڈکشن", is_active: true },
+    { id: 4, username: "hr_mgr", full_name: "Shahzaib Khan (HR Officer)", full_name_ur: "شہزیب خان (ایچ آر آفیسر)", role: "HR", role_ur: "ایچ آر", is_active: true },
+    { id: 5, username: "dispatch_mgr", full_name: "Tahir Mehmood (Dispatch Officer)", full_name_ur: "طاہر محمود (ڈسپیچ آفیسر)", role: "Dispatch", role_ur: "ڈسپیچ", is_active: true }
   ],
   suppliers: [
-    { id: 1, name: "Pak Auto Casting Industries (Pvt) Ltd", contact_person: "حاجی فاروق", phone: "0300-1122334", address: "بادامی باغ آٹو مارکیٹ، لاہور" },
-    { id: 2, name: "National Friction Material Co.", contact_person: "سلمان شیخ", phone: "0321-4455667", address: "سائٹ ایریا، کراچی" },
-    { id: 3, name: "Standard Springs & Fasteners", contact_person: "عرفان صاحب", phone: "0333-7788990", address: "گوجرانوالہ انڈسٹریل زون" },
-    { id: 4, name: "Universal Poly Packaging & Bags", contact_person: "کامران اکرم", phone: "0345-6677889", address: "اردو بازار، لاہور" },
-    { id: 5, name: "Creative Printing & Hologram Labels", contact_person: "وقاص بٹ", phone: "0302-9988776", address: "شاہ عالم مارکیٹ، لاہور" }
+    { id: 1, name: "Pak Auto Casting Industries (Pvt) Ltd", name_ur: "پاک آٹو کاسٹنگ انڈسٹریز", contact_person: "Haji Farooq", phone: "0300-1122334", address: "Badami Bagh Auto Market, Lahore" },
+    { id: 2, name: "National Friction Material Co.", name_ur: "نیشنل فرکشن میٹریل کمپنی", contact_person: "Salman Sheikh", phone: "0321-4455667", address: "SITE Area, Karachi" },
+    { id: 3, name: "Standard Springs & Fasteners", name_ur: "سٹینڈرڈ سپرنگز اینڈ فاسٹنرز", contact_person: "Irfan Sahib", phone: "0333-7788990", address: "Industrial Zone, Gujranwala" },
+    { id: 4, name: "Universal Poly Packaging & Bags", name_ur: "یونیورسل پولی پیکجنگ اینڈ بیگز", contact_person: "Kamran Akram", phone: "0345-6677889", address: "Urdu Bazar, Lahore" },
+    { id: 5, name: "Creative Printing & Hologram Labels", name_ur: "کریٹو پرنٹنگ اینڈ ہولوگرام لیبلز", contact_person: "Waqas Butt", phone: "0302-9988776", address: "Shah Alam Market, Lahore" }
   ],
   rawMaterials: [
-    { id: 1, code: "RM-ALU-01", name: "Aluminum Alloy Ingot (ADC12)", category: "Raw Metal", unit: "KG", current_stock: 650.0, min_alert_level: 100.0, unit_price: 750.0, location: "Rack-A1", is_low_stock: false },
-    { id: 2, code: "CP-BSC-02", name: "Brake Shoe Core Castings (چائلڈ پارٹ - کور کاسٹنگ)", category: "Child Part", unit: "Pieces", current_stock: 1500.0, min_alert_level: 300.0, unit_price: 95.0, location: "Bin-B1", is_low_stock: false },
-    { id: 3, code: "CP-BLS-03", name: "Friction Brake Lining Strips (چائلڈ پارٹ - لائننگ پیڈ)", category: "Child Part", unit: "Pieces", current_stock: 1800.0, min_alert_level: 400.0, unit_price: 45.0, location: "Bin-B2", is_low_stock: false },
-    { id: 4, code: "FST-TRS-04", name: "Heavy Duty Tension Return Springs (سپرنگ)", category: "Fastener", unit: "Pieces", current_stock: 2200.0, min_alert_level: 500.0, unit_price: 12.0, location: "Bin-C1", is_low_stock: false },
-    { id: 5, code: "FST-RIV-05", name: "Solid Steel Rivets 4x10mm (ریوٹ)", category: "Fastener", unit: "Pieces", current_stock: 10000.0, min_alert_level: 2000.0, unit_price: 2.5, location: "Bin-C2", is_low_stock: false },
-    { id: 6, code: "PKG-BAG-06", name: "Branded Heavy Polybag 6x9 (تھیلی - Mufti Auto Store)", category: "Packaging Bag", unit: "Pieces", current_stock: 3500.0, min_alert_level: 500.0, unit_price: 4.0, location: "Shelf-P1", is_low_stock: false },
-    { id: 7, code: "STK-BAR-07", name: "Barcode & Part Spec Sticker (سٹیکر)", category: "Sticker", unit: "Pieces", current_stock: 4000.0, min_alert_level: 600.0, unit_price: 1.5, location: "Shelf-P2", is_low_stock: false },
-    { id: 8, code: "LGO-HLG-08", name: "Mufti Auto Store Hologram Verification Logo (لوگو)", category: "Logo/Branding", unit: "Pieces", current_stock: 3000.0, min_alert_level: 500.0, unit_price: 3.0, location: "Shelf-P3", is_low_stock: false },
-    { id: 9, code: "PKG-BOX-09", name: "Master Outer Carton Box (50 Pcs Capacity)", category: "Packaging Bag", unit: "Pieces", current_stock: 250.0, min_alert_level: 50.0, unit_price: 65.0, location: "Zone-D", is_low_stock: false }
+    { id: 1, code: "RM-ALU-01", name: "Aluminum Alloy Ingot (ADC12)", name_ur: "ایلومینیم الائے انگوٹ (ADC12)", category: "Raw Metal", category_ur: "خام دھات", unit: "KG", unit_ur: "کلو گرام", current_stock: 650.0, min_alert_level: 100.0, unit_price: 750.0, location: "Rack-A1", is_low_stock: false },
+    { id: 2, code: "CP-BSC-02", name: "Brake Shoe Core Castings", name_ur: "بریک شو کور کاسٹنگ (چائلڈ پارٹ)", category: "Child Part", category_ur: "چائلڈ پارٹ", unit: "Pieces", unit_ur: "پیس", current_stock: 1500.0, min_alert_level: 300.0, unit_price: 95.0, location: "Bin-B1", is_low_stock: false },
+    { id: 3, code: "CP-BLS-03", name: "Friction Brake Lining Strips", name_ur: "فرکشن بریک لائننگ پیڈ (چائلڈ پارٹ)", category: "Child Part", category_ur: "چائلڈ پارٹ", unit: "Pieces", unit_ur: "پیس", current_stock: 1800.0, min_alert_level: 400.0, unit_price: 45.0, location: "Bin-B2", is_low_stock: false },
+    { id: 4, code: "FST-TRS-04", name: "Heavy Duty Tension Return Springs", name_ur: "ہیوی ڈیوٹی ٹینشن ریٹرن سپرنگ", category: "Fastener", category_ur: "سپرنگ و ریوٹس", unit: "Pieces", unit_ur: "پیس", current_stock: 2200.0, min_alert_level: 500.0, unit_price: 12.0, location: "Bin-C1", is_low_stock: false },
+    { id: 5, code: "FST-RIV-05", name: "Solid Steel Rivets 4x10mm", name_ur: "سولڈ سٹیل ریوٹس 4x10mm", category: "Fastener", category_ur: "سپرنگ و ریوٹس", unit: "Pieces", unit_ur: "پیس", current_stock: 10000.0, min_alert_level: 2000.0, unit_price: 2.5, location: "Bin-C2", is_low_stock: false },
+    { id: 6, code: "PKG-BAG-06", name: "Branded Heavy Polybag 6x9 (Mufti Auto Store)", name_ur: "برانڈڈ ہیوی پولی بیگ تھیلی 6x9 (مفتی آٹو سٹور)", category: "Packaging Bag", category_ur: "پیکنگ تھیلی", unit: "Pieces", unit_ur: "پیس", current_stock: 3500.0, min_alert_level: 500.0, unit_price: 4.0, location: "Shelf-P1", is_low_stock: false },
+    { id: 7, code: "STK-BAR-07", name: "Barcode & Part Spec Sticker", name_ur: "بارکوڈ و پارٹ نمبر سٹیکر", category: "Sticker", category_ur: "سٹیکر", unit: "Pieces", unit_ur: "پیس", current_stock: 4000.0, min_alert_level: 600.0, unit_price: 1.5, location: "Shelf-P2", is_low_stock: false },
+    { id: 8, code: "LGO-HLG-08", name: "Mufti Auto Store Hologram Verification Logo", name_ur: "مفتی آٹو سٹور ہولوگرام اوریجنل لوگو", category: "Logo/Branding", category_ur: "لوگو", unit: "Pieces", unit_ur: "پیس", current_stock: 3000.0, min_alert_level: 500.0, unit_price: 3.0, location: "Shelf-P3", is_low_stock: false },
+    { id: 9, code: "PKG-BOX-09", name: "Master Outer Carton Box (50 Pcs Capacity)", name_ur: "ماسٹر آؤٹر کارٹن باکس (50 پیس کپیسٹی)", category: "Packaging Bag", category_ur: "پیکنگ تھیلی", unit: "Pieces", unit_ur: "پیس", current_stock: 250.0, min_alert_level: 50.0, unit_price: 65.0, location: "Zone-D", is_low_stock: false }
   ],
   articles: [
-    { id: 1, article_code: "ART-BS-70", name: "Motorcycle Brake Shoe Assembly (CD70 / CG125)", category: "Brakes", vehicle_model: "Honda CD70 / CG125", unit: "Piece", description: "مکمل بریک شو مع کور، لائننگ، سپرنگ، ریوٹ، برانڈڈ تھیلی، سٹیکر اور لوگو" },
-    { id: 2, article_code: "ART-CP-01", name: "Heavy Duty Clutch Plate Assembly (Universal Auto)", category: "Transmission", vehicle_model: "Universal Rickshaw / Loader", unit: "Piece", description: "ہائی پرفارمنس کلچ پلیٹ مع کسٹم لوگو پیکنگ" },
-    { id: 3, article_code: "ART-SM-02", name: "Side Mirror Assembly with Base & Indicator", category: "Body Parts", vehicle_model: "Suzuki Alto / Mehran", unit: "Piece", description: "مکمل سائیڈ مرر مع گلاس، بیس اور برانڈڈ پیکنگ" }
+    { id: 1, article_code: "ART-BS-70", name: "Motorcycle Brake Shoe Assembly (CD70 / CG125)", name_ur: "موٹرسائیکل بریک شو اسمبلی (CD70 / CG125)", category: "Brakes", category_ur: "بریک سسٹمز", vehicle_model: "Honda CD70 / CG125", unit: "Piece", unit_ur: "پیس", description: "Complete Brake Shoe with Core, Lining, Spring, Rivet, Polybag, Sticker & Logo" },
+    { id: 2, article_code: "ART-CP-01", name: "Heavy Duty Clutch Plate Assembly (Universal Auto)", name_ur: "ہیوی ڈیوٹی کلچ پلیٹ اسمبلی (یونیورسل آٹو)", category: "Transmission", category_ur: "ٹرانسمیشن", vehicle_model: "Universal Rickshaw / Loader", unit: "Piece", unit_ur: "پیس", description: "High Performance Clutch Plate with Riveting and Custom Logo Packaging" },
+    { id: 3, article_code: "ART-SM-02", name: "Side Mirror Assembly with Base & Indicator", name_ur: "سائیڈ مرر اسمبلی مع بیس و انڈیکیٹر", category: "Body Parts", category_ur: "باڈی پارٹس", vehicle_model: "Suzuki Alto / Mehran", unit: "Piece", unit_ur: "پیس", description: "Complete Side Mirror with Glass, Base Fitting, and Branded Packaging" }
   ],
   recipes: [
     {
       id: 1,
       article_id: 1,
       article_name: "Motorcycle Brake Shoe Assembly (CD70 / CG125)",
-      recipe_name: "Brake Shoe CD70 Master Production Recipe (مع تھیلی، سٹیکر، لوگو)",
+      article_name_ur: "موٹرسائیکل بریک شو اسمبلی (CD70 / CG125)",
+      recipe_name: "Brake Shoe CD70 Master Production Recipe (with Bag, Sticker & Logo)",
+      recipe_name_ur: "بریک شو CD70 ماسٹر پروڈکشن ریسیپی (مع تھیلی، سٹیکر، لوگو)",
       version: "v2.1",
-      notes: "ماسٹر سیمپلنگ: فی 1 پیس میں 2 کور، 2 لائننگ، 2 سپرنگ، 8 ریوٹ، 1 تھیلی، 1 سٹیکر، 1 لوگو",
+      notes: "Master Recipe: 1 Unit requires 2 Castings, 2 Linings, 2 Springs, 8 Rivets, 1 Polybag, 1 Sticker, 1 Logo",
+      notes_ur: "ماسٹر سیمپلنگ: فی 1 پیس میں 2 کور، 2 لائننگ، 2 سپرنگ، 8 ریوٹ، 1 تھیلی، 1 سٹیکر، 1 لوگو",
       items: [
-        { material_id: 2, material_name: "Brake Shoe Core Castings (چائلڈ پارٹ - کور کاسٹنگ)", component_type: "Child Part", qty_per_unit: 2.0, unit: "Pieces", notes: "مین کاسٹنگ کور" },
-        { material_id: 3, material_name: "Friction Brake Lining Strips (چائلڈ پارٹ - لائننگ پیڈ)", component_type: "Child Part", qty_per_unit: 2.0, unit: "Pieces", notes: "فرکشن لیدرز" },
-        { material_id: 4, material_name: "Heavy Duty Tension Return Springs (سپرنگ)", component_type: "Fastener", qty_per_unit: 2.0, unit: "Pieces", notes: "ریٹرن سپرنگ" },
-        { material_id: 5, material_name: "Solid Steel Rivets 4x10mm (ریوٹ)", component_type: "Fastener", qty_per_unit: 8.0, unit: "Pieces", notes: "فٹنگ ریوٹس" },
-        { material_id: 6, material_name: "Branded Heavy Polybag 6x9 (تھیلی - Mufti Auto Store)", component_type: "Packaging Bag", qty_per_unit: 1.0, unit: "Pieces", notes: "برانڈڈ تھیلی مع پرنٹ" },
-        { material_id: 7, material_name: "Barcode & Part Spec Sticker (سٹیکر)", component_type: "Sticker", qty_per_unit: 1.0, unit: "Pieces", notes: "بارکوڈ و پارٹ نمبر سٹیکر" },
-        { material_id: 8, material_name: "Mufti Auto Store Hologram Verification Logo (لوگو)", component_type: "Logo/Branding", qty_per_unit: 1.0, unit: "Pieces", notes: "مفتی آٹو سٹور اوریجنل ہولوگرام" }
+        { material_id: 2, material_name: "Brake Shoe Core Castings", material_name_ur: "بریک شو کور کاسٹنگ", component_type: "Child Part", component_type_ur: "چائلڈ پارٹ", qty_per_unit: 2.0, unit: "Pieces", unit_ur: "پیس", notes: "Main Core" },
+        { material_id: 3, material_name: "Friction Brake Lining Strips", material_name_ur: "فرکشن بریک لائننگ پیڈ", component_type: "Child Part", component_type_ur: "چائلڈ پارٹ", qty_per_unit: 2.0, unit: "Pieces", unit_ur: "پیس", notes: "Friction Pads" },
+        { material_id: 4, material_name: "Heavy Duty Tension Return Springs", material_name_ur: "ٹینشن ریٹرن سپرنگ", component_type: "Fastener", component_type_ur: "سپرنگ", qty_per_unit: 2.0, unit: "Pieces", unit_ur: "پیس", notes: "Return Springs" },
+        { material_id: 5, material_name: "Solid Steel Rivets 4x10mm", material_name_ur: "سولڈ سٹیل ریوٹس", component_type: "Fastener", component_type_ur: "ریوٹ", qty_per_unit: 8.0, unit: "Pieces", unit_ur: "پیس", notes: "Fitting Rivets" },
+        { material_id: 6, material_name: "Branded Heavy Polybag 6x9 (Mufti Auto Store)", material_name_ur: "برانڈڈ ہیوی پولی بیگ تھیلی 6x9", component_type: "Packaging Bag", component_type_ur: "پیکنگ تھیلی", qty_per_unit: 1.0, unit: "Pieces", unit_ur: "پیس", notes: "Printed Bag" },
+        { material_id: 7, material_name: "Barcode & Part Spec Sticker", material_name_ur: "بارکوڈ و پارٹ نمبر سٹیکر", component_type: "Sticker", component_type_ur: "سٹیکر", qty_per_unit: 1.0, unit: "Pieces", unit_ur: "پیس", notes: "Barcode Label" },
+        { material_id: 8, material_name: "Mufti Auto Store Hologram Verification Logo", material_name_ur: "مفتی آٹو سٹور ہولوگرام اوریجنل لوگو", component_type: "Logo/Branding", component_type_ur: "لوگو", qty_per_unit: 1.0, unit: "Pieces", unit_ur: "پیس", notes: "Hologram Logo" }
       ]
     }
   ],
   boms: [
-    { id: 1, bom_number: "BOM-1001", article_name: "Motorcycle Brake Shoe Assembly (CD70 / CG125)", planned_quantity: 200, status: "ConvertedToWorkOrder", created_at: "2026-09-19" }
+    { id: 1, bom_number: "BOM-1001", article_name: "Motorcycle Brake Shoe Assembly (CD70 / CG125)", article_name_ur: "موٹرسائیکل بریک شو اسمبلی (CD70 / CG125)", planned_quantity: 200, status: "ConvertedToWorkOrder", status_ur: "ورک آرڈر میں تبدیل", created_at: "2026-09-19" }
   ],
   workOrders: [
     {
       id: 1,
       wo_number: "WO-9842",
       article_name: "Motorcycle Brake Shoe Assembly (CD70 / CG125)",
+      article_name_ur: "موٹرسائیکل بریک شو اسمبلی (CD70 / CG125)",
       target_quantity: 200,
       produced_quantity: 0,
       status: "In Progress",
+      status_ur: "پروڈکشن جاری",
       current_step: "Step 1: Stamping & Cutting",
+      current_step_ur: "مرحلہ 1: پریسنگ / کٹنگ",
       start_date: "2026-09-19",
       steps: [
-        { id: 101, step_number: 1, step_name: "Step 1: Stamping & Cutting (پریسنگ / کٹنگ)", piece_rate: 2.5, required_pieces: 200, completed_pieces: 200, status: "Completed", assigned_worker_name: "محمد افضل" },
-        { id: 102, step_number: 2, step_name: "Step 2: Sub-Assembly (چھوٹے پرزوں کی فٹنگ)", piece_rate: 4.0, required_pieces: 200, completed_pieces: 150, status: "In Progress", assigned_worker_name: "طارق محمود" },
-        { id: 103, step_number: 3, step_name: "Step 3: Riveting & Welding (ریوٹنگ / ویلڈنگ)", piece_rate: 3.5, required_pieces: 200, completed_pieces: 0, status: "Pending", assigned_worker_name: "Unassigned" },
-        { id: 104, step_number: 4, step_name: "Step 4: Quality Check (کوالٹی چیک و پالش)", piece_rate: 1.5, required_pieces: 200, completed_pieces: 0, status: "Pending", assigned_worker_name: "Unassigned" },
-        { id: 105, step_number: 5, step_name: "Step 5: Final Packing (تھیلی، سٹیکر اور لوگو پیکنگ)", piece_rate: 2.0, required_pieces: 200, completed_pieces: 0, status: "Pending", assigned_worker_name: "Unassigned" }
+        { id: 101, step_number: 1, step_name: "Step 1: Stamping & Cutting", step_name_ur: "مرحلہ 1: پریسنگ / کٹنگ", piece_rate: 2.5, required_pieces: 200, completed_pieces: 200, status: "Completed", status_ur: "مکمل", assigned_worker_name: "Muhammad Afzal", assigned_worker_name_ur: "محمد افضل" },
+        { id: 102, step_number: 2, step_name: "Step 2: Sub-Assembly Fitting", step_name_ur: "مرحلہ 2: چھوٹے پرزوں کی فٹنگ", piece_rate: 4.0, required_pieces: 200, completed_pieces: 150, status: "In Progress", status_ur: "جاری", assigned_worker_name: "Tariq Mehmood", assigned_worker_name_ur: "طارق محمود" },
+        { id: 103, step_number: 3, step_name: "Step 3: Riveting & Welding", step_name_ur: "مرحلہ 3: ریوٹنگ / ویلڈنگ", piece_rate: 3.5, required_pieces: 200, completed_pieces: 0, status: "Pending", status_ur: "زیر التواء", assigned_worker_name: "Unassigned", assigned_worker_name_ur: "غیر نامزد" },
+        { id: 104, step_number: 4, step_name: "Step 4: Quality Check & Finishing", step_name_ur: "مرحلہ 4: کوالٹی چیک و پالش", piece_rate: 1.5, required_pieces: 200, completed_pieces: 0, status: "Pending", status_ur: "زیر التواء", assigned_worker_name: "Unassigned", assigned_worker_name_ur: "غیر نامزد" },
+        { id: 105, step_number: 5, step_name: "Step 5: Final Packing (Bag, Sticker, Logo)", step_name_ur: "مرحلہ 5: فائنل پیکنگ (تھیلی، سٹیکر، لوگو)", piece_rate: 2.0, required_pieces: 200, completed_pieces: 0, status: "Pending", status_ur: "زیر التواء", assigned_worker_name: "Unassigned", assigned_worker_name_ur: "غیر نامزد" }
       ]
     }
   ],
   finishedGoods: [
-    { id: 1, batch_number: "BATCH-BS70-0919", article_name: "Motorcycle Brake Shoe Assembly (CD70 / CG125)", article_code: "ART-BS-70", quantity: 350, packaging_status: "Packed with Theli, Sticker & Logo", qc_passed: true, storage_location: "FG-Store-Rack-1" }
+    { id: 1, batch_number: "BATCH-BS70-0919", article_name: "Motorcycle Brake Shoe Assembly (CD70 / CG125)", article_name_ur: "موٹرسائیکل بریک شو اسمبلی (CD70 / CG125)", article_code: "ART-BS-70", quantity: 350, packaging_status: "Packed with Polybag, Sticker & Logo", packaging_status_ur: "پیک شدہ مع تھیلی، سٹیکر اور لوگو", qc_passed: true, storage_location: "FG-Store-Rack-1" }
   ],
   dispatchChallans: [
-    { id: 1, challan_number: "DC-OUT-501", destination_type: "External Factory", destination_name: "سن رائز آٹو انڈسٹریز گودام #3", dispatch_date: "2026-09-19", vehicle_no: "LES-4589", driver_name: "ناصر حسین", gate_pass_no: "GP-102", status: "Dispatched", items: [{ article_name: "Motorcycle Brake Shoe Assembly (CD70 / CG125)", quantity: 150 }] }
+    { id: 1, challan_number: "DC-OUT-501", destination_type: "External Factory", destination_type_ur: "بیرونی فیکٹری", destination_name: "Sunrise Auto Industries Warehouse #3", destination_name_ur: "سن رائز آٹو انڈسٹریز گودام #3", dispatch_date: "2026-09-19", vehicle_no: "LES-4589", driver_name: "Nasir Hussain", driver_name_ur: "ناصر حسین", gate_pass_no: "GP-102", status: "Dispatched", status_ur: "روانہ کردہ", items: [{ article_name: "Motorcycle Brake Shoe Assembly (CD70 / CG125)", article_name_ur: "موٹرسائیکل بریک شو اسمبلی", quantity: 150 }] }
   ],
   purchaseOrders: [
-    { id: 1, po_number: "PO-401", supplier_name: "Pak Auto Casting Industries (Pvt) Ltd", order_date: "2026-09-19", total_amount: 142500, status: "Completed", items: [{ material_name: "Brake Shoe Core Castings", material_code: "CP-BSC-02", quantity: 1500, unit_price: 95, received_quantity: 1500 }] }
+    { id: 1, po_number: "PO-401", supplier_name: "Pak Auto Casting Industries (Pvt) Ltd", supplier_name_ur: "پاک آٹو کاسٹنگ انڈسٹریز", order_date: "2026-09-19", total_amount: 142500, status: "Completed", status_ur: "مکمل شدہ", items: [{ material_name: "Brake Shoe Core Castings", material_code: "CP-BSC-02", quantity: 1500, unit_price: 95, received_quantity: 1500 }] }
   ],
   grns: [
-    { id: 1, grn_number: "GRN-801", supplier_name: "Pak Auto Casting Industries (Pvt) Ltd", po_number: "PO-401", delivery_challan_no: "DC-9842", receiving_date: "2026-09-19", received_by: "اصغر علی (سٹور کیپر)", remarks: "مال اوکے ہے", items: [{ material_name: "Brake Shoe Core Castings", received_qty: 1500, accepted_qty: 1500, unit: "Pieces" }] }
+    { id: 1, grn_number: "GRN-801", supplier_name: "Pak Auto Casting Industries (Pvt) Ltd", supplier_name_ur: "پاک آٹو کاسٹنگ انڈسٹریز", po_number: "PO-401", delivery_challan_no: "DC-9842", receiving_date: "2026-09-19", received_by: "Asghar Ali (Storekeeper)", received_by_ur: "اصغر علی (سٹور کیپر)", remarks: "Material OK", remarks_ur: "مال اوکے ہے", items: [{ material_name: "Brake Shoe Core Castings", received_qty: 1500, accepted_qty: 1500, unit: "Pieces", unit_ur: "پیس" }] }
   ],
   employees: [
-    { id: 1, emp_code: "EMP-101", full_name: "محمد افضل", designation: "پریس آپریٹر (ٹھیکہ ورکر)", department: "Production", phone: "0301-1234567", employment_type: "Piece-Rate", base_salary: 0, piece_rate_default: 4.5 },
-    { id: 2, emp_code: "EMP-102", full_name: "طارق محمود", designation: "اسمبلی کاریگر (ٹھیکہ ورکر)", department: "Production", phone: "0322-2345678", employment_type: "Piece-Rate", base_salary: 0, piece_rate_default: 6.0 },
-    { id: 3, emp_code: "EMP-103", full_name: "بلال احمد", designation: "پیکنگ و سٹیکرنگ (ٹھیکہ ورکر)", department: "Packaging", phone: "0334-3456789", employment_type: "Piece-Rate", base_salary: 0, piece_rate_default: 2.5 },
-    { id: 4, emp_code: "EMP-104", full_name: "اصغر علی", designation: "ہیڈ سٹور کیپر", department: "Raw Store", phone: "0345-4567890", employment_type: "Salaried", base_salary: 45000, piece_rate_default: 0 },
-    { id: 5, emp_code: "EMP-105", full_name: "کامران نواز", designation: "کوالٹی کنٹرول انسپکٹر", department: "QC", phone: "0312-5678901", employment_type: "Salaried", base_salary: 50000, piece_rate_default: 0 }
+    { id: 1, emp_code: "EMP-101", full_name: "Muhammad Afzal", full_name_ur: "محمد افضل", designation: "Press Operator (Piece-Rate)", designation_ur: "پریس آپریٹر (ٹھیکہ ورکر)", department: "Production", department_ur: "پروڈکشن", phone: "0301-1234567", employment_type: "Piece-Rate", employment_type_ur: "پر پیس ٹھیکہ", base_salary: 0, piece_rate_default: 4.5 },
+    { id: 2, emp_code: "EMP-102", full_name: "Tariq Mehmood", full_name_ur: "طارق محمود", designation: "Assembly Craftsman (Piece-Rate)", designation_ur: "اسمبلی کاریگر (ٹھیکہ ورکر)", department: "Production", department_ur: "پروڈکشن", phone: "0322-2345678", employment_type: "Piece-Rate", employment_type_ur: "پر پیس ٹھیکہ", base_salary: 0, piece_rate_default: 6.0 },
+    { id: 3, emp_code: "EMP-103", full_name: "Bilal Ahmed", full_name_ur: "بلال احمد", designation: "Packaging & Sticker (Piece-Rate)", designation_ur: "پیکنگ و سٹیکرنگ (ٹھیکہ ورکر)", department: "Packaging", department_ur: "پیکنگ", phone: "0334-3456789", employment_type: "Piece-Rate", employment_type_ur: "پر پیس ٹھیکہ", base_salary: 0, piece_rate_default: 2.5 },
+    { id: 4, emp_code: "EMP-104", full_name: "Asghar Ali", full_name_ur: "اصغر علی", designation: "Head Storekeeper", designation_ur: "ہیڈ سٹور کیپر", department: "Raw Store", department_ur: "را سٹور", phone: "0345-4567890", employment_type: "Salaried", employment_type_ur: "ماہانہ تنخواہ", base_salary: 45000, piece_rate_default: 0 },
+    { id: 5, emp_code: "EMP-105", full_name: "Kamran Nawaz", full_name_ur: "کامران نواز", designation: "QC Inspector", designation_ur: "کوالٹی کنٹرول انسپکٹر", department: "QC", department_ur: "کوالٹی چیک", phone: "0312-5678901", employment_type: "Salaried", employment_type_ur: "ماہانہ تنخواہ", base_salary: 50000, piece_rate_default: 0 }
   ],
   attendances: [
-    { id: 1, employee_id: 1, emp_code: "EMP-101", employee_name: "محمد افضل", department: "Production", date: "2026-09-19", status: "Present", check_in: "08:00 AM", check_out: "06:00 PM", overtime_hours: 2.0, remarks: "اوور ٹائم پریسنگ" },
-    { id: 2, employee_id: 2, emp_code: "EMP-102", employee_name: "طارق محمود", department: "Production", date: "2026-09-19", status: "Present", check_in: "08:15 AM", check_out: "05:00 PM", overtime_hours: 0, remarks: "آن ٹائم" },
-    { id: 3, employee_id: 3, emp_code: "EMP-103", employee_name: "بلال احمد", department: "Packaging", date: "2026-09-19", status: "Present", check_in: "08:00 AM", check_out: "07:00 PM", overtime_hours: 3.0, remarks: "پیکنگ اوور ٹائم" }
+    { id: 1, employee_id: 1, emp_code: "EMP-101", employee_name: "Muhammad Afzal", employee_name_ur: "محمد افضل", department: "Production", department_ur: "پروڈکشن", date: "2026-09-19", status: "Present", status_ur: "حاضر", check_in: "08:00 AM", check_out: "06:00 PM", overtime_hours: 2.0, remarks: "Overtime Pressing", remarks_ur: "اوور ٹائم پریسنگ" },
+    { id: 2, employee_id: 2, emp_code: "EMP-102", employee_name: "Tariq Mehmood", employee_name_ur: "طارق محمود", department: "Production", department_ur: "پروڈکشن", date: "2026-09-19", status: "Present", status_ur: "حاضر", check_in: "08:15 AM", check_out: "05:00 PM", overtime_hours: 0, remarks: "On Time", remarks_ur: "آن ٹائم" },
+    { id: 3, employee_id: 3, emp_code: "EMP-103", employee_name: "Bilal Ahmed", employee_name_ur: "بلال احمد", department: "Packaging", department_ur: "پیکنگ", date: "2026-09-19", status: "Present", status_ur: "حاضر", check_in: "08:00 AM", check_out: "07:00 PM", overtime_hours: 3.0, remarks: "Packaging Overtime", remarks_ur: "پیکنگ اوور ٹائم" }
   ],
   pieceWorks: [
-    { id: 1, employee_id: 1, employee_name: "محمد افضل", emp_code: "EMP-101", article_name: "Motorcycle Brake Shoe Assembly", step_name: "Step 1: Stamping & Cutting", date: "2026-09-19", pieces_completed: 200, rate_per_piece: 2.5, total_earning: 500, approved_by: "Supervisor" },
-    { id: 2, employee_id: 2, employee_name: "طارق محمود", emp_code: "EMP-102", article_name: "Motorcycle Brake Shoe Assembly", step_name: "Step 2: Sub-Assembly", date: "2026-09-19", pieces_completed: 150, rate_per_piece: 4.0, total_earning: 600, approved_by: "Supervisor" }
+    { id: 1, employee_id: 1, employee_name: "Muhammad Afzal", employee_name_ur: "محمد افضل", emp_code: "EMP-101", article_name: "Motorcycle Brake Shoe Assembly", article_name_ur: "موٹرسائیکل بریک شو اسمبلی", step_name: "Step 1: Stamping & Cutting", step_name_ur: "مرحلہ 1: پریسنگ / کٹنگ", date: "2026-09-19", pieces_completed: 200, rate_per_piece: 2.5, total_earning: 500, approved_by: "Supervisor", approved_by_ur: "سپروائزر" },
+    { id: 2, employee_id: 2, employee_name: "Tariq Mehmood", employee_name_ur: "طارق محمود", emp_code: "EMP-102", article_name: "Motorcycle Brake Shoe Assembly", article_name_ur: "موٹرسائیکل بریک شو اسمبلی", step_name: "Step 2: Sub-Assembly Fitting", step_name_ur: "مرحلہ 2: چھوٹے پرزوں کی فٹنگ", date: "2026-09-19", pieces_completed: 150, rate_per_piece: 4.0, total_earning: 600, approved_by: "Supervisor", approved_by_ur: "سپروائزر" }
   ],
   leaves: [
-    { id: 1, employee_name: "محمد افضل", leave_type: "Casual (اتفاقی)", start_date: "2026-09-22", end_date: "2026-09-22", total_days: 1, reason: "ضروری گھریلو کام", status: "Approved" }
+    { id: 1, employee_name: "Muhammad Afzal", employee_name_ur: "محمد افضل", leave_type: "Casual Leave", leave_type_ur: "اتفاقی چھٹی", start_date: "2026-09-22", end_date: "2026-09-22", total_days: 1, reason: "Personal Urgent Work", reason_ur: "ضروری گھریلو کام", status: "Approved", status_ur: "منظور شدہ" }
   ]
 };
 
@@ -155,9 +164,391 @@ document.addEventListener("DOMContentLoaded", async () => {
   const attDateFilter = document.getElementById("attendance-date-filter");
   if (attDateFilter) attDateFilter.value = today;
 
+  // Apply Language Mode
+  setLanguage(currentLang, false);
+
   await initialLoad();
   applyRolePermissions(currentRole);
 });
+
+// ----------------- BILINGUAL LANGUAGE ENGINE -----------------
+
+const I18N = {
+  en: {
+    brandName: "MUFTI AUTO STORE",
+    brandSub: "Auto Parts Manufacturing & Production Management ERP",
+    userRole: "User Role:",
+    navMenu: "NAVIGATION MENU",
+    roles: {
+      Admin: "Super Admin (All Modules)",
+      Storekeeper: "Store Incharge (Raw Store / GRN)",
+      Production: "Production Manager (BOM / Work Order)",
+      HR: "HR Manager (Attendance / Piece-Rate)",
+      Dispatch: "Dispatch Officer (Finished Goods / Challan)"
+    },
+    nav: {
+      dashboard: "Dashboard",
+      po: "Purchase Orders",
+      grn: "Raw Receiving (GRN)",
+      raw_store: "Raw Store Inventory",
+      sampling: "Sampling & Recipe",
+      bom: "Bill of Materials (BOM)",
+      work_orders: "Production Work Orders",
+      fg: "Finished Goods (FG)",
+      dispatch: "Outward Dispatch",
+      hr: "HR & Piece-Rate",
+      rbac: "User Roles (RBAC)"
+    },
+    dash: {
+      rawLbl: "Total Raw Materials",
+      lowAlert: "Low Stock Items",
+      woLbl: "Active Work Orders",
+      woSub: "In Progress Stages",
+      fgLbl: "Finished Goods Stock",
+      fgSub: "Ready for Dispatch",
+      attLbl: "Today's Attendance",
+      attSub: "Staff & Piece Workers",
+      bannerTitle: "Auto Parts Manufacturing Lifecycle",
+      bannerDesc: "1. Purchase Order (PO) ➔ 2. Raw Material Receiving (GRN) ➔ 3. Sampling & Recipe (Child Parts, Bags, Stickers, Logo) ➔ 4. Bill of Materials (BOM Auto Recipe) ➔ 5. Multi-Step Production & Piece-Rate Work ➔ 6. Finished Goods & Factory Dispatch.",
+      btnBOM: "Generate BOM",
+      btnGRN: "Receive Goods (GRN)",
+      woTblTitle: "Active Production Work Orders",
+      viewAll: "View All",
+      stockTblTitle: "Low Stock Warning (Raw Store)",
+      viewStore: "View Store",
+      thWoNum: "WO #",
+      thWoArt: "Article",
+      thWoQty: "Target / Done",
+      thWoSt: "Status",
+      thStCode: "Code",
+      thStName: "Item Name",
+      thStStock: "Current Stock",
+      thStAlert: "Alert Level"
+    },
+    po: {
+      title: "Purchase Order Management",
+      sub: "Procure raw materials, child parts, and packaging from suppliers",
+      btnNew: "New Purchase Order",
+      thNum: "PO Number",
+      thSup: "Supplier",
+      thDate: "Order Date",
+      thTot: "Total Amount (PKR)",
+      thSt: "Status",
+      thAct: "Action"
+    },
+    grn: {
+      title: "Goods Receiving Note (GRN)",
+      sub: "Receive supplier shipments, inspect quality, and auto-update raw store inventory",
+      btnNew: "New GRN Entry",
+      thNum: "GRN #",
+      thDc: "Supplier DC #",
+      thSup: "Supplier Name",
+      thDate: "Receiving Date",
+      thBy: "Received By",
+      thAct: "Print Voucher"
+    },
+    raw: {
+      title: "Raw Store Inventory",
+      sub: "Live stock of raw metals, child parts, springs, rivets, bags, stickers & logos",
+      btnNew: "Add New Item",
+      thCode: "Code",
+      thName: "Item Name",
+      thCat: "Category",
+      thStk: "Current Stock",
+      thUnit: "Unit",
+      thPrice: "Unit Price",
+      thLoc: "Location",
+      thStat: "Status"
+    },
+    bom: {
+      title: "Bill of Materials Generator",
+      sub: "Select an article, enter target quantity (e.g. 200 pcs), and the system automatically calculates all required parts, bags, stickers, and logos against raw store stock!",
+      lblSelect: "Select Finished Article:",
+      lblQty: "Target Quantity:",
+      btnCalc: "Calculate Recipe",
+      btnConvert: "Convert to Work Order",
+      savedTitle: "Saved BOMs History"
+    },
+    wo: {
+      title: "Multi-Step Production Work Orders",
+      sub: "Stamping, Sub-Assembly, Riveting, Quality Inspection & Final Packaging"
+    },
+    fg: {
+      title: "Finished Goods & Packaging Store",
+      sub: "Verified parts packed with polybags, stickers, and hologram logos"
+    },
+    disp: {
+      title: "Outward Dispatch Challan & Gate Pass",
+      sub: "Delivery challans for sending finished auto parts to factories or customer warehouses",
+      btnNew: "New Dispatch Challan"
+    },
+    hr: {
+      title: "HR, Attendance & Piece-Rate System",
+      sub: "Staff attendance, overtime, piece-rate (ٹھیکہ) earnings & leave management",
+      btnNewEmp: "Add New Staff"
+    },
+    rbac: {
+      title: "Role-Based Access Control (RBAC)",
+      sub: "Control module visibility and permissions for Store Incharge, Production, HR & Dispatch"
+    }
+  },
+  ur: {
+    brandName: "مفتی آٹو سٹور",
+    brandSub: "آٹو پارٹس مینوفیکچرنگ اینڈ پروڈکشن مینجمنٹ سسٹم",
+    userRole: "یوزر رول:",
+    navMenu: "نیویگیشن مینو",
+    roles: {
+      Admin: "سپر ایڈمن (تمام ماڈیولز)",
+      Storekeeper: "سٹور انچارج (را سٹور / جی آر این)",
+      Production: "پروڈکشن منیجر (BOM / ورک آرڈر)",
+      HR: "ایچ آر منیجر (حاضری / ٹھیکہ)",
+      Dispatch: "ڈسپیچ آفیسر (فنش گڈز / چالان)"
+    },
+    nav: {
+      dashboard: "ڈیش بورڈ",
+      po: "پرچیز آرڈر (PO)",
+      grn: "را مٹیریل ریسیونگ (GRN)",
+      raw_store: "را سٹور انوینٹری",
+      sampling: "سیمپلنگ و ریسیپی",
+      bom: "بل آف مٹیریل (BOM)",
+      work_orders: "پروڈکشن ورک آرڈر",
+      fg: "فنش گڈز و پیکنگ",
+      dispatch: "ڈسپیچ چالان",
+      hr: "ایچ آر و ٹھیکہ سسٹم",
+      rbac: "رولز و یوزر کنٹرول"
+    },
+    dash: {
+      rawLbl: "کل را مٹیریل آئٹمز",
+      lowAlert: "کم سٹاک آئٹمز",
+      woLbl: "ایکٹو ورک آرڈرز",
+      woSub: "مراحل میں جاری",
+      fgLbl: "فنش گڈز سٹاک",
+      fgSub: "ڈسپیچ کیلئے تیار",
+      attLbl: "آج کی ورکرز حاضری",
+      attSub: "سٹاف و ٹھیکہ ورکرز",
+      bannerTitle: "آٹو پارٹس پروڈکشن فلو",
+      bannerDesc: "1. خام مال کی خریداری (PO) ➔ 2. جی آر این و ڈیلیوری چالان ریسیونگ (GRN) ➔ 3. سیمپلنگ و ماسٹر ریسیپی (ساتھ تھیلی، سٹیکر، لوگو) ➔ 4. بل آف مٹیریل (BOM Auto Recipe) ➔ 5. ملٹی سٹیپ پروڈکشن و ٹھیکہ ورکرز ➔ 6. فنش گڈز و فیکٹری/گودام ڈسپیچ۔",
+      btnBOM: "نیا BOM بنائیں",
+      btnGRN: "مال ریسیونگ (GRN)",
+      woTblTitle: "جاری پروڈکشن ورک آرڈرز",
+      viewAll: "سب دیکھیں",
+      stockTblTitle: "کم سٹاک الرٹ (را سٹور)",
+      viewStore: "سٹور دیکھیں",
+      thWoNum: "ورک آرڈر #",
+      thWoArt: "آرٹیکل",
+      thWoQty: "ہدف / مکمل",
+      thWoSt: "سٹیٹس",
+      thStCode: "کوڈ",
+      thStName: "آئٹم کا نام",
+      thStStock: "موجودہ سٹاک",
+      thStAlert: "الرٹ لیول"
+    },
+    po: {
+      title: "پرچیز آرڈر مینجمنٹ",
+      sub: "خام مال، چائلڈ پارٹس اور پیکنگ میٹریل کے لیے سپلائرز کو جاری کیے گئے آرڈرز",
+      btnNew: "نیا پرچیز آرڈر بنائیں",
+      thNum: "PO نمبر",
+      thSup: "سپلائر",
+      thDate: "تاریخ آرڈر",
+      thTot: "کل رقم (PKR)",
+      thSt: "سٹیٹس",
+      thAct: "ایکشن"
+    },
+    grn: {
+      title: "را مٹیریل ریسیونگ (GRN)",
+      sub: "سپلائر سے مال کی آمد پر جی آر این بنائیں، چیکنگ کریں اور را سٹور میں سٹاک خودکار شامل کریں",
+      btnNew: "نئی GRN ریسیونگ درج کریں",
+      thNum: "GRN نمبر",
+      thDc: "سپلائر چالان نمبر",
+      thSup: "سپلائر کا نام",
+      thDate: "تاریخ ریسیونگ",
+      thBy: "وصول کنندہ",
+      thAct: "پرنٹ واؤچر"
+    },
+    raw: {
+      title: "را سٹور انوینٹری",
+      sub: "خام مال، چائلڈ پارٹس، سپرنگ، ریوٹ، تھیلی، سٹیکر اور لوگو کا لائیو سٹاک",
+      btnNew: "نیا آئٹم شامل کریں",
+      thCode: "کوڈ",
+      thName: "آئٹم کا نام",
+      thCat: "کیٹیگری",
+      thStk: "موجودہ سٹاک",
+      thUnit: "یونٹ",
+      thPrice: "فی یونٹ قیمت",
+      thLoc: "لوکیشن",
+      thStat: "سٹیٹس"
+    },
+    bom: {
+      title: "بل آف مٹیریل جنریٹر",
+      sub: "آرٹیکل منتخب کریں، مطلوبہ تعداد (جیسے 200 پیس) درج کریں، سسٹم خودکار طریقے سے تمام پارٹس، تھیلی، سٹیکر اور لوگو کا حساب نکال کر را سٹور سٹاک سے موازنہ کرے گا!",
+      lblSelect: "آرٹیکل منتخب کریں:",
+      lblQty: "مطلوبہ تعداد:",
+      btnCalc: "ریسیپی کیلکولیٹ کریں",
+      btnConvert: "ورک آرڈر میں تبدیل کریں",
+      savedTitle: "محفوظ شدہ بل آف مٹیریلز"
+    },
+    wo: {
+      title: "پروڈکشن اور ورک آرڈر مراحل",
+      sub: "کٹنگ، سب اسمبلی، ویلڈنگ، کوالٹی چیک، اور پیکنگ (ساتھ پر پیس ٹھیکہ ورک اندراج)"
+    },
+    fg: {
+      title: "فنش گڈز سٹور و پیکنگ",
+      sub: "پروڈکشن سے مکمل، تھیلی، سٹیکر اور لوگو لگ کر تیار پارٹس کا سٹاک"
+    },
+    disp: {
+      title: "ڈسپیچ چالان و گیٹ پاس",
+      sub: "فیکٹری یا کسٹمر گودام کو مال روانگی کے چالان اور گیٹ پاس",
+      btnNew: "نیا ڈسپیچ چالان بنائیں"
+    },
+    hr: {
+      title: "ایچ آر، حاضری و پر پیس ٹھیکہ سسٹم",
+      sub: "حاضری، اوور ٹائم، پر پیس ٹھیکہ ورکرز کا حساب اور چھٹیاں (Leaves)",
+      btnNewEmp: "نیا ملازم شامل کریں"
+    },
+    rbac: {
+      title: "رولز و یوزر لیمیٹیشن کنٹرول",
+      sub: "ایچ آر، سٹور مین، پروڈکشن والے کو کیا کیا دکھانا ہے اور کیا نہیں دکھانا، مکمل کنٹرول"
+    }
+  }
+};
+
+function setLanguage(lang, reloadView = true) {
+  currentLang = lang;
+  localStorage.setItem("mufti_erp_lang", lang);
+
+  const html = document.getElementById("html-root");
+  html.setAttribute("lang", lang);
+  html.setAttribute("dir", lang === "ur" ? "rtl" : "ltr");
+
+  // Toggle button active states in Header
+  const btnEn = document.getElementById("lang-btn-en");
+  const btnUr = document.getElementById("lang-btn-ur");
+
+  if (lang === "en") {
+    btnEn.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-sm";
+    btnUr.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white";
+  } else {
+    btnUr.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-amber-500 text-slate-950 shadow-sm";
+    btnEn.className = "px-3 py-1 rounded-lg text-xs font-bold transition flex items-center gap-1.5 text-slate-400 hover:text-white";
+  }
+
+  // Update Header & Nav Static Texts
+  const t = I18N[lang];
+  document.getElementById("header-brand-name").innerText = t.brandName;
+  document.getElementById("header-brand-sub").innerText = t.brandSub;
+  document.getElementById("label-user-role").innerText = t.userRole;
+  document.getElementById("sidebar-label-nav").innerText = t.navMenu;
+
+  // Role selector options
+  const roleSel = document.getElementById("role-selector");
+  roleSel.options[0].text = t.roles.Admin;
+  roleSel.options[1].text = t.roles.Storekeeper;
+  roleSel.options[2].text = t.roles.Production;
+  roleSel.options[3].text = t.roles.HR;
+  roleSel.options[4].text = t.roles.Dispatch;
+
+  // Nav Items
+  document.getElementById("nav-txt-dashboard").innerText = t.nav.dashboard;
+  document.getElementById("nav-txt-po").innerText = t.nav.po;
+  document.getElementById("nav-txt-grn").innerText = t.nav.grn;
+  document.getElementById("nav-txt-raw_store").innerText = t.nav.raw_store;
+  document.getElementById("nav-txt-sampling").innerText = t.nav.sampling;
+  document.getElementById("nav-txt-bom").innerText = t.nav.bom;
+  document.getElementById("nav-txt-work_orders").innerText = t.nav.work_orders;
+  document.getElementById("nav-txt-fg").innerText = t.nav.fg;
+  document.getElementById("nav-txt-dispatch").innerText = t.nav.dispatch;
+  document.getElementById("nav-txt-hr").innerText = t.nav.hr;
+  document.getElementById("nav-txt-rbac").innerText = t.nav.rbac;
+
+  // Dashboard texts
+  document.getElementById("stat-lbl-raw").innerText = t.dash.rawLbl;
+  document.getElementById("stat-lbl-low-alert").innerText = t.dash.lowAlert;
+  document.getElementById("stat-lbl-wo").innerText = t.dash.woLbl;
+  document.getElementById("stat-lbl-wo-sub").innerText = t.dash.woSub;
+  document.getElementById("stat-lbl-fg").innerText = t.dash.fgLbl;
+  document.getElementById("stat-lbl-fg-sub").innerText = t.dash.fgSub;
+  document.getElementById("stat-lbl-att").innerText = t.dash.attLbl;
+  document.getElementById("stat-lbl-att-sub").innerText = t.dash.attSub;
+  document.getElementById("banner-title").innerText = t.dash.bannerTitle;
+  document.getElementById("banner-desc").innerText = t.dash.bannerDesc;
+  document.getElementById("btn-create-bom-banner").innerText = t.dash.btnBOM;
+  document.getElementById("btn-create-grn-banner").innerText = t.dash.btnGRN;
+  document.getElementById("dash-tbl-wo-title").innerText = t.dash.woTblTitle;
+  document.getElementById("dash-tbl-wo-viewall").innerText = t.dash.viewAll;
+  document.getElementById("dash-tbl-stock-title").innerText = t.dash.stockTblTitle;
+  document.getElementById("dash-tbl-stock-viewall").innerText = t.dash.viewStore;
+  document.getElementById("th-wo-num").innerText = t.dash.thWoNum;
+  document.getElementById("th-wo-art").innerText = t.dash.thWoArt;
+  document.getElementById("th-wo-qty").innerText = t.dash.thWoQty;
+  document.getElementById("th-wo-st").innerText = t.dash.thWoSt;
+  document.getElementById("th-st-code").innerText = t.dash.thStCode;
+  document.getElementById("th-st-name").innerText = t.dash.thStName;
+  document.getElementById("th-st-stock").innerText = t.dash.thStStock;
+  document.getElementById("th-st-alert").innerText = t.dash.thStAlert;
+
+  // PO texts
+  document.getElementById("po-page-title").innerText = t.po.title;
+  document.getElementById("po-page-sub").innerText = t.po.sub;
+  document.getElementById("po-btn-new").innerText = t.po.btnNew;
+  document.getElementById("th-po-num").innerText = t.po.thNum;
+  document.getElementById("th-po-sup").innerText = t.po.thSup;
+  document.getElementById("th-po-date").innerText = t.po.thDate;
+  document.getElementById("th-po-tot").innerText = t.po.thTot;
+  document.getElementById("th-po-st").innerText = t.po.thSt;
+  document.getElementById("th-po-act").innerText = t.po.thAct;
+
+  // GRN texts
+  document.getElementById("grn-page-title").innerText = t.grn.title;
+  document.getElementById("grn-page-sub").innerText = t.grn.sub;
+  document.getElementById("grn-btn-new").innerText = t.grn.btnNew;
+  document.getElementById("th-grn-num").innerText = t.grn.thNum;
+  document.getElementById("th-grn-dc").innerText = t.grn.thDc;
+  document.getElementById("th-grn-sup").innerText = t.grn.thSup;
+  document.getElementById("th-grn-date").innerText = t.grn.thDate;
+  document.getElementById("th-grn-by").innerText = t.grn.thBy;
+  document.getElementById("th-grn-act").innerText = t.grn.thAct;
+
+  // Raw store texts
+  document.getElementById("raw-page-title").innerText = t.raw.title;
+  document.getElementById("raw-page-sub").innerText = t.raw.sub;
+  document.getElementById("raw-btn-new").innerText = t.raw.btnNew;
+  document.getElementById("th-raw-code").innerText = t.raw.thCode;
+  document.getElementById("th-raw-name").innerText = t.raw.thName;
+  document.getElementById("th-raw-cat").innerText = t.raw.thCat;
+  document.getElementById("th-raw-stk").innerText = t.raw.thStk;
+  document.getElementById("th-raw-unit").innerText = t.raw.thUnit;
+  document.getElementById("th-raw-price").innerText = t.raw.thPrice;
+  document.getElementById("th-raw-loc").innerText = t.raw.thLoc;
+  document.getElementById("th-raw-stat").innerText = t.raw.thStat;
+
+  // BOM texts
+  document.getElementById("bom-page-title").innerText = t.bom.title;
+  document.getElementById("bom-page-sub").innerText = t.bom.sub;
+  document.getElementById("bom-lbl-select").innerText = t.bom.lblSelect;
+  document.getElementById("bom-lbl-qty").innerText = t.bom.lblQty;
+  document.getElementById("bom-btn-calc").innerText = t.bom.btnCalc;
+  document.getElementById("bom-saved-title").innerText = t.bom.savedTitle;
+
+  // Other modules
+  document.getElementById("sample-page-title").innerText = t.sampling ? t.sampling.title : (lang === "ur" ? "سیمپلنگ و ماسٹر ریسیپی" : "Sampling & Master Recipe");
+  document.getElementById("sample-page-sub").innerText = lang === "ur" ? "مین پارٹ، چائلڈ پارٹس، پیکنگ تھیلی، سٹیکر اور لوگو کی ریسیپی ڈیفینیشن" : "Define auto part components: core parts, child parts, packaging bags, stickers & logos";
+  document.getElementById("wo-page-title").innerText = t.wo.title;
+  document.getElementById("wo-page-sub").innerText = t.wo.sub;
+  document.getElementById("fg-page-title").innerText = t.fg.title;
+  document.getElementById("fg-page-sub").innerText = t.fg.sub;
+  document.getElementById("disp-page-title").innerText = t.disp.title;
+  document.getElementById("disp-page-sub").innerText = t.disp.sub;
+  document.getElementById("disp-btn-new").innerText = t.disp.btnNew;
+  document.getElementById("hr-page-title").innerText = t.hr.title;
+  document.getElementById("hr-page-sub").innerText = t.hr.sub;
+  document.getElementById("hr-btn-new-emp").innerText = t.hr.btnNewEmp;
+  document.getElementById("rbac-page-title").innerText = t.rbac.title;
+  document.getElementById("rbac-page-sub").innerText = t.rbac.sub;
+
+  if (reloadView) {
+    navigate(currentView);
+  }
+}
 
 async function initialLoad() {
   await Promise.all([
@@ -200,7 +591,7 @@ function applyRolePermissions(role) {
 function navigate(viewName) {
   const allowed = ROLE_PERMISSIONS[currentRole] || [];
   if (!allowed.includes(viewName)) {
-    alert("آپ کے مقررہ رول کو اس ماڈیول تک رسائی کی اجازت نہیں ہے۔");
+    alert(currentLang === "ur" ? "آپ کے مقررہ رول کو اس ماڈیول تک رسائی کی اجازت نہیں ہے۔" : "Access Restricted for this User Role.");
     return;
   }
 
@@ -209,16 +600,10 @@ function navigate(viewName) {
   const target = document.getElementById(`view-${viewName}`);
   if (target) target.classList.remove("hidden");
 
-  document.querySelectorAll(".nav-item").forEach(btn => {
-    btn.classList.remove("bg-slate-900", "text-white", "shadow-sm");
-    btn.classList.add("text-slate-700");
-  });
-
+  // Highlight active menu-box
+  document.querySelectorAll(".menu-box").forEach(btn => btn.classList.remove("active"));
   const activeBtn = document.getElementById(`nav-${viewName}`);
-  if (activeBtn) {
-    activeBtn.classList.remove("text-slate-700");
-    activeBtn.classList.add("bg-slate-900", "text-white", "shadow-sm");
-  }
+  if (activeBtn) activeBtn.classList.add("active");
 
   if (viewName === "dashboard") loadDashboardStats();
   if (viewName === "po") loadPurchaseOrders();
@@ -242,17 +627,7 @@ function refreshCurrentView() {
 // ----------------- 1. DASHBOARD -----------------
 
 async function loadDashboardStats() {
-  let stats;
-  if (isLocalBackend) {
-    try {
-      const res = await fetch(`${API_BASE}/api/dashboard/stats`);
-      stats = await res.json();
-    } catch (e) {
-      stats = getLocalStats();
-    }
-  } else {
-    stats = getLocalStats();
-  }
+  const stats = getLocalStats();
 
   document.getElementById("stat-raw-items").innerText = stats.raw_materials_count;
   document.getElementById("stat-low-stock").innerText = stats.low_stock_count;
@@ -261,19 +636,19 @@ async function loadDashboardStats() {
   document.getElementById("stat-attendance").innerText = `${stats.today_present_count} / ${stats.total_employees}`;
 
   // Work orders table in dashboard
-  const wos = isLocalBackend ? await (await fetch(`${API_BASE}/api/work-orders`)).json() : db.workOrders;
+  const wos = db.workOrders;
   const woTbody = document.getElementById("dash-wo-table");
   if (wos.length === 0) {
-    woTbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400">کوئی ایکٹو ورک آرڈر نہیں ملا</td></tr>`;
+    woTbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400">${currentLang === "ur" ? "کوئی ایکٹو ورک آرڈر نہیں ملا" : "No active work orders found"}</td></tr>`;
   } else {
     woTbody.innerHTML = wos.slice(0, 5).map(w => `
       <tr class="hover:bg-slate-50">
         <td class="py-2.5 px-3 font-semibold text-slate-800">${w.wo_number}</td>
-        <td class="py-2.5 px-3">${w.article_name}</td>
+        <td class="py-2.5 px-3">${currentLang === "ur" ? (w.article_name_ur || w.article_name) : w.article_name}</td>
         <td class="py-2.5 px-3 font-medium">${w.produced_quantity} / ${w.target_quantity}</td>
         <td class="py-2.5 px-3">
           <span class="px-2 py-0.5 rounded text-[11px] font-semibold ${w.status === 'Completed' ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-100 text-blue-700'}">
-            ${w.status}
+            ${currentLang === "ur" ? (w.status_ur || w.status) : w.status}
           </span>
         </td>
       </tr>
@@ -281,18 +656,18 @@ async function loadDashboardStats() {
   }
 
   // Stock table
-  const mats = isLocalBackend ? await (await fetch(`${API_BASE}/api/raw-materials`)).json() : db.rawMaterials;
+  const mats = db.rawMaterials;
   const lowMats = mats.filter(m => m.current_stock <= m.min_alert_level);
   const stockTbody = document.getElementById("dash-stock-table");
   if (lowMats.length === 0) {
-    stockTbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-emerald-600 font-medium">تمام مٹیریل مناسب مقدار میں موجود ہیں!</td></tr>`;
+    stockTbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-emerald-600 font-medium">${currentLang === "ur" ? "تمام مٹیریل مناسب مقدار میں موجود ہیں!" : "All materials in sufficient stock!"}</td></tr>`;
   } else {
     stockTbody.innerHTML = lowMats.map(m => `
       <tr class="hover:bg-amber-50/50">
         <td class="py-2.5 px-3 font-mono text-slate-700">${m.code}</td>
-        <td class="py-2.5 px-3 font-medium text-slate-800">${m.name}</td>
-        <td class="py-2.5 px-3 text-red-600 font-bold">${m.current_stock} ${m.unit}</td>
-        <td class="py-2.5 px-3 text-slate-500">${m.min_alert_level} ${m.unit}</td>
+        <td class="py-2.5 px-3 font-medium text-slate-800">${currentLang === "ur" ? (m.name_ur || m.name) : m.name}</td>
+        <td class="py-2.5 px-3 text-red-600 font-bold">${m.current_stock} ${currentLang === "ur" ? (m.unit_ur || m.unit) : m.unit}</td>
+        <td class="py-2.5 px-3 text-slate-500">${m.min_alert_level} ${currentLang === "ur" ? (m.unit_ur || m.unit) : m.unit}</td>
       </tr>
     `).join("");
   }
@@ -317,27 +692,27 @@ function getLocalStats() {
 // ----------------- 2. PURCHASE ORDERS -----------------
 
 async function loadPurchaseOrders() {
-  const pos = isLocalBackend ? await (await fetch(`${API_BASE}/api/purchase-orders`)).json() : db.purchaseOrders;
+  const pos = db.purchaseOrders;
   const tbody = document.getElementById("po-table-body");
   if (pos.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400">کوئی پرچیز آرڈر موجود نہیں ہے</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400">${currentLang === "ur" ? "کوئی پرچیز آرڈر موجود نہیں ہے" : "No purchase orders found"}</td></tr>`;
     return;
   }
 
   tbody.innerHTML = pos.map(po => `
     <tr class="hover:bg-slate-50">
       <td class="py-3 px-4 font-mono font-bold text-blue-600">${po.po_number}</td>
-      <td class="py-3 px-4 font-medium text-slate-800">${po.supplier_name}</td>
+      <td class="py-3 px-4 font-medium text-slate-800">${currentLang === "ur" ? (po.supplier_name_ur || po.supplier_name) : po.supplier_name}</td>
       <td class="py-3 px-4">${po.order_date}</td>
       <td class="py-3 px-4 font-semibold">PKR ${po.total_amount.toLocaleString()}</td>
       <td class="py-3 px-4">
         <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold ${po.status === 'Completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-          ${po.status}
+          ${currentLang === "ur" ? (po.status_ur || po.status) : po.status}
         </span>
       </td>
       <td class="py-3 px-4 text-right">
         <button onclick="printPO(${JSON.stringify(po).replace(/"/g, '&quot;')})" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-medium inline-flex items-center gap-1">
-          <i data-lucide="printer" class="w-3.5 h-3.5"></i> پرنٹ
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i> ${currentLang === "ur" ? "پرنٹ" : "Print"}
         </button>
       </td>
     </tr>
@@ -347,26 +722,27 @@ async function loadPurchaseOrders() {
 }
 
 function openNewPOModal() {
-  const supplierOptions = suppliersCache.map(s => `<option value="${s.id}">${s.name}</option>`).join("");
-  const materialOptions = rawMaterialsCache.map(m => `<option value="${m.id}">${m.name} (${m.code})</option>`).join("");
+  const isUr = currentLang === "ur";
+  const supplierOptions = suppliersCache.map(s => `<option value="${s.id}">${isUr ? (s.name_ur || s.name) : s.name}</option>`).join("");
+  const materialOptions = rawMaterialsCache.map(m => `<option value="${m.id}">${isUr ? (m.name_ur || m.name) : m.name} (${m.code})</option>`).join("");
 
   const content = `
     <div class="space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
           <i data-lucide="shopping-cart" class="w-5 h-5 text-blue-600"></i>
-          نیا پرچیز آرڈر بنائیں (New Purchase Order)
+          ${isUr ? "نیا پرچیز آرڈر بنائیں" : "New Purchase Order"}
         </h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">PO نمبر:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "PO نمبر:" : "PO Number:"}</label>
           <input type="text" id="po-num" value="PO-${Date.now().toString().slice(-5)}" class="w-full border border-slate-300 rounded-lg p-2 font-mono bg-slate-50" readonly>
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">سپلائر منتخب کریں:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "سپلائر منتخب کریں:" : "Select Supplier:"}</label>
           <select id="po-supplier" class="w-full border border-slate-300 rounded-lg p-2 bg-white">
             ${supplierOptions}
           </select>
@@ -374,26 +750,26 @@ function openNewPOModal() {
       </div>
 
       <div class="border rounded-lg p-3 bg-slate-50 space-y-3">
-        <h4 class="text-xs font-bold text-slate-700">آرڈر آئٹمز:</h4>
+        <h4 class="text-xs font-bold text-slate-700">${isUr ? "آرڈر آئٹمز:" : "Order Items:"}</h4>
         <div class="grid grid-cols-12 gap-2 text-xs">
           <div class="col-span-6">
-            <label class="block text-[11px] font-semibold text-slate-600 mb-1">را مٹیریل / چائلڈ پارٹ:</label>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">${isUr ? "را مٹیریل / چائلڈ پارٹ:" : "Material / Part:"}</label>
             <select id="po-item-mat" class="w-full border rounded p-1.5 bg-white">${materialOptions}</select>
           </div>
           <div class="col-span-3">
-            <label class="block text-[11px] font-semibold text-slate-600 mb-1">کوانٹٹی:</label>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">${isUr ? "کوانٹٹی:" : "Quantity:"}</label>
             <input type="number" id="po-item-qty" value="500" min="1" class="w-full border rounded p-1.5 bg-white">
           </div>
           <div class="col-span-3">
-            <label class="block text-[11px] font-semibold text-slate-600 mb-1">ریٹ فی یونٹ (PKR):</label>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">${isUr ? "ریٹ فی یونٹ (PKR):" : "Unit Rate (PKR):"}</label>
             <input type="number" id="po-item-price" value="50" min="0" class="w-full border rounded p-1.5 bg-white">
           </div>
         </div>
       </div>
 
       <div class="flex justify-end gap-2 pt-3 border-t">
-        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">منسوخ کریں</button>
-        <button onclick="submitNewPO()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow">آرڈر محفوظ کریں</button>
+        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">${isUr ? "منسوخ کریں" : "Cancel"}</button>
+        <button onclick="submitNewPO()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg shadow">${isUr ? "آرڈر محفوظ کریں" : "Save Order"}</button>
       </div>
     </div>
   `;
@@ -413,9 +789,11 @@ async function submitNewPO() {
     id: db.purchaseOrders.length + 1,
     po_number: poNum,
     supplier_name: supObj ? supObj.name : "Supplier",
+    supplier_name_ur: supObj ? (supObj.name_ur || supObj.name) : "سپلائر",
     order_date: new Date().toISOString().split("T")[0],
     total_amount: qty * price,
     status: "Pending",
+    status_ur: "زیر التواء",
     items: [{
       material_name: matObj ? matObj.name : "Material",
       material_code: matObj ? matObj.code : "CODE",
@@ -425,30 +803,20 @@ async function submitNewPO() {
     }]
   };
 
-  if (isLocalBackend) {
-    try {
-      await fetch(`${API_BASE}/api/purchase-orders`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ po_number: poNum, supplier_id: supplierId, items: [{ material_id: matId, quantity: qty, unit_price: price }] })
-      });
-    } catch (e) {}
-  }
-
   db.purchaseOrders.unshift(newPO);
   saveLocalDB();
   closeModal();
   loadPurchaseOrders();
-  alert("پرچیز آرڈر کامیابی سے جاری ہو گیا!");
+  alert(currentLang === "ur" ? "پرچیز آرڈر کامیابی سے جاری ہو گیا!" : "Purchase order created successfully!");
 }
 
 // ----------------- 3. GRN & RECEIVING -----------------
 
 async function loadGRNs() {
-  const grns = isLocalBackend ? await (await fetch(`${API_BASE}/api/grns`)).json() : db.grns;
+  const grns = db.grns;
   const tbody = document.getElementById("grn-table-body");
   if (grns.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400">کوئی GRN ریکارڈ نہیں ہے</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400">${currentLang === "ur" ? "کوئی GRN ریکارڈ نہیں ہے" : "No GRN records found"}</td></tr>`;
     return;
   }
 
@@ -456,12 +824,12 @@ async function loadGRNs() {
     <tr class="hover:bg-slate-50">
       <td class="py-3 px-4 font-mono font-bold text-emerald-600">${g.grn_number}</td>
       <td class="py-3 px-4 font-mono text-slate-700">${g.delivery_challan_no}</td>
-      <td class="py-3 px-4 font-medium text-slate-800">${g.supplier_name}</td>
+      <td class="py-3 px-4 font-medium text-slate-800">${currentLang === "ur" ? (g.supplier_name_ur || g.supplier_name) : g.supplier_name}</td>
       <td class="py-3 px-4">${g.receiving_date}</td>
-      <td class="py-3 px-4 font-medium text-slate-700">${g.received_by}</td>
+      <td class="py-3 px-4 font-medium text-slate-700">${currentLang === "ur" ? (g.received_by_ur || g.received_by) : g.received_by}</td>
       <td class="py-3 px-4 text-right">
         <button onclick="printGRN(${JSON.stringify(g).replace(/"/g, '&quot;')})" class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded text-xs font-semibold inline-flex items-center gap-1">
-          <i data-lucide="printer" class="w-3.5 h-3.5"></i> پرنٹ واؤچر
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i> ${currentLang === "ur" ? "پرنٹ واؤچر" : "Print Voucher"}
         </button>
       </td>
     </tr>
@@ -471,51 +839,52 @@ async function loadGRNs() {
 }
 
 function openNewGRNModal() {
-  const supplierOptions = suppliersCache.map(s => `<option value="${s.id}">${s.name}</option>`).join("");
-  const materialOptions = rawMaterialsCache.map(m => `<option value="${m.id}">${m.name} (${m.code})</option>`).join("");
+  const isUr = currentLang === "ur";
+  const supplierOptions = suppliersCache.map(s => `<option value="${s.id}">${isUr ? (s.name_ur || s.name) : s.name}</option>`).join("");
+  const materialOptions = rawMaterialsCache.map(m => `<option value="${m.id}">${isUr ? (m.name_ur || m.name) : m.name} (${m.code})</option>`).join("");
 
   const content = `
     <div class="space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
           <i data-lucide="package-check" class="w-5 h-5 text-emerald-600"></i>
-          نئی GRN ریسیونگ و چالان اندراج (New GRN)
+          ${isUr ? "نئی GRN ریسیونگ و چالان اندراج" : "New Goods Received Note (GRN)"}
         </h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">GRN نمبر:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "GRN نمبر:" : "GRN Number:"}</label>
           <input type="text" id="grn-num" value="GRN-${Date.now().toString().slice(-5)}" class="w-full border border-slate-300 rounded-lg p-2 font-mono bg-slate-50" readonly>
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">سپلائر ڈیلیوری چالان نمبر:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "سپلائر چالان نمبر:" : "Supplier DC No:"}</label>
           <input type="text" id="grn-dc-num" placeholder="e.g. DC-9842" class="w-full border border-slate-300 rounded-lg p-2 bg-white">
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">سپلائر:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "سپلائر:" : "Supplier:"}</label>
           <select id="grn-supplier" class="w-full border border-slate-300 rounded-lg p-2 bg-white">${supplierOptions}</select>
         </div>
       </div>
 
       <div class="border rounded-lg p-3 bg-slate-50 space-y-3">
-        <h4 class="text-xs font-bold text-slate-700">وصول شدہ را مٹیریل تفصیل:</h4>
+        <h4 class="text-xs font-bold text-slate-700">${isUr ? "وصول شدہ را مٹیریل تفصیل:" : "Received Material Details:"}</h4>
         <div class="grid grid-cols-12 gap-2 text-xs">
           <div class="col-span-5">
-            <label class="block text-[11px] font-semibold text-slate-600 mb-1">آئٹم منتخب کریں:</label>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">${isUr ? "آئٹم منتخب کریں:" : "Select Item:"}</label>
             <select id="grn-item-mat" class="w-full border rounded p-1.5 bg-white">${materialOptions}</select>
           </div>
           <div class="col-span-3">
-            <label class="block text-[11px] font-semibold text-slate-600 mb-1">وصول شدہ مقدار:</label>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">${isUr ? "وصول شدہ مقدار:" : "Received Qty:"}</label>
             <input type="number" id="grn-item-qty" value="200" min="1" class="w-full border rounded p-1.5 bg-white">
           </div>
           <div class="col-span-2">
-            <label class="block text-[11px] font-semibold text-slate-600 mb-1">مسترد (Rejected):</label>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">${isUr ? "مسترد (Rej):" : "Rejected Qty:"}</label>
             <input type="number" id="grn-item-rej" value="0" min="0" class="w-full border rounded p-1.5 bg-white">
           </div>
           <div class="col-span-2">
-            <label class="block text-[11px] font-semibold text-slate-600 mb-1">ریٹ فی یونٹ:</label>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">${isUr ? "ریٹ فی یونٹ:" : "Unit Rate:"}</label>
             <input type="number" id="grn-item-price" value="0" min="0" class="w-full border rounded p-1.5 bg-white">
           </div>
         </div>
@@ -523,18 +892,18 @@ function openNewGRNModal() {
 
       <div class="grid grid-cols-2 gap-3 text-xs">
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">وصول کنندہ (Received By):</label>
-          <input type="text" id="grn-receiver" value="اصغر علی (سٹور کیپر)" class="w-full border border-slate-300 rounded-lg p-2 bg-white">
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "وصول کنندہ:" : "Received By:"}</label>
+          <input type="text" id="grn-receiver" value="${isUr ? 'اصغر علی (سٹور کیپر)' : 'Asghar Ali (Storekeeper)'}" class="w-full border border-slate-300 rounded-lg p-2 bg-white">
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">ریمارکس:</label>
-          <input type="text" id="grn-remarks" placeholder="مال بالکل درست ہے" class="w-full border border-slate-300 rounded-lg p-2 bg-white">
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "ریمارکس:" : "Remarks:"}</label>
+          <input type="text" id="grn-remarks" placeholder="${isUr ? 'مال بالکل درست ہے' : 'Inspected and verified OK'}" class="w-full border border-slate-300 rounded-lg p-2 bg-white">
         </div>
       </div>
 
       <div class="flex justify-end gap-2 pt-3 border-t">
-        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">منسوخ کریں</button>
-        <button onclick="submitNewGRN()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow">GRN محفوظ کریں اور سٹاک شامل کریں</button>
+        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">${isUr ? "منسوخ کریں" : "Cancel"}</button>
+        <button onclick="submitNewGRN()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow">${isUr ? "GRN محفوظ کریں اور سٹاک شامل کریں" : "Save GRN & Update Stock"}</button>
       </div>
     </div>
   `;
@@ -555,40 +924,23 @@ async function submitNewGRN() {
   const rejQty = parseFloat(document.getElementById("grn-item-rej").value);
   const accQty = Math.max(0, recQty - rejQty);
 
-  // Update in local DB
   const newGRN = {
     id: db.grns.length + 1,
     grn_number: grnNum,
     supplier_name: supObj ? supObj.name : "Supplier",
+    supplier_name_ur: supObj ? (supObj.name_ur || supObj.name) : "سپلائر",
     delivery_challan_no: dcNum,
     po_number: "DIRECT",
     receiving_date: new Date().toISOString().split("T")[0],
     received_by: receiver,
+    received_by_ur: receiver,
     remarks: remarks,
     items: [{ material_name: matObj ? matObj.name : "Material", received_qty: recQty, accepted_qty: accQty, unit: matObj ? matObj.unit : "Pieces" }]
   };
 
-  // Add stock to material
   const targetMat = db.rawMaterials.find(m => m.id === matId);
   if (targetMat) {
     targetMat.current_stock += accQty;
-  }
-
-  if (isLocalBackend) {
-    try {
-      await fetch(`${API_BASE}/api/grns`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          grn_number: grnNum,
-          delivery_challan_no: dcNum,
-          supplier_id: supplierId,
-          received_by: receiver,
-          remarks: remarks,
-          items: [{ material_id: matId, received_qty: recQty, rejected_qty: rejQty, accepted_qty: accQty }]
-        })
-      });
-    } catch (e) {}
   }
 
   db.grns.unshift(newGRN);
@@ -596,13 +948,13 @@ async function submitNewGRN() {
   closeModal();
   await loadRawMaterials();
   await loadGRNs();
-  alert(`GRN محفوظ ہو گئی! ${accQty} یونٹس را سٹور انوینٹری میں شامل کر دیے گئے۔`);
+  alert(currentLang === "ur" ? `GRN محفوظ ہو گئی! ${accQty} یونٹس را سٹور انوینٹری میں شامل کر دیے گئے۔` : `GRN saved successfully! ${accQty} units added to raw store inventory.`);
 }
 
 // ----------------- 4. RAW STORE INVENTORY -----------------
 
 async function loadRawMaterials(categoryFilter = "") {
-  let materials = isLocalBackend ? await (await fetch(`${API_BASE}/api/raw-materials`)).json() : db.rawMaterials;
+  let materials = db.rawMaterials;
   if (categoryFilter) {
     materials = materials.filter(m => m.category === categoryFilter);
   }
@@ -616,17 +968,17 @@ async function loadRawMaterials(categoryFilter = "") {
     return `
       <tr class="hover:bg-slate-50">
         <td class="py-3 px-4 font-mono font-semibold text-slate-700">${m.code}</td>
-        <td class="py-3 px-4 font-bold text-slate-800">${m.name}</td>
+        <td class="py-3 px-4 font-bold text-slate-800">${currentLang === "ur" ? (m.name_ur || m.name) : m.name}</td>
         <td class="py-3 px-4">
-          <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-700">${m.category}</span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-slate-100 text-slate-700">${currentLang === "ur" ? (m.category_ur || m.category) : m.category}</span>
         </td>
         <td class="py-3 px-4 font-bold ${isLow ? 'text-red-600 font-extrabold' : 'text-slate-800'}">${m.current_stock}</td>
-        <td class="py-3 px-4 text-slate-500">${m.unit}</td>
+        <td class="py-3 px-4 text-slate-500">${currentLang === "ur" ? (m.unit_ur || m.unit) : m.unit}</td>
         <td class="py-3 px-4">PKR ${m.unit_price}</td>
         <td class="py-3 px-4 text-slate-500">${m.location}</td>
         <td class="py-3 px-4 text-center">
           <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${isLow ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700'}">
-            ${isLow ? 'کم سٹاک' : 'موجود'}
+            ${isLow ? (currentLang === 'ur' ? 'کم سٹاک' : 'Low Stock') : (currentLang === 'ur' ? 'موجود' : 'Available')}
           </span>
         </td>
       </tr>
@@ -639,58 +991,59 @@ function filterRawMaterials(category) {
 }
 
 function openNewMaterialModal() {
+  const isUr = currentLang === "ur";
   const content = `
     <div class="space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
           <i data-lucide="boxes" class="w-5 h-5 text-amber-600"></i>
-          نیا را مٹیریل / پارٹ شامل کریں
+          ${isUr ? "نیا را مٹیریل / پارٹ شامل کریں" : "Add New Raw Material / Part"}
         </h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">آئٹم کوڈ:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "آئٹم کوڈ:" : "Item Code:"}</label>
           <input type="text" id="mat-code" placeholder="e.g. CP-SPR-10" class="w-full border rounded-lg p-2 font-mono">
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">آئٹم کا نام:</label>
-          <input type="text" id="mat-name" placeholder="e.g. ہیوی ڈیوٹی سپرنگ" class="w-full border rounded-lg p-2">
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "آئٹم کا نام:" : "Item Name:"}</label>
+          <input type="text" id="mat-name" placeholder="e.g. Heavy Duty Spring" class="w-full border rounded-lg p-2">
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">کیٹیگری:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "کیٹیگری:" : "Category:"}</label>
           <select id="mat-category" class="w-full border rounded-lg p-2 bg-white">
-            <option value="Child Part">چائلڈ پارٹ (Child Part)</option>
-            <option value="Raw Metal">خام دھات (Raw Metal)</option>
-            <option value="Fastener">سپرنگ و ریوٹس (Fastener)</option>
-            <option value="Packaging Bag">پیکنگ تھیلی (Bag)</option>
-            <option value="Sticker">سٹیکر (Sticker)</option>
-            <option value="Logo/Branding">لوگو (Logo/Branding)</option>
+            <option value="Child Part">${isUr ? "چائلڈ پارٹ" : "Child Part"}</option>
+            <option value="Raw Metal">${isUr ? "خام دھات" : "Raw Metal"}</option>
+            <option value="Fastener">${isUr ? "سپرنگ و ریوٹس" : "Fastener"}</option>
+            <option value="Packaging Bag">${isUr ? "پیکنگ تھیلی" : "Packaging Bag"}</option>
+            <option value="Sticker">${isUr ? "سٹیکر" : "Sticker"}</option>
+            <option value="Logo/Branding">${isUr ? "لوگو" : "Logo/Branding"}</option>
           </select>
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">پیمائش کا یونٹ (Unit):</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "پیمائش کا یونٹ:" : "Measurement Unit:"}</label>
           <select id="mat-unit" class="w-full border rounded-lg p-2 bg-white">
-            <option value="Pieces">Pieces (پیس)</option>
-            <option value="KG">KG (کلو گرام)</option>
-            <option value="Rolls">Rolls (رول)</option>
-            <option value="Meters">Meters (میٹر)</option>
+            <option value="Pieces">Pieces</option>
+            <option value="KG">KG</option>
+            <option value="Rolls">Rolls</option>
+            <option value="Meters">Meters</option>
           </select>
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">شروع کا سٹاک:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "شروع کا سٹاک:" : "Initial Stock:"}</label>
           <input type="number" id="mat-stock" value="0" min="0" class="w-full border rounded-lg p-2">
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">کم سے کم الرٹ لیول:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "کم سے کم الرٹ لیول:" : "Min Alert Level:"}</label>
           <input type="number" id="mat-alert" value="50" min="1" class="w-full border rounded-lg p-2">
         </div>
       </div>
 
       <div class="flex justify-end gap-2 pt-3 border-t">
-        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">منسوخ کریں</button>
-        <button onclick="submitNewMaterial()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs font-bold rounded-lg shadow">سٹور میں شامل کریں</button>
+        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">${isUr ? "منسوخ کریں" : "Cancel"}</button>
+        <button onclick="submitNewMaterial()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 text-xs font-bold rounded-lg shadow">${isUr ? "سٹور میں شامل کریں" : "Save Item"}</button>
       </div>
     </div>
   `;
@@ -702,8 +1055,11 @@ async function submitNewMaterial() {
     id: db.rawMaterials.length + 1,
     code: document.getElementById("mat-code").value,
     name: document.getElementById("mat-name").value,
+    name_ur: document.getElementById("mat-name").value,
     category: document.getElementById("mat-category").value,
+    category_ur: document.getElementById("mat-category").value,
     unit: document.getElementById("mat-unit").value,
+    unit_ur: document.getElementById("mat-unit").value,
     current_stock: parseFloat(document.getElementById("mat-stock").value || 0),
     min_alert_level: parseFloat(document.getElementById("mat-alert").value || 50),
     unit_price: 0,
@@ -712,77 +1068,69 @@ async function submitNewMaterial() {
   };
 
   if (!newMat.code || !newMat.name) {
-    alert("برائے مہربانی کوڈ اور نام درج کریں!");
+    alert(currentLang === "ur" ? "برائے مہربانی کوڈ اور نام درج کریں!" : "Please enter both Code and Name!");
     return;
-  }
-
-  if (isLocalBackend) {
-    try {
-      await fetch(`${API_BASE}/api/raw-materials`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newMat)
-      });
-    } catch (e) {}
   }
 
   db.rawMaterials.push(newMat);
   saveLocalDB();
   closeModal();
   await loadRawMaterials();
-  alert("نیا مٹیریل کامیابی سے سٹور میں شامل ہو گیا!");
+  alert(currentLang === "ur" ? "نیا مٹیریل کامیابی سے سٹور میں شامل ہو گیا!" : "New material added to store successfully!");
 }
 
 // ----------------- 5. SAMPLING & RECIPES -----------------
 
 async function loadSamplingRecipes() {
-  const recipes = isLocalBackend ? await (await fetch(`${API_BASE}/api/sampling-recipes`)).json() : db.recipes;
+  const recipes = db.recipes;
   const container = document.getElementById("recipes-container");
   if (!container) return;
 
   if (recipes.length === 0) {
-    container.innerHTML = `<div class="bg-white p-8 rounded-xl border text-center text-slate-400">کوئی سیمپلنگ ریسیپی نہیں ہے</div>`;
+    container.innerHTML = `<div class="bg-white p-8 rounded-xl border text-center text-slate-400">${currentLang === "ur" ? "کوئی سیمپلنگ ریسیپی نہیں ہے" : "No sampling recipes found"}</div>`;
     return;
   }
 
   container.innerHTML = recipes.map(r => `
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden p-5 space-y-4">
+    <div class="stat-tile space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3">
         <div>
           <div class="flex items-center gap-2">
             <span class="px-2 py-0.5 rounded text-xs font-bold bg-purple-100 text-purple-700 font-mono">${r.version}</span>
-            <h3 class="font-bold text-base text-slate-800">${r.article_name}</h3>
+            <h3 class="font-bold text-base text-slate-800">${currentLang === "ur" ? (r.article_name_ur || r.article_name) : r.article_name}</h3>
           </div>
-          <p class="text-xs text-slate-500 mt-1">${r.notes || 'ماسٹر سیمپل ریسیپی مع چائلڈ پارٹس، تھیلی، سٹیکر اور لوگو'}</p>
+          <p class="text-xs text-slate-500 mt-1">${currentLang === "ur" ? (r.notes_ur || r.notes) : r.notes}</p>
         </div>
         <button onclick="useRecipeForBOM(${r.article_id})" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs rounded-lg border border-rose-200 transition flex items-center gap-1">
           <i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>
-          اس ریسیپی کا BOM بنائیں
+          ${currentLang === "ur" ? "اس ریسیپی کا BOM بنائیں" : "Generate BOM for this Recipe"}
         </button>
       </div>
 
       <div>
-        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">فی 1 پیس بنانے کیلئے درکار پرزہ جات و میٹریل:</h4>
+        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+          ${currentLang === "ur" ? "فی 1 پیس بنانے کیلئے درکار پرزہ جات و میٹریل:" : "Components & Packaging Required per Unit:"}
+        </h4>
         <div class="overflow-x-auto rounded-lg border border-slate-100">
           <table class="w-full text-xs text-left text-slate-600">
             <thead class="bg-slate-50 text-slate-500 font-semibold">
               <tr>
-                <th class="py-2 px-3">کمپوننٹ / میٹریل</th>
-                <th class="py-2 px-3">قسم</th>
-                <th class="py-2 px-3">فی 1 یونٹ ضرورت</th>
-                <th class="py-2 px-3">یونٹ</th>
-                <th class="py-2 px-3">تفصیل</th>
+                <th class="py-2 px-3">${currentLang === "ur" ? "کمپوننٹ / میٹریل" : "Component / Material"}</th>
+                <th class="py-2 px-3">${currentLang === "ur" ? "قسم" : "Type"}</th>
+                <th class="py-2 px-3">${currentLang === "ur" ? "فی 1 یونٹ ضرورت" : "Qty / Unit"}</th>
+                <th class="py-2 px-3">${currentLang === "ur" ? "یونٹ" : "Unit"}</th>
+                <th class="py-2 px-3">${currentLang === "ur" ? "تفصیل" : "Notes"}</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-slate-100">
               ${r.items.map(it => `
                 <tr>
-                  <td class="py-2 px-3 font-semibold text-slate-800">${it.material_name}</td>
+                  <td class="py-2 px-3 font-semibold text-slate-800">${currentLang === "ur" ? (it.material_name_ur || it.material_name) : it.material_name}</td>
                   <td class="py-2 px-3">
-                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">${it.component_type}</span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">${currentLang === "ur" ? (it.component_type_ur || it.component_type) : it.component_type}</span>
                   </td>
                   <td class="py-2 px-3 font-bold text-slate-800">${it.qty_per_unit}</td>
-                  <td class="py-2 px-3 text-slate-500">${it.unit}</td>
+                  <td class="py-2 px-3 text-slate-500">${currentLang === "ur" ? (it.unit_ur || it.unit) : it.unit}</td>
                   <td class="py-2 px-3 text-slate-500">${it.notes || '-'}</td>
                 </tr>
               `).join("")}
@@ -811,7 +1159,7 @@ async function loadBOMModule() {
   await loadArticles();
   const select = document.getElementById("bom-article-select");
   if (select) {
-    select.innerHTML = articlesCache.map(a => `<option value="${a.id}">${a.name} (${a.article_code})</option>`).join("");
+    select.innerHTML = articlesCache.map(a => `<option value="${a.id}">${currentLang === "ur" ? (a.name_ur || a.name) : a.name} (${a.article_code})</option>`).join("");
   }
   loadSavedBOMs();
 }
@@ -820,51 +1168,42 @@ async function calculateBOM() {
   const articleId = parseInt(document.getElementById("bom-article-select").value);
   const quantity = parseFloat(document.getElementById("bom-quantity-input").value || 200);
 
-  let data;
-  if (isLocalBackend) {
-    try {
-      const res = await fetch(`${API_BASE}/api/bom/calculate?article_id=${articleId}&planned_quantity=${quantity}`);
-      data = await res.json();
-    } catch (e) {
-      data = calculateLocalBOM(articleId, quantity);
-    }
-  } else {
-    data = calculateLocalBOM(articleId, quantity);
-  }
-
+  const data = calculateLocalBOM(articleId, quantity);
   currentBOMData = data;
+
+  const isUr = currentLang === "ur";
   document.getElementById("bom-calculation-result").classList.remove("hidden");
-  document.getElementById("bom-res-title").innerText = `BOM برائے: ${data.article_name}`;
-  document.getElementById("bom-res-subtitle").innerText = `مطلوبہ پروڈکشن ہدف: ${data.planned_quantity} پیس | ریسیپی: ${data.recipe_name}`;
+  document.getElementById("bom-res-title").innerText = isUr ? `BOM برائے: ${data.article_name_ur || data.article_name}` : `BOM For: ${data.article_name}`;
+  document.getElementById("bom-res-subtitle").innerText = isUr ? `مطلوبہ پروڈکشن ہدف: ${data.planned_quantity} پیس | ریسیپی: ${data.recipe_name_ur || data.recipe_name}` : `Target Quantity: ${data.planned_quantity} Pcs | Recipe: ${data.recipe_name}`;
 
   const badge = document.getElementById("bom-stock-status-badge");
   if (data.has_shortage) {
     badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-red-100 text-red-800 border border-red-200";
-    badge.innerText = "انتباہ: را سٹور میں مٹیریل کی کمی ہے!";
+    badge.innerText = isUr ? "انتباہ: را سٹور میں مٹیریل کی کمی ہے!" : "Warning: Material Shortage Detected!";
   } else {
     badge.className = "text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200";
-    badge.innerText = "تمام درکار پرزہ جات و پیکنگ سٹاک میں موجود ہیں";
+    badge.innerText = isUr ? "تمام درکار پرزہ جات و پیکنگ سٹاک میں موجود ہیں" : "All Components & Packaging Available";
   }
 
   const tbody = document.getElementById("bom-calc-table-body");
   tbody.innerHTML = data.items.map(it => `
     <tr class="hover:bg-slate-50">
       <td class="py-2.5 px-3 font-bold text-slate-800">
-        ${it.material_name}
+        ${isUr ? (it.material_name_ur || it.material_name) : it.material_name}
         <span class="block text-[11px] font-mono text-slate-400">${it.material_code}</span>
       </td>
       <td class="py-2.5 px-3">
-        <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">${it.component_type}</span>
+        <span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">${isUr ? (it.component_type_ur || it.component_type) : it.component_type}</span>
       </td>
-      <td class="py-2.5 px-3 font-semibold">${it.qty_per_unit} ${it.unit}</td>
-      <td class="py-2.5 px-3 font-bold text-rose-600 text-sm">${it.required_qty} ${it.unit}</td>
-      <td class="py-2.5 px-3 font-medium text-slate-700">${it.available_stock} ${it.unit}</td>
+      <td class="py-2.5 px-3 font-semibold">${it.qty_per_unit} ${isUr ? (it.unit_ur || it.unit) : it.unit}</td>
+      <td class="py-2.5 px-3 font-bold text-rose-600 text-sm">${it.required_qty} ${isUr ? (it.unit_ur || it.unit) : it.unit}</td>
+      <td class="py-2.5 px-3 font-medium text-slate-700">${it.available_stock} ${isUr ? (it.unit_ur || it.unit) : it.unit}</td>
       <td class="py-2.5 px-3 font-bold ${it.shortage_qty > 0 ? 'text-red-600' : 'text-slate-400'}">
-        ${it.shortage_qty > 0 ? it.shortage_qty + ' ' + it.unit : '-'}
+        ${it.shortage_qty > 0 ? it.shortage_qty + ' ' + (isUr ? (it.unit_ur || it.unit) : it.unit) : '-'}
       </td>
       <td class="py-2.5 px-3 text-center">
         <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${it.status === 'Available' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
-          ${it.status === 'Available' ? 'دستیاب' : 'شارٹیج'}
+          ${it.status === 'Available' ? (isUr ? 'دستیاب' : 'Available') : (isUr ? 'شارٹیج' : 'Shortage')}
         </span>
       </td>
     </tr>
@@ -887,12 +1226,15 @@ function calculateLocalBOM(articleId, quantity) {
       material_id: it.material_id,
       material_code: mat ? mat.code : "RM",
       material_name: it.material_name,
+      material_name_ur: it.material_name_ur,
       component_type: it.component_type,
+      component_type_ur: it.component_type_ur,
       qty_per_unit: it.qty_per_unit,
       required_qty: req,
       available_stock: avail,
       shortage_qty: shortage,
       unit: it.unit,
+      unit_ur: it.unit_ur,
       status: shortage === 0 ? "Available" : "Shortage"
     };
   });
@@ -900,8 +1242,10 @@ function calculateLocalBOM(articleId, quantity) {
   return {
     article_id: art.id,
     article_name: art.name,
+    article_name_ur: art.name_ur,
     recipe_id: rec.id,
     recipe_name: rec.recipe_name,
+    recipe_name_ur: rec.recipe_name_ur,
     planned_quantity: quantity,
     has_shortage: hasShortage,
     items: items
@@ -910,7 +1254,7 @@ function calculateLocalBOM(articleId, quantity) {
 
 async function convertBOMToWorkOrder() {
   if (!currentBOMData) {
-    alert("پہلے BOM کیلکولیٹ کریں!");
+    alert(currentLang === "ur" ? "پہلے BOM کیلکولیٹ کریں!" : "Please calculate BOM first!");
     return;
   }
 
@@ -921,8 +1265,10 @@ async function convertBOMToWorkOrder() {
     id: db.boms.length + 1,
     bom_number: bomNum,
     article_name: currentBOMData.article_name,
+    article_name_ur: currentBOMData.article_name_ur,
     planned_quantity: currentBOMData.planned_quantity,
     status: "ConvertedToWorkOrder",
+    status_ur: "ورک آرڈر میں تبدیل",
     created_at: new Date().toISOString().split("T")[0]
   };
 
@@ -930,17 +1276,20 @@ async function convertBOMToWorkOrder() {
     id: db.workOrders.length + 1,
     wo_number: woNum,
     article_name: currentBOMData.article_name,
+    article_name_ur: currentBOMData.article_name_ur,
     target_quantity: currentBOMData.planned_quantity,
     produced_quantity: 0,
     status: "In Progress",
+    status_ur: "پروڈکشن جاری",
     current_step: "Step 1: Stamping & Cutting",
+    current_step_ur: "مرحلہ 1: پریسنگ / کٹنگ",
     start_date: new Date().toISOString().split("T")[0],
     steps: [
-      { id: Date.now() + 1, step_number: 1, step_name: "Step 1: Stamping & Cutting (پریسنگ / کٹنگ)", piece_rate: 2.5, required_pieces: currentBOMData.planned_quantity, completed_pieces: 0, status: "Pending", assigned_worker_name: "Unassigned" },
-      { id: Date.now() + 2, step_number: 2, step_name: "Step 2: Sub-Assembly (چھوٹے پرزوں کی فٹنگ)", piece_rate: 4.0, required_pieces: currentBOMData.planned_quantity, completed_pieces: 0, status: "Pending", assigned_worker_name: "Unassigned" },
-      { id: Date.now() + 3, step_number: 3, step_name: "Step 3: Riveting & Welding (ریوٹنگ / ویلڈنگ)", piece_rate: 3.5, required_pieces: currentBOMData.planned_quantity, completed_pieces: 0, status: "Pending", assigned_worker_name: "Unassigned" },
-      { id: Date.now() + 4, step_number: 4, step_name: "Step 4: Quality Check (کوالٹی چیک و پالش)", piece_rate: 1.5, required_pieces: currentBOMData.planned_quantity, completed_pieces: 0, status: "Pending", assigned_worker_name: "Unassigned" },
-      { id: Date.now() + 5, step_number: 5, step_name: "Step 5: Final Packing (تھیلی، سٹیکر اور لوگو پیکنگ)", piece_rate: 2.0, required_pieces: currentBOMData.planned_quantity, completed_pieces: 0, status: "Pending", assigned_worker_name: "Unassigned" }
+      { id: Date.now() + 1, step_number: 1, step_name: "Step 1: Stamping & Cutting", step_name_ur: "مرحلہ 1: پریسنگ / کٹنگ", piece_rate: 2.5, required_pieces: currentBOMData.planned_quantity, completed_pieces: 0, status: "Pending", status_ur: "زیر التواء", assigned_worker_name: "Unassigned", assigned_worker_name_ur: "غیر نامزد" },
+      { id: Date.now() + 2, step_number: 2, step_name: "Step 2: Sub-Assembly Fitting", step_name_ur: "مرحلہ 2: چھوٹے پرزوں کی فٹنگ", piece_rate: 4.0, required_pieces: currentBOMData.planned_quantity, completed_pieces: 0, status: "Pending", status_ur: "زیر التواء", assigned_worker_name: "Unassigned", assigned_worker_name_ur: "غیر نامزد" },
+      { id: Date.now() + 3, step_number: 3, step_name: "Step 3: Riveting & Welding", step_name_ur: "مرحلہ 3: ریوٹنگ / ویلڈنگ", piece_rate: 3.5, required_pieces: currentBOMData.planned_quantity, completed_pieces: 0, status: "Pending", status_ur: "زیر التواء", assigned_worker_name: "Unassigned", assigned_worker_name_ur: "غیر نامزد" },
+      { id: Date.now() + 4, step_number: 4, step_name: "Step 4: Quality Check & Finishing", step_name_ur: "مرحلہ 4: کوالٹی چیک و پالش", piece_rate: 1.5, required_pieces: currentBOMData.planned_quantity, completed_pieces: 0, status: "Pending", status_ur: "زیر التواء", assigned_worker_name: "Unassigned", assigned_worker_name_ur: "غیر نامزد" },
+      { id: Date.now() + 5, step_number: 5, step_name: "Step 5: Final Packing (Bag, Sticker, Logo)", step_name_ur: "مرحلہ 5: فائنل پیکنگ (تھیلی، سٹیکر، لوگو)", piece_rate: 2.0, required_pieces: currentBOMData.planned_quantity, completed_pieces: 0, status: "Pending", status_ur: "زیر التواء", assigned_worker_name: "Unassigned", assigned_worker_name_ur: "غیر نامزد" }
     ]
   };
 
@@ -948,28 +1297,30 @@ async function convertBOMToWorkOrder() {
   db.workOrders.unshift(newWO);
   saveLocalDB();
 
-  alert(`BOM (${bomNum}) محفوظ ہو گیا اور نیا ورک آرڈر (${woNum}) جاری کر دیا گیا!`);
+  alert(currentLang === "ur" ? `BOM (${bomNum}) محفوظ ہو گیا اور نیا ورک آرڈر (${woNum}) جاری کر دیا گیا!` : `BOM (${bomNum}) saved and Work Order (${woNum}) created!`);
   navigate("work_orders");
 }
 
 async function loadSavedBOMs() {
-  const boms = isLocalBackend ? await (await fetch(`${API_BASE}/api/boms`)).json() : db.boms;
+  const boms = db.boms;
   const tbody = document.getElementById("saved-boms-table");
   if (!tbody) return;
 
   if (boms.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">کوئی محفوظ شدہ BOM نہیں ہے</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" class="py-4 text-center text-slate-400">${currentLang === "ur" ? "کوئی محفوظ شدہ BOM نہیں ہے" : "No saved BOMs found"}</td></tr>`;
     return;
   }
 
   tbody.innerHTML = boms.map(b => `
     <tr class="hover:bg-slate-50">
       <td class="py-3 px-4 font-mono font-bold text-rose-600">${b.bom_number}</td>
-      <td class="py-3 px-4 font-semibold text-slate-800">${b.article_name}</td>
-      <td class="py-3 px-4 font-bold">${b.planned_quantity} پیس</td>
+      <td class="py-3 px-4 font-semibold text-slate-800">${currentLang === "ur" ? (b.article_name_ur || b.article_name) : b.article_name}</td>
+      <td class="py-3 px-4 font-bold">${b.planned_quantity} ${currentLang === "ur" ? "پیس" : "Pcs"}</td>
       <td class="py-3 px-4">${b.created_at}</td>
       <td class="py-3 px-4">
-        <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-100 text-blue-800">${b.status}</span>
+        <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-100 text-blue-800">
+          ${currentLang === "ur" ? (b.status_ur || b.status) : b.status}
+        </span>
       </td>
     </tr>
   `).join("");
@@ -978,32 +1329,36 @@ async function loadSavedBOMs() {
 // ----------------- 7. WORK ORDERS & MULTI-STEP PRODUCTION -----------------
 
 async function loadWorkOrders() {
-  const wos = isLocalBackend ? await (await fetch(`${API_BASE}/api/work-orders`)).json() : db.workOrders;
+  const wos = db.workOrders;
   const container = document.getElementById("work-orders-container");
   if (!container) return;
 
   if (wos.length === 0) {
-    container.innerHTML = `<div class="bg-white p-8 rounded-xl border text-center text-slate-400">کوئی ورک آرڈر موجود نہیں ہے</div>`;
+    container.innerHTML = `<div class="bg-white p-8 rounded-xl border text-center text-slate-400">${currentLang === "ur" ? "کوئی ورک آرڈر موجود نہیں ہے" : "No work orders found"}</div>`;
     return;
   }
 
   container.innerHTML = wos.map(wo => `
-    <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden p-5 space-y-4">
+    <div class="stat-tile space-y-4">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-3">
         <div>
           <div class="flex items-center gap-2">
             <span class="px-2 py-0.5 rounded text-xs font-mono font-bold bg-orange-100 text-orange-800">${wo.wo_number}</span>
-            <h3 class="font-bold text-base text-slate-800">${wo.article_name}</h3>
+            <h3 class="font-bold text-base text-slate-800">${currentLang === "ur" ? (wo.article_name_ur || wo.article_name) : wo.article_name}</h3>
           </div>
-          <p class="text-xs text-slate-500 mt-1">ہدف کوانٹٹی: <span class="font-bold text-slate-700">${wo.target_quantity} پیس</span> | تاریخ شروع: ${wo.start_date}</p>
+          <p class="text-xs text-slate-500 mt-1">
+            ${currentLang === "ur" ? `ہدف کوانٹٹی: <span class="font-bold text-slate-700">${wo.target_quantity} پیس</span> | تاریخ شروع: ${wo.start_date}` : `Target: <span class="font-bold text-slate-700">${wo.target_quantity} Pcs</span> | Start Date: ${wo.start_date}`}
+          </p>
         </div>
         <span class="px-3 py-1 rounded-full text-xs font-bold ${wo.status === 'Completed' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">
-          ${wo.status}
+          ${currentLang === "ur" ? (wo.status_ur || wo.status) : wo.status}
         </span>
       </div>
 
       <div>
-        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">پروڈکشن کے مراحل (Production Stages & Piece-Rate ٹھیکہ):</h4>
+        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+          ${currentLang === "ur" ? "پروڈکشن کے مراحل (Production Stages & Piece-Rate ٹھیکہ):" : "Production Stages & Piece-Rate Operations:"}
+        </h4>
         <div class="grid grid-cols-1 md:grid-cols-5 gap-3">
           ${wo.steps.map(s => {
             const pct = Math.min(100, Math.round((s.completed_pieces / s.required_pieces) * 100));
@@ -1012,12 +1367,14 @@ async function loadWorkOrders() {
               <div class="border rounded-xl p-3 ${isDone ? 'bg-emerald-50/50 border-emerald-200' : 'bg-slate-50 border-slate-200'} flex flex-col justify-between space-y-2">
                 <div>
                   <div class="flex items-center justify-between">
-                    <span class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${isDone ? 'bg-emerald-200 text-emerald-800' : 'bg-slate-200 text-slate-700'}">مرحلہ ${s.step_number}</span>
+                    <span class="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${isDone ? 'bg-emerald-200 text-emerald-800' : 'bg-slate-200 text-slate-700'}">
+                      ${currentLang === "ur" ? `مرحلہ ${s.step_number}` : `Step ${s.step_number}`}
+                    </span>
                     <span class="text-[11px] font-bold ${isDone ? 'text-emerald-700' : 'text-slate-600'}">${pct}%</span>
                   </div>
-                  <h5 class="text-xs font-bold text-slate-800 mt-1.5 leading-tight">${s.step_name}</h5>
-                  <p class="text-[11px] text-slate-500 mt-1">ٹھیکہ ریٹ: <span class="font-semibold text-amber-700">PKR ${s.piece_rate}/پیس</span></p>
-                  <p class="text-[11px] text-slate-500">کاریگر: <span class="font-semibold text-slate-700">${s.assigned_worker_name}</span></p>
+                  <h5 class="text-xs font-bold text-slate-800 mt-1.5 leading-tight">${currentLang === "ur" ? (s.step_name_ur || s.step_name) : s.step_name}</h5>
+                  <p class="text-[11px] text-slate-500 mt-1">${currentLang === "ur" ? "ٹھیکہ ریٹ:" : "Piece Rate:"} <span class="font-semibold text-amber-700">PKR ${s.piece_rate}/${currentLang === "ur" ? "پیس" : "pc"}</span></p>
+                  <p class="text-[11px] text-slate-500">${currentLang === "ur" ? "کاریگر:" : "Worker:"} <span class="font-semibold text-slate-700">${currentLang === "ur" ? (s.assigned_worker_name_ur || s.assigned_worker_name) : s.assigned_worker_name}</span></p>
                 </div>
 
                 <div class="space-y-2 pt-2 border-t border-slate-200">
@@ -1028,9 +1385,9 @@ async function loadWorkOrders() {
                     <span class="text-slate-500">${s.completed_pieces} / ${s.required_pieces}</span>
                     ${!isDone ? `
                       <button onclick="openStepProgressModal(${wo.id}, ${s.id}, '${s.step_name}', ${s.required_pieces - s.completed_pieces}, ${s.piece_rate})" class="px-2 py-0.5 bg-orange-600 hover:bg-orange-700 text-white rounded font-bold text-[10px] shadow transition">
-                        پیس درج کریں
+                        ${currentLang === "ur" ? "پیس درج کریں" : "Log Pieces"}
                       </button>
-                    ` : `<span class="text-emerald-700 font-bold text-[10px]">مکمل ✓</span>`}
+                    ` : `<span class="text-emerald-700 font-bold text-[10px]">${currentLang === "ur" ? "مکمل ✓" : "Done ✓"}</span>`}
                   </div>
                 </div>
               </div>
@@ -1045,37 +1402,38 @@ async function loadWorkOrders() {
 }
 
 function openStepProgressModal(woId, stepId, stepName, remainingPieces, pieceRate) {
-  const workerOptions = employeesCache.map(e => `<option value="${e.id}">${e.full_name} (${e.department} - ${e.employment_type})</option>`).join("");
+  const isUr = currentLang === "ur";
+  const workerOptions = employeesCache.map(e => `<option value="${e.id}">${isUr ? (e.full_name_ur || e.full_name) : e.full_name} (${isUr ? (e.department_ur || e.department) : e.department})</option>`).join("");
 
   const content = `
     <div class="space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
           <i data-lucide="check-circle-2" class="w-5 h-5 text-orange-600"></i>
-          مرحلہ پروڈکشن اور ٹھیکہ ورک اندراج
+          ${isUr ? "مرحلہ پروڈکشن اور ٹھیکہ ورک اندراج" : "Log Stage Progress & Piece-Rate"}
         </h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
       <div class="bg-orange-50 p-3 rounded-lg border border-orange-200 text-xs">
         <p class="font-bold text-orange-900">${stepName}</p>
-        <p class="text-orange-700 mt-0.5">باقی درکار پیس: <strong>${remainingPieces}</strong> | فی پیس ٹھیکہ ریٹ: <strong>PKR ${pieceRate}</strong></p>
+        <p class="text-orange-700 mt-0.5">${isUr ? "باقی درکار پیس:" : "Remaining Pieces:"} <strong>${remainingPieces}</strong> | ${isUr ? "فی پیس ٹھیکہ ریٹ:" : "Rate per Piece:"} <strong>PKR ${pieceRate}</strong></p>
       </div>
 
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">کاریگر منتخب کریں:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "کاریگر منتخب کریں:" : "Assigned Worker:"}</label>
           <select id="step-worker" class="w-full border rounded-lg p-2 bg-white">${workerOptions}</select>
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">آج کتنے پیس مکمل کیے؟</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "آج کتنے پیس مکمل کیے؟" : "Completed Pieces Today:"}</label>
           <input type="number" id="step-completed-add" value="${remainingPieces}" max="${remainingPieces}" min="1" class="w-full border rounded-lg p-2 font-bold text-slate-800 text-sm">
         </div>
       </div>
 
       <div class="flex justify-end gap-2 pt-3 border-t">
-        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">منسوخ کریں</button>
-        <button onclick="submitStepProgress(${woId}, ${stepId}, ${pieceRate})" class="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-lg shadow">اندراج کریں و ٹھیکہ شامل کریں</button>
+        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">${isUr ? "منسوخ کریں" : "Cancel"}</button>
+        <button onclick="submitStepProgress(${woId}, ${stepId}, ${pieceRate})" class="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-xs font-bold rounded-lg shadow">${isUr ? "اندراج کریں و ٹھیکہ شامل کریں" : "Save Progress & Credit Pay"}</button>
       </div>
     </div>
   `;
@@ -1093,76 +1451,85 @@ async function submitStepProgress(woId, stepId, pieceRate) {
     if (step) {
       step.completed_pieces += completedAdd;
       step.assigned_worker_name = workerObj ? workerObj.full_name : "Worker";
+      step.assigned_worker_name_ur = workerObj ? (workerObj.full_name_ur || workerObj.full_name) : "کاریگر";
       if (step.completed_pieces >= step.required_pieces) {
         step.status = "Completed";
+        step.status_ur = "مکمل";
       } else {
         step.status = "In Progress";
+        step.status_ur = "جاری";
       }
     }
 
-    // Check all steps done -> Finished Good
     const allDone = wo.steps.every(s => s.status === "Completed");
     if (allDone) {
       wo.status = "Completed";
+      wo.status_ur = "مکمل";
       wo.produced_quantity = wo.target_quantity;
       db.finishedGoods.unshift({
         id: db.finishedGoods.length + 1,
         batch_number: `BATCH-${wo.wo_number}`,
         article_name: wo.article_name,
+        article_name_ur: wo.article_name_ur,
         article_code: "ART-AUTO",
         quantity: wo.produced_quantity,
-        packaging_status: "Packed with Theli, Sticker & Logo",
+        packaging_status: "Packed with Polybag, Sticker & Logo",
+        packaging_status_ur: "پیک شدہ مع تھیلی، سٹیکر اور لوگو",
         qc_passed: true,
         storage_location: "FG-Store-Main"
       });
     }
   }
 
-  // Add to piece work log
+  // Credit piece work
   db.pieceWorks.unshift({
     id: db.pieceWorks.length + 1,
     employee_id: workerId,
     employee_name: workerObj ? workerObj.full_name : "Worker",
+    employee_name_ur: workerObj ? (workerObj.full_name_ur || workerObj.full_name) : "کاریگر",
     emp_code: workerObj ? workerObj.emp_code : "EMP",
     article_name: wo ? wo.article_name : "Auto Part",
-    step_name: "پروڈکشن مرحلہ",
+    article_name_ur: wo ? (wo.article_name_ur || wo.article_name) : "آٹو پارٹ",
+    step_name: "Production Stage",
+    step_name_ur: "پروڈکشن مرحلہ",
     date: new Date().toISOString().split("T")[0],
     pieces_completed: completedAdd,
     rate_per_piece: pieceRate,
     total_earning: completedAdd * pieceRate,
-    approved_by: "Supervisor"
+    approved_by: "Supervisor",
+    approved_by_ur: "سپروائزر"
   });
 
   saveLocalDB();
   closeModal();
   await loadWorkOrders();
   await loadFinishedGoods();
-  alert("پروڈکشن اپڈیٹ ہو گئی اور کاریگر کے ٹھیکہ ریکارڈ میں اجرت شامل کر دی گئی!");
+  alert(currentLang === "ur" ? "پروڈکشن اپڈیٹ ہو گئی اور کاریگر کے ٹھیکہ ریکارڈ میں اجرت شامل کر دی گئی!" : "Production updated and worker credited successfully!");
 }
 
 // ----------------- 8. FINISHED GOODS & PACKING -----------------
 
 async function loadFinishedGoods() {
-  const fgs = isLocalBackend ? await (await fetch(`${API_BASE}/api/finished-goods`)).json() : db.finishedGoods;
+  const fgs = db.finishedGoods;
   const tbody = document.getElementById("fg-table-body");
   if (!tbody) return;
 
   if (fgs.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400">کوئی فنش گڈز سٹاک نہیں ہے</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400">${currentLang === "ur" ? "کوئی فنش گڈز سٹاک نہیں ہے" : "No finished goods found"}</td></tr>`;
     return;
   }
 
   tbody.innerHTML = fgs.map(f => `
     <tr class="hover:bg-slate-50">
       <td class="py-3 px-4 font-mono font-bold text-teal-700">${f.batch_number}</td>
-      <td class="py-3 px-4 font-bold text-slate-800">${f.article_name}</td>
+      <td class="py-3 px-4 font-bold text-slate-800">${currentLang === "ur" ? (f.article_name_ur || f.article_name) : f.article_name}</td>
       <td class="py-3 px-4 font-mono text-slate-500">${f.article_code}</td>
-      <td class="py-3 px-4 font-extrabold text-teal-600 text-sm">${f.quantity} پیس</td>
+      <td class="py-3 px-4 font-extrabold text-teal-600 text-sm">${f.quantity} ${currentLang === "ur" ? "پیس" : "Pcs"}</td>
       <td class="py-3 px-4">
-        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">${f.packaging_status}</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-100 text-amber-800">${currentLang === "ur" ? (f.packaging_status_ur || f.packaging_status) : f.packaging_status}</span>
       </td>
       <td class="py-3 px-4">
-        <span class="px-2 py-0.5 rounded text-xs font-bold ${f.qc_passed ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">QC پاس ✓</span>
+        <span class="px-2 py-0.5 rounded text-xs font-bold ${f.qc_passed ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">${currentLang === "ur" ? "QC پاس ✓" : "QC Passed ✓"}</span>
       </td>
       <td class="py-3 px-4 text-slate-500">${f.storage_location}</td>
     </tr>
@@ -1172,26 +1539,26 @@ async function loadFinishedGoods() {
 // ----------------- 9. DISPATCH CHALLAN & GATE PASS -----------------
 
 async function loadDispatchChallans() {
-  const challans = isLocalBackend ? await (await fetch(`${API_BASE}/api/dispatch-challans`)).json() : db.dispatchChallans;
+  const challans = db.dispatchChallans;
   const tbody = document.getElementById("dispatch-table-body");
   if (!tbody) return;
 
   if (challans.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400">کوئی ڈسپیچ چالان نہیں ہے</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="py-6 text-center text-slate-400">${currentLang === "ur" ? "کوئی ڈسپیچ چالان نہیں ہے" : "No dispatch challans found"}</td></tr>`;
     return;
   }
 
   tbody.innerHTML = challans.map(c => `
     <tr class="hover:bg-slate-50">
       <td class="py-3 px-4 font-mono font-bold text-cyan-700">${c.challan_number}</td>
-      <td class="py-3 px-4 font-medium text-slate-800">${c.destination_name} (${c.destination_type})</td>
+      <td class="py-3 px-4 font-medium text-slate-800">${currentLang === "ur" ? (c.destination_name_ur || c.destination_name) : c.destination_name} (${currentLang === "ur" ? (c.destination_type_ur || c.destination_type) : c.destination_type})</td>
       <td class="py-3 px-4">${c.dispatch_date}</td>
       <td class="py-3 px-4 font-mono font-semibold">${c.vehicle_no}</td>
-      <td class="py-3 px-4">${c.driver_name}</td>
+      <td class="py-3 px-4">${currentLang === "ur" ? (c.driver_name_ur || c.driver_name) : c.driver_name}</td>
       <td class="py-3 px-4 font-mono text-slate-600">${c.gate_pass_no}</td>
       <td class="py-3 px-4 text-right">
         <button onclick="printDispatch(${JSON.stringify(c).replace(/"/g, '&quot;')})" class="px-2.5 py-1 bg-cyan-50 hover:bg-cyan-100 text-cyan-700 rounded text-xs font-semibold inline-flex items-center gap-1">
-          <i data-lucide="printer" class="w-3.5 h-3.5"></i> پرنٹ چالان
+          <i data-lucide="printer" class="w-3.5 h-3.5"></i> ${currentLang === "ur" ? "پرنٹ چالان" : "Print Challan"}
         </button>
       </td>
     </tr>
@@ -1201,69 +1568,70 @@ async function loadDispatchChallans() {
 }
 
 function openNewDispatchModal() {
-  const articleOptions = articlesCache.map(a => `<option value="${a.id}">${a.name} (${a.article_code})</option>`).join("");
+  const isUr = currentLang === "ur";
+  const articleOptions = articlesCache.map(a => `<option value="${a.id}">${isUr ? (a.name_ur || a.name) : a.name} (${a.article_code})</option>`).join("");
 
   const content = `
     <div class="space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
           <i data-lucide="truck" class="w-5 h-5 text-cyan-600"></i>
-          نیا ڈسپیچ چالان و گیٹ پاس تیار کریں (New Delivery Challan)
+          ${isUr ? "نیا ڈسپیچ چالان و گیٹ پاس تیار کریں" : "New Dispatch Challan & Gate Pass"}
         </h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">چالان نمبر:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "چالان نمبر:" : "Challan No:"}</label>
           <input type="text" id="disp-num" value="DC-OUT-${Date.now().toString().slice(-5)}" class="w-full border rounded-lg p-2 font-mono bg-slate-50" readonly>
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">منزل کی قسم:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "منزل کی قسم:" : "Destination Type:"}</label>
           <select id="disp-dest-type" class="w-full border rounded-lg p-2 bg-white">
-            <option value="External Factory">بیرونی فیکٹری (External Factory)</option>
-            <option value="Customer Warehouse">کسٹمر گودام (Customer Warehouse)</option>
-            <option value="Wholesale Distributor">ہول سیل ڈسٹری بیوٹر</option>
+            <option value="External Factory">${isUr ? "بیرونی فیکٹری" : "External Factory"}</option>
+            <option value="Customer Warehouse">${isUr ? "کسٹمر گودام" : "Customer Warehouse"}</option>
+            <option value="Wholesale Distributor">${isUr ? "ہول سیل ڈسٹری بیوٹر" : "Wholesale Distributor"}</option>
           </select>
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">فیکٹری / گودام کا نام:</label>
-          <input type="text" id="disp-dest-name" placeholder="e.g. سن رائز آٹو انڈسٹریز" class="w-full border rounded-lg p-2">
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "فیکٹری / گودام کا نام:" : "Factory / Warehouse Name:"}</label>
+          <input type="text" id="disp-dest-name" placeholder="e.g. Sunrise Auto Warehouse #3" class="w-full border rounded-lg p-2">
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">گاڑی نمبر:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "گاڑی نمبر:" : "Vehicle No:"}</label>
           <input type="text" id="disp-veh" placeholder="e.g. LES-4589" class="w-full border rounded-lg p-2 font-mono">
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">ڈرائیور کا نام:</label>
-          <input type="text" id="disp-driver" placeholder="e.g. ناصر حسین" class="w-full border rounded-lg p-2">
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "ڈرائیور کا نام:" : "Driver Name:"}</label>
+          <input type="text" id="disp-driver" placeholder="e.g. Nasir Hussain" class="w-full border rounded-lg p-2">
         </div>
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">گیٹ پاس نمبر:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "گیٹ پاس نمبر:" : "Gate Pass No:"}</label>
           <input type="text" id="disp-gp" value="GP-${Date.now().toString().slice(-4)}" class="w-full border rounded-lg p-2 font-mono">
         </div>
       </div>
 
       <div class="border rounded-lg p-3 bg-slate-50 space-y-2 text-xs">
-        <h4 class="font-bold text-slate-700">روانہ کردہ فنش گڈز:</h4>
+        <h4 class="font-bold text-slate-700">${isUr ? "روانہ کردہ فنش گڈز:" : "Dispatched Finished Goods:"}</h4>
         <div class="grid grid-cols-12 gap-2">
           <div class="col-span-8">
-            <label class="block text-[11px] font-semibold text-slate-600 mb-1">آرٹیکل:</label>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">${isUr ? "آرٹیکل:" : "Article:"}</label>
             <select id="disp-item-art" class="w-full border rounded p-1.5 bg-white">${articleOptions}</select>
           </div>
           <div class="col-span-4">
-            <label class="block text-[11px] font-semibold text-slate-600 mb-1">کوانٹٹی (پیس):</label>
+            <label class="block text-[11px] font-semibold text-slate-600 mb-1">${isUr ? "کوانٹٹی (پیس):" : "Quantity (Pcs):"}</label>
             <input type="number" id="disp-item-qty" value="100" min="1" class="w-full border rounded p-1.5 bg-white">
           </div>
         </div>
       </div>
 
       <div class="flex justify-end gap-2 pt-3 border-t">
-        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">منسوخ کریں</button>
-        <button onclick="submitNewDispatch()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold rounded-lg shadow">چالان جاری کریں اور سٹاک کٹ کریں</button>
+        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">${isUr ? "منسوخ کریں" : "Cancel"}</button>
+        <button onclick="submitNewDispatch()" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-bold rounded-lg shadow">${isUr ? "چالان جاری کریں اور سٹاک کٹ کریں" : "Generate Challan"}</button>
       </div>
     </div>
   `;
@@ -1280,6 +1648,7 @@ async function submitNewDispatch() {
     challan_number: document.getElementById("disp-num").value,
     destination_type: document.getElementById("disp-dest-type").value,
     destination_name: document.getElementById("disp-dest-name").value,
+    destination_name_ur: document.getElementById("disp-dest-name").value,
     vehicle_no: document.getElementById("disp-veh").value,
     driver_name: document.getElementById("disp-driver").value,
     gate_pass_no: document.getElementById("disp-gp").value,
@@ -1287,7 +1656,6 @@ async function submitNewDispatch() {
     items: [{ article_name: artObj ? artObj.name : "Auto Part", quantity: qty }]
   };
 
-  // Deduct from FG
   const fg = db.finishedGoods.find(f => f.article_name === (artObj ? artObj.name : ""));
   if (fg) {
     fg.quantity = Math.max(0, fg.quantity - qty);
@@ -1298,7 +1666,7 @@ async function submitNewDispatch() {
   closeModal();
   await loadDispatchChallans();
   await loadFinishedGoods();
-  alert("ڈسپیچ چالان کامیابی سے جاری ہو گیا اور فنش گڈز سٹاک اپڈیٹ ہو گیا!");
+  alert(currentLang === "ur" ? "ڈسپیچ چالان کامیابی سے جاری ہو گیا اور فنش گڈز سٹاک اپڈیٹ ہو گیا!" : "Dispatch challan generated and stock deducted successfully!");
 }
 
 // ----------------- 10. HR & PAYROLL -----------------
@@ -1308,7 +1676,7 @@ function switchHRTab(tabName) {
   tabs.forEach(t => {
     const btn = document.getElementById(`hr-tab-${t}`);
     const content = document.getElementById(`hr-content-${t}`);
-    if (btn) btn.className = t === tabName ? "py-2.5 border-b-2 border-pink-600 text-pink-600" : "py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800";
+    if (btn) btn.className = t === tabName ? "py-2.5 border-b-2 border-pink-600 text-pink-600 font-bold" : "py-2.5 border-b-2 border-transparent text-slate-500 hover:text-slate-800 font-bold";
     if (content) {
       if (t === tabName) content.classList.remove("hidden");
       else content.classList.add("hidden");
@@ -1322,37 +1690,38 @@ function switchHRTab(tabName) {
 }
 
 async function loadAttendance() {
-  const atts = isLocalBackend ? await (await fetch(`${API_BASE}/api/attendance`)).json() : db.attendances;
+  const atts = db.attendances;
   const tbody = document.getElementById("attendance-table-body");
   if (!tbody) return;
 
   if (atts.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" class="py-4 text-center text-slate-400">کوئی حاضری ریکارڈ نہیں ہے</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="py-4 text-center text-slate-400">${currentLang === "ur" ? "کوئی حاضری ریکارڈ نہیں ہے" : "No attendance records found"}</td></tr>`;
     return;
   }
 
   tbody.innerHTML = atts.map(a => `
     <tr class="hover:bg-slate-50">
       <td class="py-2.5 px-3 font-mono text-slate-700">${a.emp_code}</td>
-      <td class="py-2.5 px-3 font-bold text-slate-800">${a.employee_name}</td>
-      <td class="py-2.5 px-3">${a.department}</td>
+      <td class="py-2.5 px-3 font-bold text-slate-800">${currentLang === "ur" ? (a.employee_name_ur || a.employee_name) : a.employee_name}</td>
+      <td class="py-2.5 px-3">${currentLang === "ur" ? (a.department_ur || a.department) : a.department}</td>
       <td class="py-2.5 px-3">
         <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${a.status === 'Present' ? 'bg-emerald-100 text-emerald-800' : 'bg-red-100 text-red-800'}">
-          ${a.status === 'Present' ? 'حاضر (Present)' : 'غیر حاضر'}
+          ${currentLang === "ur" ? (a.status_ur || a.status) : a.status}
         </span>
       </td>
       <td class="py-2.5 px-3 text-slate-600">${a.check_in || '-'}</td>
       <td class="py-2.5 px-3 text-slate-600">${a.check_out || '-'}</td>
       <td class="py-2.5 px-3 font-bold ${a.overtime_hours > 0 ? 'text-pink-600' : 'text-slate-400'}">
-        ${a.overtime_hours > 0 ? a.overtime_hours + ' گھنٹے' : '-'}
+        ${a.overtime_hours > 0 ? a.overtime_hours + (currentLang === 'ur' ? ' گھنٹے' : ' hrs') : '-'}
       </td>
-      <td class="py-2.5 px-3 text-slate-500">${a.remarks || '-'}</td>
+      <td class="py-2.5 px-3 text-slate-500">${currentLang === "ur" ? (a.remarks_ur || a.remarks) : a.remarks}</td>
     </tr>
   `).join("");
 }
 
 function openMarkAttendanceModal() {
-  const workerOptions = employeesCache.map(e => `<option value="${e.id}">${e.full_name} (${e.emp_code})</option>`).join("");
+  const isUr = currentLang === "ur";
+  const workerOptions = employeesCache.map(e => `<option value="${e.id}">${isUr ? (e.full_name_ur || e.full_name) : e.full_name} (${e.emp_code})</option>`).join("");
   const today = new Date().toISOString().split("T")[0];
 
   const content = `
@@ -1360,51 +1729,51 @@ function openMarkAttendanceModal() {
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
           <i data-lucide="calendar-check" class="w-5 h-5 text-pink-600"></i>
-          یومیہ حاضری و اوور ٹائم اندراج
+          ${isUr ? "یومیہ حاضری و اوور ٹائم اندراج" : "Log Daily Attendance & Overtime"}
         </h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
 
       <div class="space-y-3 text-xs">
         <div>
-          <label class="block font-semibold mb-1 text-slate-700">ملازم منتخب کریں:</label>
+          <label class="block font-semibold mb-1 text-slate-700">${isUr ? "ملازم منتخب کریں:" : "Select Employee:"}</label>
           <select id="att-emp" class="w-full border rounded-lg p-2 bg-white">${workerOptions}</select>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-semibold mb-1 text-slate-700">تاریخ:</label>
+            <label class="block font-semibold mb-1 text-slate-700">${isUr ? "تاریخ:" : "Date:"}</label>
             <input type="date" id="att-date" value="${today}" class="w-full border rounded-lg p-2 bg-white">
           </div>
           <div>
-            <label class="block font-semibold mb-1 text-slate-700">حاضری سٹیٹس:</label>
+            <label class="block font-semibold mb-1 text-slate-700">${isUr ? "حاضری سٹیٹس:" : "Status:"}</label>
             <select id="att-status" class="w-full border rounded-lg p-2 bg-white">
-              <option value="Present">حاضر (Present)</option>
-              <option value="Absent">غیر حاضر (Absent)</option>
-              <option value="Half-Day">ہاف ڈے (Half-Day)</option>
+              <option value="Present">${isUr ? "حاضر (Present)" : "Present"}</option>
+              <option value="Absent">${isUr ? "غیر حاضر (Absent)" : "Absent"}</option>
+              <option value="Half-Day">${isUr ? "ہاف ڈے (Half-Day)" : "Half-Day"}</option>
             </select>
           </div>
         </div>
 
         <div class="grid grid-cols-3 gap-3">
           <div>
-            <label class="block font-semibold mb-1 text-slate-700">آمد کا وقت:</label>
+            <label class="block font-semibold mb-1 text-slate-700">${isUr ? "آمد کا وقت:" : "Check In:"}</label>
             <input type="text" id="att-in" value="08:00 AM" class="w-full border rounded-lg p-2">
           </div>
           <div>
-            <label class="block font-semibold mb-1 text-slate-700">روانگی کا وقت:</label>
+            <label class="block font-semibold mb-1 text-slate-700">${isUr ? "روانگی کا وقت:" : "Check Out:"}</label>
             <input type="text" id="att-out" value="05:00 PM" class="w-full border rounded-lg p-2">
           </div>
           <div>
-            <label class="block font-semibold mb-1 text-slate-700">اوور ٹائم (گھنٹے):</label>
+            <label class="block font-semibold mb-1 text-slate-700">${isUr ? "اوور ٹائم (گھنٹے):" : "Overtime (Hrs):"}</label>
             <input type="number" id="att-ot" value="0" min="0" step="0.5" class="w-full border rounded-lg p-2 font-bold text-pink-600">
           </div>
         </div>
       </div>
 
       <div class="flex justify-end gap-2 pt-3 border-t">
-        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">منسوخ کریں</button>
-        <button onclick="submitAttendance()" class="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold rounded-lg shadow">حاضری محفوظ کریں</button>
+        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">${isUr ? "منسوخ کریں" : "Cancel"}</button>
+        <button onclick="submitAttendance()" class="px-4 py-2 bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold rounded-lg shadow">${isUr ? "حاضری محفوظ کریں" : "Save Attendance"}</button>
       </div>
     </div>
   `;
@@ -1420,13 +1789,17 @@ async function submitAttendance() {
     employee_id: empId,
     emp_code: empObj ? empObj.emp_code : "EMP",
     employee_name: empObj ? empObj.full_name : "Worker",
+    employee_name_ur: empObj ? (empObj.full_name_ur || empObj.full_name) : "کاریگر",
     department: empObj ? empObj.department : "Production",
+    department_ur: empObj ? (empObj.department_ur || empObj.department) : "پروڈکشن",
     date: document.getElementById("att-date").value,
     status: document.getElementById("att-status").value,
+    status_ur: document.getElementById("att-status").value === "Present" ? "حاضر" : "غیر حاضر",
     check_in: document.getElementById("att-in").value,
     check_out: document.getElementById("att-out").value,
     overtime_hours: parseFloat(document.getElementById("att-ot").value || 0),
-    remarks: "بذریعہ ایچ آر پینل"
+    remarks: "Logged via HR Panel",
+    remarks_ur: "بذریعہ ایچ آر پینل"
   };
 
   db.attendances.unshift(newAtt);
@@ -1437,32 +1810,33 @@ async function submitAttendance() {
 }
 
 async function loadPieceWorks() {
-  const pws = isLocalBackend ? await (await fetch(`${API_BASE}/api/piece-works`)).json() : db.pieceWorks;
+  const pws = db.pieceWorks;
   const tbody = document.getElementById("piecework-table-body");
   if (!tbody) return;
 
   if (pws.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" class="py-4 text-center text-slate-400">کوئی ٹھیکہ ورک ریکارڈ نہیں ہے</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="py-4 text-center text-slate-400">${currentLang === "ur" ? "کوئی ٹھیکہ ورک ریکارڈ نہیں ہے" : "No piece-rate records found"}</td></tr>`;
     return;
   }
 
   tbody.innerHTML = pws.map(p => `
     <tr class="hover:bg-slate-50">
       <td class="py-2.5 px-3">${p.date}</td>
-      <td class="py-2.5 px-3 font-bold text-slate-800">${p.employee_name}</td>
-      <td class="py-2.5 px-3 font-medium text-slate-700">${p.article_name}</td>
-      <td class="py-2.5 px-3">${p.step_name}</td>
-      <td class="py-2.5 px-3 font-bold text-slate-800">${p.pieces_completed} پیس</td>
+      <td class="py-2.5 px-3 font-bold text-slate-800">${currentLang === "ur" ? (p.employee_name_ur || p.employee_name) : p.employee_name}</td>
+      <td class="py-2.5 px-3 font-medium text-slate-700">${currentLang === "ur" ? (p.article_name_ur || p.article_name) : p.article_name}</td>
+      <td class="py-2.5 px-3">${currentLang === "ur" ? (p.step_name_ur || p.step_name) : p.step_name}</td>
+      <td class="py-2.5 px-3 font-bold text-slate-800">${p.pieces_completed} ${currentLang === "ur" ? "پیس" : "Pcs"}</td>
       <td class="py-2.5 px-3 text-slate-600">PKR ${p.rate_per_piece}</td>
       <td class="py-2.5 px-3 font-extrabold text-amber-700">PKR ${p.total_earning.toLocaleString()}</td>
-      <td class="py-2.5 px-3 text-slate-500">${p.approved_by}</td>
+      <td class="py-2.5 px-3 text-slate-500">${currentLang === "ur" ? (p.approved_by_ur || p.approved_by) : p.approved_by}</td>
     </tr>
   `).join("");
 }
 
 function openNewPieceWorkModal() {
-  const workerOptions = employeesCache.map(e => `<option value="${e.id}">${e.full_name} (${e.department})</option>`).join("");
-  const articleOptions = articlesCache.map(a => `<option value="${a.name}">${a.name}</option>`).join("");
+  const isUr = currentLang === "ur";
+  const workerOptions = employeesCache.map(e => `<option value="${e.id}">${isUr ? (e.full_name_ur || e.full_name) : e.full_name} (${isUr ? (e.department_ur || e.department) : e.department})</option>`).join("");
+  const articleOptions = articlesCache.map(a => `<option value="${a.name}">${isUr ? (a.name_ur || a.name) : a.name}</option>`).join("");
   const today = new Date().toISOString().split("T")[0];
 
   const content = `
@@ -1470,7 +1844,7 @@ function openNewPieceWorkModal() {
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="font-bold text-base text-slate-800 flex items-center gap-2">
           <i data-lucide="plus-circle" class="w-5 h-5 text-amber-600"></i>
-          نئی ٹھیکہ انٹری درج کریں (Piece-Rate Log)
+          ${isUr ? "نئی ٹھیکہ انٹری درج کریں" : "Log Piece-Rate Work"}
         </h3>
         <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><i data-lucide="x" class="w-5 h-5"></i></button>
       </div>
@@ -1478,41 +1852,41 @@ function openNewPieceWorkModal() {
       <div class="space-y-3 text-xs">
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-semibold mb-1 text-slate-700">کاریگر:</label>
+            <label class="block font-semibold mb-1 text-slate-700">${isUr ? "کاریگر:" : "Worker:"}</label>
             <select id="pw-emp" class="w-full border rounded-lg p-2 bg-white">${workerOptions}</select>
           </div>
           <div>
-            <label class="block font-semibold mb-1 text-slate-700">تاریخ:</label>
+            <label class="block font-semibold mb-1 text-slate-700">${isUr ? "تاریخ:" : "Date:"}</label>
             <input type="date" id="pw-date" value="${today}" class="w-full border rounded-lg p-2 bg-white">
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-semibold mb-1 text-slate-700">آرٹیکل:</label>
+            <label class="block font-semibold mb-1 text-slate-700">${isUr ? "آرٹیکل:" : "Article:"}</label>
             <select id="pw-art" class="w-full border rounded-lg p-2 bg-white">${articleOptions}</select>
           </div>
           <div>
-            <label class="block font-semibold mb-1 text-slate-700">کام / مرحلہ:</label>
-            <input type="text" id="pw-step" placeholder="e.g. تھیلی و سٹیکر پیکنگ" class="w-full border rounded-lg p-2">
+            <label class="block font-semibold mb-1 text-slate-700">${isUr ? "کام / مرحلہ:" : "Step / Operation:"}</label>
+            <input type="text" id="pw-step" placeholder="e.g. Packaging with Polybag & Sticker" class="w-full border rounded-lg p-2">
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-semibold mb-1 text-slate-700">مکمل شدہ پیس:</label>
+            <label class="block font-semibold mb-1 text-slate-700">${isUr ? "مکمل شدہ پیس:" : "Completed Pieces:"}</label>
             <input type="number" id="pw-pcs" value="100" min="1" class="w-full border rounded-lg p-2 font-bold">
           </div>
           <div>
-            <label class="block font-semibold mb-1 text-slate-700">فی پیس ریٹ (PKR):</label>
+            <label class="block font-semibold mb-1 text-slate-700">${isUr ? "فی پیس ریٹ (PKR):" : "Rate per Piece (PKR):"}</label>
             <input type="number" id="pw-rate" value="5" min="0.5" step="0.5" class="w-full border rounded-lg p-2 font-bold text-amber-700">
           </div>
         </div>
       </div>
 
       <div class="flex justify-end gap-2 pt-3 border-t">
-        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">منسوخ کریں</button>
-        <button onclick="submitPieceWork()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-lg shadow">اجرت اندراج کریں</button>
+        <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">${isUr ? "منسوخ کریں" : "Cancel"}</button>
+        <button onclick="submitPieceWork()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-lg shadow">${isUr ? "اجرت اندراج کریں" : "Save Earning"}</button>
       </div>
     </div>
   `;
@@ -1529,49 +1903,53 @@ async function submitPieceWork() {
     id: db.pieceWorks.length + 1,
     employee_id: empId,
     employee_name: empObj ? empObj.full_name : "Worker",
+    employee_name_ur: empObj ? (empObj.full_name_ur || empObj.full_name) : "کاریگر",
     emp_code: empObj ? empObj.emp_code : "EMP",
     article_name: document.getElementById("pw-art").value,
+    article_name_ur: document.getElementById("pw-art").value,
     step_name: document.getElementById("pw-step").value,
+    step_name_ur: document.getElementById("pw-step").value,
     date: document.getElementById("pw-date").value,
     pieces_completed: pcs,
     rate_per_piece: rate,
     total_earning: pcs * rate,
-    approved_by: "Supervisor"
+    approved_by: "Supervisor",
+    approved_by_ur: "سپروائزر"
   };
 
   db.pieceWorks.unshift(newPW);
   saveLocalDB();
   closeModal();
   loadPieceWorks();
-  alert("ٹھیکہ ورک کامیابی سے محفوظ ہو گیا!");
+  alert(currentLang === "ur" ? "ٹھیکہ ورک کامیابی سے محفوظ ہو گیا!" : "Piece-rate work saved successfully!");
 }
 
 async function loadLeaves() {
-  const leaves = isLocalBackend ? await (await fetch(`${API_BASE}/api/leaves`)).json() : db.leaves;
+  const leaves = db.leaves;
   const tbody = document.getElementById("leaves-table-body");
   if (!tbody) return;
 
   if (leaves.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="8" class="py-4 text-center text-slate-400">کوئی چھٹی کی درخواست نہیں ہے</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="py-4 text-center text-slate-400">${currentLang === "ur" ? "کوئی چھٹی کی درخواست نہیں ہے" : "No leave applications found"}</td></tr>`;
     return;
   }
 
   tbody.innerHTML = leaves.map(l => `
     <tr class="hover:bg-slate-50">
-      <td class="py-2.5 px-3 font-bold text-slate-800">${l.employee_name}</td>
-      <td class="py-2.5 px-3">${l.leave_type}</td>
+      <td class="py-2.5 px-3 font-bold text-slate-800">${currentLang === "ur" ? (l.employee_name_ur || l.employee_name) : l.employee_name}</td>
+      <td class="py-2.5 px-3">${currentLang === "ur" ? (l.leave_type_ur || l.leave_type) : l.leave_type}</td>
       <td class="py-2.5 px-3">${l.start_date}</td>
       <td class="py-2.5 px-3">${l.end_date}</td>
-      <td class="py-2.5 px-3 font-bold">${l.total_days} دن</td>
-      <td class="py-2.5 px-3 text-slate-600">${l.reason}</td>
+      <td class="py-2.5 px-3 font-bold">${l.total_days} ${currentLang === "ur" ? "دن" : "days"}</td>
+      <td class="py-2.5 px-3 text-slate-600">${currentLang === "ur" ? (l.reason_ur || l.reason) : l.reason}</td>
       <td class="py-2.5 px-3">
         <span class="px-2 py-0.5 rounded-full text-[11px] font-bold ${l.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-          ${l.status}
+          ${currentLang === "ur" ? (l.status_ur || l.status) : l.status}
         </span>
       </td>
       <td class="py-2.5 px-3 text-right space-x-1 rtl:space-x-reverse">
         ${l.status === 'Pending' ? `
-          <button onclick="updateLeaveStatus(${l.id}, 'Approved')" class="px-2 py-0.5 bg-emerald-600 text-white rounded text-[11px] font-semibold">منظور</button>
+          <button onclick="updateLeaveStatus(${l.id}, 'Approved')" class="px-2 py-0.5 bg-emerald-600 text-white rounded text-[11px] font-semibold">${currentLang === 'ur' ? 'منظور' : 'Approve'}</button>
         ` : '-'}
       </td>
     </tr>
@@ -1582,6 +1960,7 @@ function updateLeaveStatus(id, status) {
   const lv = db.leaves.find(l => l.id === id);
   if (lv) {
     lv.status = status;
+    lv.status_ur = status === "Approved" ? "منظور شدہ" : "مسترد";
     saveLocalDB();
     loadLeaves();
   }
@@ -1594,16 +1973,16 @@ async function loadEmployeesTable() {
   tbody.innerHTML = employeesCache.map(e => `
     <tr class="hover:bg-slate-50">
       <td class="py-2.5 px-3 font-mono font-bold text-slate-700">${e.emp_code}</td>
-      <td class="py-2.5 px-3 font-bold text-slate-800">${e.full_name}</td>
-      <td class="py-2.5 px-3">${e.designation}</td>
-      <td class="py-2.5 px-3 font-medium">${e.department}</td>
+      <td class="py-2.5 px-3 font-bold text-slate-800">${currentLang === "ur" ? (e.full_name_ur || e.full_name) : e.full_name}</td>
+      <td class="py-2.5 px-3">${currentLang === "ur" ? (e.designation_ur || e.designation) : e.designation}</td>
+      <td class="py-2.5 px-3 font-medium">${currentLang === "ur" ? (e.department_ur || e.department) : e.department}</td>
       <td class="py-2.5 px-3">
         <span class="px-2 py-0.5 rounded text-[11px] font-semibold ${e.employment_type === 'Piece-Rate' ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}">
-          ${e.employment_type === 'Piece-Rate' ? 'ٹھیکہ ورکر' : 'تنخواہ دار'}
+          ${currentLang === "ur" ? (e.employment_type_ur || e.employment_type) : e.employment_type}
         </span>
       </td>
       <td class="py-2.5 px-3 font-semibold">
-        ${e.employment_type === 'Piece-Rate' ? `PKR ${e.piece_rate_default}/پیس` : `PKR ${e.base_salary.toLocaleString()}`}
+        ${e.employment_type === 'Piece-Rate' ? `PKR ${e.piece_rate_default}/${currentLang === "ur" ? "پیس" : "pc"}` : `PKR ${e.base_salary.toLocaleString()}`}
       </td>
       <td class="py-2.5 px-3 text-slate-500 font-mono">${e.phone}</td>
     </tr>
@@ -1613,18 +1992,18 @@ async function loadEmployeesTable() {
 // ----------------- 11. RBAC & USER CONTROLS -----------------
 
 async function loadRolesAndUsers() {
-  const roles = isLocalBackend ? await (await fetch(`${API_BASE}/api/roles`)).json() : db.roles;
-  const users = isLocalBackend ? await (await fetch(`${API_BASE}/api/users`)).json() : db.users;
+  const roles = db.roles;
+  const users = db.users;
 
   const rolesContainer = document.getElementById("roles-list-container");
   if (rolesContainer) {
     rolesContainer.innerHTML = roles.map(r => `
       <div class="p-3 bg-white border border-slate-200 rounded-lg shadow-xs">
         <div class="flex items-center justify-between">
-          <span class="font-bold text-slate-800">${r.name}</span>
-          <span class="text-[11px] font-mono text-indigo-600 font-semibold">${r.permissions === '*' ? 'تمام ماڈیولز (Full Access)' : r.permissions}</span>
+          <span class="font-bold text-slate-800">${currentLang === "ur" ? (r.name_ur || r.name) : r.name}</span>
+          <span class="text-[11px] font-mono text-indigo-600 font-semibold">${r.permissions === '*' ? (currentLang === 'ur' ? 'تمام ماڈیولز (Full Access)' : 'Full Access (*)') : r.permissions}</span>
         </div>
-        <p class="text-slate-500 text-[11px] mt-1">${r.description}</p>
+        <p class="text-slate-500 text-[11px] mt-1">${currentLang === "ur" ? (r.description_ur || r.description) : r.description}</p>
       </div>
     `).join("");
   }
@@ -1634,9 +2013,9 @@ async function loadRolesAndUsers() {
     usersTbody.innerHTML = users.map(u => `
       <tr class="hover:bg-slate-50">
         <td class="py-2 px-3 font-mono font-semibold text-slate-700">${u.username}</td>
-        <td class="py-2 px-3 font-medium text-slate-800">${u.full_name}</td>
+        <td class="py-2 px-3 font-medium text-slate-800">${currentLang === "ur" ? (u.full_name_ur || u.full_name) : u.full_name}</td>
         <td class="py-2 px-3">
-          <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-50 text-indigo-700">${u.role}</span>
+          <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-indigo-50 text-indigo-700">${currentLang === "ur" ? (u.role_ur || u.role) : u.role}</span>
         </td>
       </tr>
     `).join("");
@@ -1646,15 +2025,15 @@ async function loadRolesAndUsers() {
 // ----------------- HELPERS & CACHE LOADERS -----------------
 
 async function loadArticles() {
-  articlesCache = isLocalBackend ? await (await fetch(`${API_BASE}/api/articles`)).json() : db.articles;
+  articlesCache = db.articles;
 }
 
 async function loadSuppliers() {
-  suppliersCache = isLocalBackend ? await (await fetch(`${API_BASE}/api/suppliers`)).json() : db.suppliers;
+  suppliersCache = db.suppliers;
 }
 
 async function loadEmployees() {
-  employeesCache = isLocalBackend ? await (await fetch(`${API_BASE}/api/employees`)).json() : db.employees;
+  employeesCache = db.employees;
 }
 
 // ----------------- PRINT FORMATTERS -----------------
@@ -1753,7 +2132,7 @@ function printDispatch(challan) {
             <tr>
               <td><strong>${it.article_name}</strong></td>
               <td style="text-align: center; font-weight: bold; font-size: 14px;">${it.quantity} Pieces</td>
-              <td style="text-align: center;">Packed with Theli, Sticker & Logo ✓</td>
+              <td style="text-align: center;">Packed with Polybag, Sticker & Logo ✓</td>
             </tr>
           `).join("")}
         </tbody>
